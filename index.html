@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>產線式理財 · 自動化資產配置系統 | Dex 生活投資</title>
+<style>
+  :root{
+    --bg:#070b14;
+    --bg2:#0a0f1c;
+    --panel:#0d1526;
+    --panel2:#111b30;
+    --line:rgba(90,140,220,.10);
+    --line-strong:rgba(90,140,220,.22);
+    --blue:#4d8fef;
+    --blue-bright:#5b9bff;
+    --blue-soft:#9dc3ff;
+    --glow:rgba(77,143,239,.45);
+    --gold:#ffb64d;
+    --gold-soft:#ffcf87;
+    --gold-deep:#ff9a2e;
+    --gold-glow:rgba(255,168,61,.45);
+    --text:#e9f0fb;
+    --muted:#8ba0c2;
+    --muted-2:#63769a;
+    --warn:#f0a13b;
+    --ok:#48d597;
+    --font: "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.75;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* ===== HUD 背景層 ===== */
+  .grid-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:46px 46px;
+    -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 30%,transparent 90%);
+            mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 30%,transparent 90%);
+  }
+  .glow-orb{
+    position:fixed;z-index:0;pointer-events:none;border-radius:50%;
+    filter:blur(90px);opacity:.5;
+  }
+  .orb-1{width:520px;height:520px;top:-160px;left:50%;transform:translateX(-50%);
+    background:radial-gradient(circle,rgba(77,143,239,.35),transparent 70%);}
+  .orb-2{width:420px;height:420px;bottom:6%;left:-120px;
+    background:radial-gradient(circle,rgba(59,130,246,.18),transparent 70%);}
+  /* 四角 HUD 邊框 */
+  .hud-frame{position:fixed;inset:22px;z-index:1;pointer-events:none;}
+  .hud-frame span{position:absolute;width:34px;height:34px;border:2px solid var(--blue);opacity:.55}
+  .hud-frame .tl{top:0;left:0;border-right:0;border-bottom:0}
+  .hud-frame .tr{top:0;right:0;border-left:0;border-bottom:0}
+  .hud-frame .bl{bottom:0;left:0;border-right:0;border-top:0}
+  .hud-frame .br{bottom:0;right:0;border-left:0;border-top:0}
+
+  .wrap{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:0 22px}
+  section{padding:88px 0;position:relative}
+
+  /* ===== 導覽 ===== */
+  nav{
+    position:sticky;top:0;z-index:20;
+    background:rgba(7,11,20,.72);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px}
+  .brand{display:flex;align-items:center;gap:13px;font-weight:700;letter-spacing:.5px;font-size:21px}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--glow)}
+  .brand small{display:block;font-size:12px;color:var(--muted-2);letter-spacing:2.5px;font-weight:400;margin-top:2px}
+  .nav-cta{
+    font-size:13px;padding:9px 18px;border:1px solid var(--gold);border-radius:30px;
+    color:var(--gold-soft);text-decoration:none;transition:.2s;white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--gold);color:#2a1500;box-shadow:0 0 18px var(--gold-glow)}
+
+  /* ===== 標籤 / 眉標 ===== */
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:3px;color:var(--blue-soft);
+    text-transform:uppercase;margin-bottom:18px;font-weight:600;
+  }
+  .kicker::before{content:"";width:26px;height:1px;background:var(--blue)}
+  h1{font-size:clamp(34px,6.4vw,60px);line-height:1.18;font-weight:800;letter-spacing:.5px}
+  h2{font-size:clamp(26px,4.4vw,40px);font-weight:800;line-height:1.3;margin-bottom:14px}
+  .lead{color:var(--muted);font-size:clamp(15px,2.2vw,18px);max-width:640px}
+
+  /* ===== HERO ===== */
+  .hero{text-align:center;padding-top:70px;padding-bottom:70px}
+  .hero .en{
+    font-size:12px;letter-spacing:6px;color:var(--muted-2);
+    text-transform:uppercase;margin-bottom:26px
+  }
+  .hero h1 .hl{color:var(--gold);text-shadow:0 0 28px var(--gold-glow)}
+  .hero .sub{margin:26px auto 0;max-width:620px;color:var(--muted);font-size:clamp(15px,2.4vw,19px)}
+  .radar{position:relative;width:190px;height:190px;margin:8px auto 30px}
+  .radar .ring{position:absolute;inset:0;border:1px solid var(--line-strong);border-radius:50%}
+  .radar .ring:nth-child(2){inset:26px;opacity:.7}
+  .radar .ring:nth-child(3){inset:52px;opacity:.5}
+  .radar .core{
+    position:absolute;inset:0;margin:auto;width:76px;height:76px;
+    display:flex;align-items:center;justify-content:center;
+    animation:spin 14s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .radar .core svg{width:76px;height:76px}
+  .radar .sweep{
+    position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,transparent 0deg,var(--glow) 40deg,transparent 60deg);
+    -webkit-mask:radial-gradient(circle,transparent 30px,#000 31px);
+            mask:radial-gradient(circle,transparent 30px,#000 31px);
+    animation:spin 6s linear infinite;opacity:.6;
+  }
+  .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:34px;
+    font-weight:700;font-size:15px;text-decoration:none;transition:.22s;letter-spacing:.5px;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#2a1500;box-shadow:0 0 26px var(--gold-glow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 40px var(--gold-glow)}
+  .btn-ghost{border:1px solid var(--line-strong);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue-soft)}
+
+  .hero-stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:52px}
+  .stat{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px 26px;min-width:150px;
+  }
+  .stat b{display:block;font-size:30px;color:var(--gold);font-weight:800;letter-spacing:1px}
+  .stat span{font-size:13px;color:var(--muted-2)}
+
+  /* ===== 一句話定義 ===== */
+  .define{
+    background:linear-gradient(180deg,var(--panel),rgba(13,21,38,.4));
+    border:1px solid var(--line-strong);border-radius:20px;
+    padding:40px 36px;text-align:center;position:relative;overflow:hidden;
+  }
+  .define::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--blue),transparent)
+  }
+  .define p{font-size:clamp(17px,2.6vw,23px);font-weight:600;line-height:1.7}
+  .define .hl{color:var(--gold)}
+  .define .note{margin-top:16px;font-size:14px;color:var(--muted);font-weight:400}
+
+  /* ===== 病根 vs 解法 ===== */
+  .pains{display:grid;grid-template-columns:1fr;gap:16px;margin-top:38px}
+  .pain{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)
+  }
+  .pain .side{padding:22px 24px}
+  .pain .p-bad{background:rgba(240,161,59,.05)}
+  .pain .p-arrow{
+    display:flex;align-items:center;justify-content:center;width:56px;
+    color:var(--blue);font-size:22px;background:var(--panel2);flex-shrink:0
+  }
+  .pain h4{font-size:16px;margin-bottom:6px}
+  .pain .p-bad h4{color:var(--warn)}
+  .pain .p-good h4{color:var(--ok)}
+  .pain p{font-size:14px;color:var(--muted);line-height:1.65}
+
+  /* ===== 產線 roadmap ===== */
+  .roadmap{position:relative;margin-top:46px;padding-left:8px}
+  .roadmap::before{
+    content:"";position:absolute;left:26px;top:12px;bottom:12px;width:2px;
+    background:linear-gradient(180deg,var(--blue),rgba(77,143,239,.15));
+  }
+  .station{
+    position:relative;padding:0 0 30px 74px;
+  }
+  .station .node{
+    position:absolute;left:8px;top:2px;width:38px;height:38px;border-radius:50%;
+    background:var(--bg2);border:2px solid var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:var(--blue-bright);font-size:15px;z-index:2;
+    box-shadow:0 0 0 5px rgba(7,11,20,1),0 0 16px var(--glow);
+  }
+  .station.final .node{border-color:var(--ok);color:var(--ok);box-shadow:0 0 0 5px rgba(7,11,20,1),0 0 16px rgba(72,213,151,.5)}
+  .st-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px;transition:.25s;
+  }
+  .st-card:hover{border-color:var(--line-strong);transform:translateX(4px)}
+  .st-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  .st-icon{width:34px;height:34px;flex-shrink:0}
+  .st-icon svg{width:34px;height:34px;stroke:var(--blue);fill:none;stroke-width:1.6}
+  .st-title{font-size:18px;font-weight:800}
+  .st-time{
+    font-size:14px;letter-spacing:.5px;color:var(--blue-soft);font-weight:700;
+    border:1px solid var(--line-strong);border-radius:20px;padding:5px 14px;margin-left:auto;
+    background:rgba(77,143,239,.08);white-space:nowrap
+  }
+  .st-desc{font-size:14.5px;color:var(--muted);margin-bottom:14px}
+  .st-tags{display:flex;gap:10px;flex-wrap:wrap}
+  .tag{font-size:12px;padding:5px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+  .tag-auto{background:rgba(77,143,239,.10);border:1px solid rgba(77,143,239,.3);color:var(--blue-soft)}
+  .tag-poka{background:rgba(240,161,59,.08);border:1px solid rgba(240,161,59,.28);color:var(--warn)}
+  .tag b{font-weight:700}
+  .badge-own{
+    font-size:10px;letter-spacing:1px;background:var(--gold);color:#2a1500;
+    padding:2px 8px;border-radius:6px;font-weight:800;margin-left:6px
+  }
+
+  /* ===== 決策樹橫幅 ===== */
+  .decision{
+    margin-top:30px;border:1px dashed var(--line-strong);border-radius:16px;
+    padding:24px 26px;display:flex;gap:18px;align-items:center;background:rgba(17,27,48,.4)
+  }
+  .decision .lock{font-size:30px}
+  .decision h4{color:var(--blue-soft);font-size:16px;margin-bottom:4px}
+  .decision p{font-size:14px;color:var(--muted)}
+
+  /* ===== FMEA ===== */
+  .fmea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:34px}
+  .fmea-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .fmea-card .num{font-size:13px;color:var(--blue);font-weight:800;letter-spacing:2px}
+  .fmea-card h4{font-size:16px;margin:8px 0 6px}
+  .fmea-card p{font-size:13.5px;color:var(--muted)}
+  .stress{margin-top:26px;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:26px 28px}
+  .stress h4{font-size:16px;margin-bottom:16px;color:var(--blue-soft)}
+  .stress ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .stress li{font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+  .stress li span{flex-shrink:0}
+
+  /* ===== 原則 ===== */
+  .principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:36px}
+  .prin{
+    background:linear-gradient(180deg,var(--panel),rgba(13,21,38,.3));
+    border:1px solid var(--line);border-radius:16px;padding:28px;position:relative
+  }
+  .prin .n{font-size:44px;font-weight:800;color:rgba(77,143,239,.22);line-height:1;position:absolute;top:16px;right:20px}
+  .prin h4{font-size:18px;margin-bottom:10px;color:var(--blue-soft)}
+  .prin p{font-size:14px;color:var(--muted)}
+
+  /* ===== 界線（不是什麼） ===== */
+  .not-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:30px}
+  .not-item{
+    border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:var(--panel);
+    font-size:14.5px;color:var(--muted);display:flex;gap:12px;align-items:flex-start
+  }
+  .not-item .x{color:var(--warn);font-weight:800;flex-shrink:0}
+
+  /* ===== CTA ===== */
+  .final-cta{text-align:center}
+  .final-cta .box{
+    background:linear-gradient(160deg,rgba(77,143,239,.12),var(--panel));
+    border:1px solid var(--line-strong);border-radius:24px;padding:56px 40px;position:relative;overflow:hidden
+  }
+  .final-cta .box::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% -20%,var(--glow),transparent 60%);opacity:.4
+  }
+  .final-cta h2{position:relative}
+  .final-cta p{position:relative;color:var(--muted);max-width:540px;margin:14px auto 30px}
+
+  /* ===== footer ===== */
+  footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;position:relative;z-index:2}
+  footer .links{display:flex;gap:22px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+  footer a{color:var(--muted);text-decoration:none;font-size:14px;transition:.2s}
+  footer a:hover{color:var(--blue-soft)}
+  footer small{color:var(--muted-2);font-size:12px}
+
+  .disclaimer{
+    max-width:760px;margin:30px auto 0;font-size:12px;color:var(--muted-2);
+    line-height:1.7;text-align:center;border-top:1px solid var(--line);padding-top:22px
+  }
+
+  /* ===== 品牌 LOGO ===== */
+  .brand .logo{width:46px;height:46px;flex-shrink:0;display:flex}
+  .brand .logo svg,.brand .logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 10px var(--glow))}
+
+  /* ===== 三大核心 ===== */
+  .cores{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+  .core-card{
+    background:linear-gradient(180deg,var(--panel),rgba(13,21,38,.35));
+    border:1px solid var(--line);border-radius:18px;padding:32px 22px 28px;
+    text-align:center;position:relative;overflow:hidden;transition:.25s;
+  }
+  .core-card::before{
+    content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:56%;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:.55
+  }
+  .core-card:hover{border-color:var(--line-strong);transform:translateY(-4px)}
+  .core-viz{width:120px;height:120px;margin:0 auto 16px}
+  .core-viz svg{width:120px;height:120px;overflow:visible}
+  .core-num{font-size:11px;letter-spacing:2.5px;color:var(--muted-2);font-weight:700;margin-bottom:6px}
+  .core-card h4{font-size:21px;font-weight:800;margin-bottom:9px}
+  .core-card p{font-size:13.5px;color:var(--muted);line-height:1.65}
+  .c-auto h4{color:var(--blue-soft)}
+  .c-viz h4{color:var(--gold-soft)}
+  .c-poka h4{color:var(--ok)}
+  /* — 自動化：齒輪 — */
+  .viz-gears .cog{transform-box:fill-box;transform-origin:center}
+  .viz-gears .cog-a{animation:spin 7s linear infinite}
+  .viz-gears .cog-b{animation:spin 4s linear infinite reverse}
+  /* — 視覺化：長條 — */
+  .viz-chart .bar{fill:var(--gold);transform-box:fill-box;transform-origin:bottom}
+  .viz-chart .b1{animation:barpulse 2.4s ease-in-out infinite}
+  .viz-chart .b2{animation:barpulse 2.4s ease-in-out infinite .3s}
+  .viz-chart .b3{animation:barpulse 2.4s ease-in-out infinite .6s}
+  .viz-chart .b4{animation:barpulse 2.4s ease-in-out infinite .15s}
+  @keyframes barpulse{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+  .viz-chart .trend{fill:none;stroke:var(--gold-soft);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--gold-glow))}
+  .viz-chart .tdot{fill:var(--gold-soft);animation:tblink 2.4s ease-in-out infinite}
+  @keyframes tblink{0%,100%{opacity:.35}50%{opacity:1}}
+  /* — 防呆：盾牌 — */
+  .viz-shield .pulse{transform-box:fill-box;transform-origin:center;animation:pulsering 2.8s ease-out infinite}
+  @keyframes pulsering{0%{transform:scale(.72);opacity:.55}70%{opacity:0}100%{transform:scale(1.18);opacity:0}}
+  .viz-shield .check{stroke-dasharray:46;stroke-dashoffset:46;animation:checkdraw 2.8s ease-in-out infinite}
+  @keyframes checkdraw{0%,12%{stroke-dashoffset:46}42%,82%{stroke-dashoffset:0}100%{stroke-dashoffset:46}}
+
+  /* ===== 為什麼跟我做 ===== */
+  .whyme{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:38px}
+  .why-card{
+    background:linear-gradient(180deg,var(--panel),rgba(13,21,38,.3));
+    border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:14px;
+    padding:28px 24px;transition:.25s;position:relative;overflow:hidden;
+  }
+  .why-card::after{content:"";position:absolute;top:0;left:0;width:120px;height:120px;
+    background:radial-gradient(circle at 0 0,var(--gold-glow),transparent 70%);opacity:.12;pointer-events:none}
+  .why-card:hover{border-color:var(--line-strong);border-left-color:var(--gold-soft);transform:translateY(-4px)}
+  .why-ic{font-size:34px;margin-bottom:14px;line-height:1}
+  .why-card h4{font-size:18px;font-weight:800;margin-bottom:10px;color:var(--gold-soft)}
+  .why-card p{font-size:14px;color:var(--muted);line-height:1.65}
+
+  /* ===== 進場動畫 ===== */
+  .reveal{opacity:0;transform:translateY(28px);transition:.7s cubic-bezier(.2,.7,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:640px){
+    section{padding:60px 0}
+    .cores{grid-template-columns:1fr;gap:14px}
+    .whyme{grid-template-columns:1fr}
+    .pain{grid-template-columns:1fr}
+    .pain .p-arrow{width:100%;height:44px}
+    .hud-frame{inset:12px}
+    .define{padding:30px 22px}
+    .station{padding-left:64px}
+    .roadmap::before{left:22px}
+    .station .node{left:4px}
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="hud-frame"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="wrap">
+    <div class="brand">
+      <span class="logo">
+        <img src="data:image/png;base64,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" alt="產線式理財 logo"/>
+      </span>
+      <div>產線式理財<small>DEX · AUTOMATED SYSTEM</small></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="radar">
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="sweep"></div>
+      <div class="core">
+        <svg viewBox="0 0 76 76"><g stroke="#5b9bff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="38" cy="38" r="20"/><circle cx="38" cy="38" r="8"/>
+          <path d="M38 8v10M38 58v10M8 38h10M58 38h10M17 17l7 7M52 52l7 7M59 17l-7 7M24 52l-7 7"/>
+        </g></svg>
+      </div>
+    </div>
+    <div class="en">AUTOMATED ASSET ALLOCATION · ONE-YEAR ROADMAP</div>
+    <h1>錢的<span class="hl">防呆生產線</span><br>設好一次，之後自己走</h1>
+    <p class="sub">把複雜的資產配置，拆成照順序走的 8 個工作站。<br>不用盯盤、不用每次重新決定——用產線思維，先鋪好軌道，讓錢自動分流。</p>
+    <div class="btns">
+      <a href="https://www.skool.com/dex-4461/about" target="_blank" rel="noopener" class="btn btn-primary">加入 Dex 陪跑 →</a>
+      <a href="#roadmap" class="btn btn-ghost">看完整 8 站產線</a>
+      <a href="#why" class="btn btn-ghost">為什麼要這樣做</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>8</b><span>照順序的工作站</span></div>
+      <div class="stat"><b>+⑨</b><span>最終壓力檢驗站</span></div>
+      <div class="stat"><b>1</b><span>貫穿全程防呆決策樹</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 一句話定義 ===== -->
+<section>
+  <div class="wrap">
+    <div class="define reveal">
+      <p>一條 8 站的<span class="hl">「錢的防呆生產線」</span>——每站設好一次就自動運作，再用一條決策樹貫穿全程防呆。</p>
+      <p class="note">產線思維：你不是每個月「決定錢要放哪」，而是先把軌道鋪好，之後錢自己走。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 三大核心 ===== -->
+<section id="cores">
+  <div class="wrap">
+    <div class="kicker reveal">THREE CORES · 三大核心</div>
+    <h2 class="reveal">整套系統，靠這三件事運轉</h2>
+    <p class="lead reveal">自動化幫你把流程固定下來、視覺化讓現況一眼看懂、防呆閥即時攔住異常——三個一起轉，把「犯錯與異常」降到最低，才叫產線。</p>
+
+    <div class="cores">
+
+      <div class="core-card c-auto reveal">
+        <div class="core-viz">
+          <svg class="viz-gears" viewBox="0 0 120 120">
+            <g class="cog cog-a">
+              <circle cx="56" cy="62" r="20" fill="none" stroke="#4d8fef" stroke-width="3"/>
+              <circle cx="56" cy="62" r="7" fill="none" stroke="#9dc3ff" stroke-width="2.5"/>
+              <g stroke="#4d8fef" stroke-width="4" stroke-linecap="round">
+                <line x1="56" y1="34" x2="56" y2="42"/><line x1="56" y1="82" x2="56" y2="90"/>
+                <line x1="28" y1="62" x2="36" y2="62"/><line x1="76" y1="62" x2="84" y2="62"/>
+                <line x1="36" y1="42" x2="41.7" y2="47.7"/><line x1="70.3" y1="76.3" x2="76" y2="82"/>
+                <line x1="76" y1="42" x2="70.3" y2="47.7"/><line x1="41.7" y1="76.3" x2="36" y2="82"/>
+              </g>
+            </g>
+            <g class="cog cog-b">
+              <circle cx="88" cy="38" r="9" fill="none" stroke="#9dc3ff" stroke-width="2.5"/>
+              <circle cx="88" cy="38" r="3" fill="#9dc3ff"/>
+              <g stroke="#9dc3ff" stroke-width="3" stroke-linecap="round">
+                <line x1="88" y1="24" x2="88" y2="30"/><line x1="88" y1="46" x2="88" y2="52"/>
+                <line x1="74" y1="38" x2="80" y2="38"/><line x1="96" y1="38" x2="102" y2="38"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="core-num">CORE 01</div>
+        <h4>⚙️ 自動化</h4>
+        <p>軌道設好一次，錢自己分流、自己扣款、自己領息——照你設好的規則跑，把一時衝動的犯錯降到最低。</p>
+      </div>
+
+      <div class="core-card c-viz reveal">
+        <div class="core-viz">
+          <svg class="viz-chart" viewBox="0 0 120 120">
+            <line x1="16" y1="94" x2="106" y2="94" stroke="var(--line-strong)" stroke-width="2"/>
+            <rect class="bar b1" x="24" y="42" width="14" height="52" rx="3"/>
+            <rect class="bar b2" x="45" y="42" width="14" height="52" rx="3"/>
+            <rect class="bar b3" x="66" y="42" width="14" height="52" rx="3"/>
+            <rect class="bar b4" x="87" y="42" width="14" height="52" rx="3"/>
+            <path class="trend" d="M31 58 55 44 76 50 94 28"/>
+            <circle class="tdot" cx="94" cy="28" r="4"/>
+          </svg>
+        </div>
+        <div class="core-num">CORE 02</div>
+        <h4>📊 視覺化</h4>
+        <p>看不見的錢流與資產配置，畫成一張看得懂的圖，現況一眼掃完，才知道下一步要補哪裡。</p>
+      </div>
+
+      <div class="core-card c-poka reveal">
+        <div class="core-viz">
+          <svg class="viz-shield" viewBox="0 0 120 120">
+            <circle class="pulse" cx="60" cy="62" r="36" fill="none" stroke="#48d597" stroke-width="2"/>
+            <path d="M60 24 88 34V60C88 79 74 91 60 98 46 91 32 79 32 60V34Z" fill="rgba(72,213,151,.08)" stroke="#48d597" stroke-width="3" stroke-linejoin="round"/>
+            <path class="check" d="M48 61 56 69 74 49" fill="none" stroke="#48d597" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="core-num">CORE 03</div>
+        <h4>🔒 防呆</h4>
+        <p>每一站設一道防呆閥，不靠意志力硬撐，靠機制讓你「不容易做錯」（Poka-yoke）。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 為什麼這樣設計 ===== -->
+<section id="why">
+  <div class="wrap">
+    <div class="kicker reveal">WHY · 對應根因</div>
+    <h2 class="reveal">解掉的是三個病根，<br>不是「不懂投資」</h2>
+    <p class="lead reveal">30–45 歲上班族卡住的真正原因，往往不是知識不夠，而是這三件事。</p>
+
+    <div class="pains">
+      <div class="pain reveal">
+        <div class="side p-bad"><h4>決策疲勞</h4><p>深夜意志力歸零，每次碰錢都要重新決定，容易被情緒帶著亂買。</p></div>
+        <div class="p-arrow">→</div>
+        <div class="side p-good"><h4>自動化</h4><p>軌道設好，錢自動分流，把「決策」從意志力最低的深夜移除。</p></div>
+      </div>
+      <div class="pain reveal">
+        <div class="side p-bad"><h4>缺客製化轉譯</h4><p>看完書、YouTube、線上課，還是不知道「以我的情況具體怎麼做」。</p></div>
+        <div class="p-arrow">→</div>
+        <div class="side p-good"><h4>產線拆站</h4><p>每站一個明確動作＋試算表，照著填就好，不用自己拼裝。</p></div>
+      </div>
+      <div class="pain reveal">
+        <div class="side p-bad"><h4>缺防呆與驗收</h4><p>一個人做，沒人擋錯、沒人驗收，錯了也不知道。</p></div>
+        <div class="p-arrow">→</div>
+        <div class="side p-good"><h4>防呆閥＋社群結案</h4><p>每站設檢查點，蓋好由社群驗收，過了才往下一站。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 產線全貌 ROADMAP ===== -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="kicker reveal">THE PRODUCTION LINE · 產線全貌</div>
+    <h2 class="reveal">照順序走的 8 站，<br>＋ 一站最終總體檢</h2>
+    <p class="lead reveal">先守後攻。地基沒蓋完前不准進攻——每一站都設好「自動化」與「防呆閥」。</p>
+
+    <div class="roadmap">
+
+      <div class="station reveal">
+        <div class="node">1</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26h24M8 26V14l8-6 8 6v12M13 26v-6h6v6"/></svg></div>
+            <div class="st-title">🏗️ 地基站</div>
+            <div class="st-time">Day 1–15</div>
+          </div>
+          <p class="st-desc">先守：財商觀念（資產配置、複利、資金流、開源節流）＋ 緊急預備金 ＋ 隔離帳戶。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ <b>自動化</b>｜帳戶隔離＝不容易亂動</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜地基沒蓋完，不准進攻</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">2</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4C10 12 6 16 6 21a10 10 0 0020 0c0-5-4-9-10-17z"/></svg></div>
+            <div class="st-title">💧 開源站① 高利活存</div>
+            <div class="st-time">Day 15–30</div>
+          </div>
+          <p class="st-desc">最無痛入門，把閒錢從活儲搬到高利活存生息，也是緊急預備金的擺放處。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ <b>自動化</b>｜自動轉入</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜只放「短期會用到」的錢</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">3</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6l12 5-12 5L4 11l12-5zM8 14v7c0 2 4 4 8 4s8-2 8-4v-7"/></svg></div>
+            <div class="st-title">🎓 進入股市準備站</div>
+            <div class="st-time">Day 30–60</div>
+          </div>
+          <p class="st-desc">進場心法 ＋ 基本術語 ＋ 看盤地圖（看什麼、去哪看）＋ 避雷。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ 心法站，不涉金流</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜看不懂數據前，先小額／模擬</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">4</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26L12 16l5 5 11-13M28 8h-6M28 8v6"/></svg></div>
+            <div class="st-title">📈 開源站② ETF 核心</div>
+            <div class="st-time">M2–M4</div>
+          </div>
+          <p class="st-desc">配息與市值型抓比例（含 REIT／債券），長期核心引擎，自動買不盯盤，滿一張可借券打工。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ <b>自動化</b>｜券商自動扣款＋借券</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜扣款日鎖定＝不擇時</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">5</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13h22v5H5zM6 18v9h20v-9M16 13v14M16 13c-3-6-9-4-9 0h9zm0 0c3-6 9-4 9 0h-9z"/></svg></div>
+            <div class="st-title">🎁 開源站③ 股東紀念品</div>
+            <div class="st-time">M2–M12</div>
+          </div>
+          <p class="st-desc">存股順便領好康，減輕日常用品負擔——搭配 AI 自動投票（Dex 獨門）省下每年逐間投票的工。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ <b>AI 自動投票</b><span class="badge-own">獨門</span></span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜只挑符合條件的標的</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">6</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="9"/><path d="M21 21l6 6"/></svg></div>
+            <div class="st-title">🔍 檢驗站</div>
+            <div class="st-time">M4–M5</div>
+          </div>
+          <p class="st-desc">3 面向個股判斷 ＋ 理性剎車（照鏡子、打預防針、機會成本）＋ 壓力測試。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ 理性關卡</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜賠居多＋被動收入未達標→別碰主動個股</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">7</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="11"/><path d="M16 10v12M12.5 12.5h5a2.5 2.5 0 010 5h-5"/></svg></div>
+            <div class="st-title">🪙 開源站④ 穩定幣領息</div>
+            <div class="st-time">M5–M6</div>
+          </div>
+          <p class="st-desc">低波動的數位現金流（非炒幣），為配置補上一條穩定收息的支線。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ <b>自動化</b>｜自動領息</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜嚴設「這不是拿來炒」的紀律</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station reveal">
+        <div class="node">8</div>
+        <div class="st-card">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4l11 6-11 6L5 10l11-6zM5 16l11 6 11-6M5 22l11 6 11-6"/></svg></div>
+            <div class="st-title">🏦 進階升級（選修）</div>
+            <div class="st-time">M6–M9</div>
+          </div>
+          <p class="st-desc">資產優化選修站：質押／良性負債／財商實作。市值 50 萬解鎖，非人人必修。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto">⚙️ 選修進階</span>
+            <span class="tag tag-poka">🔒 <b>解鎖門檻</b>｜3 個月＋被動現金流＋市值 50 萬</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="station final reveal">
+        <div class="node">✓</div>
+        <div class="st-card" style="border-color:rgba(72,213,151,.28)">
+          <div class="st-head">
+            <div class="st-icon"><svg viewBox="0 0 32 32" stroke="#48d597" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16l6 6 14-14"/><circle cx="16" cy="16" r="14" opacity=".4"/></svg></div>
+            <div class="st-title" style="color:#48d597">✅ ⑨ 最終檢驗站</div>
+            <div class="st-time">M9–M12 · Final Test</div>
+          </div>
+          <p class="st-desc">系統全建好後做「出廠總體檢」：用工廠 FMEA 思維逐站找失效點，再跑壓力情境，過關才畢業。</p>
+          <div class="st-tags">
+            <span class="tag tag-auto" style="background:rgba(72,213,151,.1);border-color:rgba(72,213,151,.3);color:#8fe8c0">⚙️ 一年一次總驗收</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜任一情境沒過→回站補強，過關才畢業</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 決策樹橫幅 -->
+    <div class="decision reveal">
+      <div class="lock">🔒</div>
+      <div>
+        <h4>財商防呆決策樹｜貫穿全程</h4>
+        <p>額外大錢或誘惑來時，照這張圖走，不讓情緒替你做決定——這是情緒失守時的總防呆閥。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 最終檢驗站 FMEA ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker reveal">FINAL TEST · 出廠前總體檢</div>
+    <h2 class="reveal">8 站全建好，<br>先讓產線跑一次壓力測試</h2>
+    <p class="lead reveal">借用工廠的 FMEA（失效模式與影響分析）：逐站找出可能會壞的地方，再用壓力情境實測——過關，才算真正把系統交給自己。</p>
+
+    <div class="fmea-grid">
+      <div class="fmea-card reveal"><div class="num">Q1</div><h4>這站可能怎麼失效？</h4><p>哪個環節最容易出包。</p></div>
+      <div class="fmea-card reveal"><div class="num">Q2</div><h4>失效了會怎樣？</h4><p>對現金流／心態的衝擊多大。</p></div>
+      <div class="fmea-card reveal"><div class="num">Q3</div><h4>怎麼先防？</h4><p>對應的防呆閥夠不夠力。</p></div>
+    </div>
+
+    <div class="stress reveal">
+      <h4>壓力測試情境（模擬跑一遍）</h4>
+      <ul>
+        <li><span>💼</span>突然失業 6 個月：緊急預備金＋高利活存頂得住嗎？</li>
+        <li><span>📉</span>股市大跌 40%：ETF 自動扣款照跑、不砍在最低點？</li>
+        <li><span>💸</span>臨時急需一大筆錢：動用順序對嗎（先動活存、不動核心）？</li>
+        <li><span>🪙</span>穩定幣平台出狀況：曝險是否在可承受範圍？</li>
+        <li><span>😈</span>誘惑來襲（親友報明牌）：決策樹擋得住嗎？</li>
+        <li><span>📊</span>升息／降息：配置需不需要微調？</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 三大原則 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker reveal">DESIGN PRINCIPLES · 系統的靈魂</div>
+    <h2 class="reveal">三大設計原則</h2>
+    <div class="principles">
+      <div class="prin reveal"><div class="n">01</div><h4>守優先於攻</h4><p>先蓋地基（緊急預備金）再開源。先學會不賠錢，再想怎麼賺。</p></div>
+      <div class="prin reveal"><div class="n">02</div><h4>設定一次、自動運作</h4><p>好系統讓你不用每次重新決定——把決策從意志力最低的深夜移除。</p></div>
+      <div class="prin reveal"><div class="n">03</div><h4>每站一個防呆閥</h4><p>不靠意志力對抗誘惑，靠機制讓你「不容易做錯」（Poka-yoke）。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 界線 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker reveal">BOUNDARIES · 先劃界</div>
+    <h2 class="reveal">這套系統「不是」什麼</h2>
+    <div class="not-grid">
+      <div class="not-item reveal"><span class="x">✕</span>不是選股教學，不帶你追飆股</div>
+      <div class="not-item reveal"><span class="x">✕</span>不是要你天天看盤</div>
+      <div class="not-item reveal"><span class="x">✕</span>不是保證報酬的投資組合（開源收益因人而異）</div>
+      <div class="not-item reveal"><span class="x">✕</span>不是一次性課程——是一套設好會自動運作的系統</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 為什麼跟我做 ===== -->
+<section id="whyme">
+  <div class="wrap">
+    <div class="kicker reveal">WHY DEX · 為什麼跟我做</div>
+    <h2 class="reveal">工具你也查得到，<br>差別在有沒有人陪你走完</h2>
+    <p class="lead reveal">系統是骨架，真正讓你不半途卡死的，是這三件事。</p>
+    <div class="whyme">
+      <div class="why-card reveal">
+        <div class="why-ic">📊</div>
+        <h4>視覺化釐清現況</h4>
+        <p>先把你的錢流與資產配置攤成一張圖，看清楚現在站在哪，才知道下一站往哪走。</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-ic">🤝</div>
+        <h4>陪跑・1 對 1 六次諮詢</h4>
+        <p>不是丟一套課就放生——1 對 1 六次諮詢陪你走，卡關有人幫你看、幫你擋、幫你驗收。</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-ic">🛡️</div>
+        <h4>13 年經驗協助避雷</h4>
+        <p>用 13 年實戰經驗幫你繞開地雷，減少四大浪費——時間、金錢、注意力、健康。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section id="cta" class="final-cta">
+  <div class="wrap">
+    <div class="box reveal">
+      <h2>把軌道鋪好，<br>剩下的交給系統</h2>
+      <p>成果目標＝把資產配置框架訂出來、工具設定好（過程）。實際收穫在後續一年慢慢發生——先蓋好系統，再談自動運作。</p>
+      <div class="btns" style="margin-top:0">
+        <a href="https://www.skool.com/dex-4461/about" target="_blank" rel="noopener" class="btn btn-primary">加入 Dex 陪跑 →</a>
+        <a href="https://www.youtube.com/@dexlife" target="_blank" rel="noopener" class="btn btn-ghost">先看內容再決定</a>
+      </div>
+    </div>
+    <div class="disclaimer">
+      ⚠️ 本頁為資產配置系統的框架示範，非投資建議、非保證報酬。壓力測試檢查的是「系統扛不扛得住」，非預測市場、非保證獲利。開源收益因人而異，投資有風險，請依自身狀況評估。
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://www.instagram.com/dex_life0826/" target="_blank">Instagram</a>
+      <a href="https://www.youtube.com/@dexlife" target="_blank">YouTube</a>
+      <a href="https://www.facebook.com/Dexlifeinvest" target="_blank">Facebook</a>
+    </div>
+    <small>© 2026 Dex 生活投資 · 產線式理財｜自動化資產配置系統</small>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{
+    el.style.transitionDelay=(i%4*60)+'ms';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
