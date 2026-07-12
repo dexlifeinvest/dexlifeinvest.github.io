@@ -336,6 +336,56 @@
   .reveal{opacity:0;transform:translateY(28px);transition:.7s cubic-bezier(.2,.7,.3,1)}
   .reveal.in{opacity:1;transform:none}
 
+  /* ===== 財商覺醒 · 地基站特效 ===== */
+  .station.awaken .node{
+    border-color:var(--gold);color:var(--gold);
+    animation:awakenNode 2.8s ease-in-out infinite;
+  }
+  @keyframes awakenNode{
+    0%,100%{box-shadow:0 0 0 5px rgba(7,11,20,1),0 0 14px var(--gold-glow)}
+    50%{box-shadow:0 0 0 5px rgba(7,11,20,1),0 0 28px var(--gold-glow),0 0 46px var(--gold-glow)}
+  }
+  .awaken-card{
+    position:relative;overflow:hidden;
+    border-color:rgba(255,168,61,.32)!important;
+    background:linear-gradient(180deg,rgba(38,28,12,.5),var(--panel))!important;
+  }
+  .awaken-card::after{
+    content:"";position:absolute;top:-40%;width:60%;height:180%;
+    background:linear-gradient(90deg,transparent,rgba(255,168,61,.12),transparent);
+    transform:skewX(-18deg);animation:awakenSweep 4.8s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes awakenSweep{0%{left:-45%}55%,100%{left:125%}}
+  .awaken-top{display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+  .brain-viz{width:74px;height:74px;flex-shrink:0}
+  .brain-viz svg{width:74px;height:74px;overflow:visible}
+  .awaken-lead{display:flex;flex-direction:column;gap:7px;min-width:0}
+  .awaken-badge{
+    display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
+    font-size:11px;letter-spacing:2px;font-weight:800;color:#2a1500;white-space:nowrap;
+    background:linear-gradient(135deg,var(--gold),var(--gold-deep));
+    padding:4px 13px;border-radius:20px;box-shadow:0 0 16px var(--gold-glow);
+  }
+  .awaken-card .st-title{color:var(--gold-soft)}
+  .awaken-card .st-time{margin-left:auto}
+  .awaken-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+  .awaken-chips span{
+    font-size:12px;padding:5px 11px;border-radius:8px;
+    background:rgba(255,168,61,.08);border:1px solid rgba(255,168,61,.25);color:var(--gold-soft);
+  }
+  /* — 人腦覺醒 SVG 動畫 — */
+  .brain-viz .aura{transform-box:fill-box;transform-origin:center;animation:brainAura 2.8s ease-out infinite}
+  @keyframes brainAura{0%{transform:scale(.68);opacity:.5}70%{opacity:0}100%{transform:scale(1.28);opacity:0}}
+  .brain-viz .outline{fill:rgba(255,168,61,.06);stroke:var(--gold);stroke-width:2.4;
+    filter:drop-shadow(0 0 6px var(--gold-glow))}
+  .brain-viz .gyri{fill:none;stroke:var(--gold-soft);stroke-width:1.4;stroke-linecap:round;opacity:.7}
+  .brain-viz .syn{fill:#fff5e6;animation:synBlink 2.4s ease-in-out infinite}
+  .brain-viz .s2{animation-delay:.4s}.brain-viz .s3{animation-delay:.8s}
+  .brain-viz .s4{animation-delay:1.2s}.brain-viz .s5{animation-delay:1.6s}
+  @keyframes synBlink{0%,100%{opacity:.25;filter:none}50%{opacity:1;filter:drop-shadow(0 0 5px var(--gold-soft))}}
+  .brain-viz .spark{stroke:var(--gold);stroke-width:2;stroke-linecap:round;animation:sparkFlick 2.8s ease-in-out infinite}
+  @keyframes sparkFlick{0%,100%{opacity:0}50%{opacity:.9}}
+
   @media(max-width:640px){
     section{padding:60px 0}
     .cores{grid-template-columns:1fr;gap:14px}
@@ -382,7 +432,7 @@
       </div>
     </div>
     <div class="en">AUTOMATED ASSET ALLOCATION · ONE-YEAR ROADMAP</div>
-    <h1>錢的<span class="hl">防呆生產線</span><br>設好一次，之後自己走</h1>
+    <h1>財務的<span class="hl">防呆生產線</span><br>設好一次，之後自己走</h1>
     <p class="sub">把複雜的資產配置，拆成照順序走的 8 個工作站。<br>不用盯盤、不用每次重新決定——用產線思維，先鋪好軌道，讓錢自動分流。</p>
     <div class="btns">
       <a href="https://www.skool.com/dex-4461/about" target="_blank" rel="noopener" class="btn btn-primary">加入 Dex 陪跑 →</a>
@@ -401,7 +451,7 @@
 <section>
   <div class="wrap">
     <div class="define reveal">
-      <p>一條 8 站的<span class="hl">「錢的防呆生產線」</span>——每站設好一次就自動運作，再用一條決策樹貫穿全程防呆。</p>
+      <p>一條 8 站的<span class="hl">「財務的防呆生產線」</span>——每站設好一次就自動運作，再用一條決策樹貫穿全程防呆。</p>
       <p class="note">產線思維：你不是每個月「決定錢要放哪」，而是先把軌道鋪好，之後錢自己走。</p>
     </div>
   </div>
@@ -514,17 +564,43 @@
 
     <div class="roadmap">
 
-      <div class="station reveal">
+      <div class="station awaken reveal">
         <div class="node">1</div>
-        <div class="st-card">
-          <div class="st-head">
-            <div class="st-icon"><svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26h24M8 26V14l8-6 8 6v12M13 26v-6h6v6"/></svg></div>
-            <div class="st-title">🏗️ 地基站</div>
+        <div class="st-card awaken-card">
+          <div class="awaken-top">
+            <div class="brain-viz">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="aura" cx="58" cy="56" r="30" fill="none" stroke="#ffb64d" stroke-width="2"/>
+                <line class="spark" x1="58" y1="18" x2="58" y2="7"/>
+                <line class="spark" x1="86" y1="30" x2="95" y2="22" style="animation-delay:.5s"/>
+                <line class="spark" x1="30" y1="30" x2="21" y2="22" style="animation-delay:1s"/>
+                <line class="spark" x1="92" y1="58" x2="103" y2="58" style="animation-delay:1.5s"/>
+                <line class="spark" x1="24" y1="58" x2="13" y2="58" style="animation-delay:.8s"/>
+                <path class="outline" d="M58 22 C72 22 82 30 84 42 C92 42 96 50 94 58 C97 64 94 72 88 74 C88 82 80 88 70 86 C66 92 50 92 46 86 C36 88 28 82 28 74 C22 72 19 64 22 58 C20 50 24 42 32 42 C34 30 44 22 58 22 Z"/>
+                <path class="gyri" d="M58 24 V84"/>
+                <path class="gyri" d="M44 40 C50 46 48 54 42 58 C48 62 50 70 45 76"/>
+                <path class="gyri" d="M72 40 C66 46 68 54 74 58 C68 62 66 70 71 76"/>
+                <circle class="syn s1" cx="44" cy="40" r="2.6"/>
+                <circle class="syn s2" cx="72" cy="40" r="2.6"/>
+                <circle class="syn s3" cx="42" cy="58" r="2.6"/>
+                <circle class="syn s4" cx="74" cy="58" r="2.6"/>
+                <circle class="syn s5" cx="58" cy="72" r="2.6"/>
+              </svg>
+            </div>
+            <div class="awaken-lead">
+              <span class="awaken-badge">✦ 財商覺醒 · FINANCIAL AWAKENING</span>
+              <div class="st-title">🧠 地基站｜讓財商先醒過來</div>
+            </div>
             <div class="st-time">Day 1–15</div>
           </div>
-          <p class="st-desc">先守：財商觀念（資產配置、複利、資金流、開源節流）＋ 緊急預備金 ＋ 隔離帳戶。</p>
+          <p class="st-desc">整條產線的價值起點。先讓財商覺醒——搞懂自己站在「六大財富階梯」的哪一階，才知道現在該<b style="color:var(--gold-soft)">省錢、賺錢，還是投資</b>，別再照抄別人的方法。把財商觀念（資產配置、複利、資金流、開源節流）＋緊急預備金＋隔離帳戶一次打底，地基蓋穩了才往上走。</p>
+          <div class="awaken-chips">
+            <span>🪜 六大財富階梯定位</span>
+            <span>🛡️ 先守再攻</span>
+            <span>📊 真實財富中位數・了解現況</span>
+            <span>🚫 別再照抄別人</span>
+          </div>
           <div class="st-tags">
-            <span class="tag tag-auto">⚙️ <b>自動化</b>｜帳戶隔離＝不容易亂動</span>
             <span class="tag tag-poka">🔒 <b>防呆閥</b>｜地基沒蓋完，不准進攻</span>
           </div>
         </div>
@@ -541,6 +617,7 @@
           <p class="st-desc">最無痛入門，把閒錢從活儲搬到高利活存生息，也是緊急預備金的擺放處。</p>
           <div class="st-tags">
             <span class="tag tag-auto">⚙️ <b>自動化</b>｜自動轉入</span>
+            <span class="tag tag-auto">⚙️ <b>自動化</b>｜帳戶隔離＝不容易亂動</span>
             <span class="tag tag-poka">🔒 <b>防呆閥</b>｜只放「短期會用到」的錢</span>
           </div>
         </div>
@@ -557,7 +634,7 @@
           <p class="st-desc">進場心法 ＋ 基本術語 ＋ 看盤地圖（看什麼、去哪看）＋ 避雷。</p>
           <div class="st-tags">
             <span class="tag tag-auto">⚙️ 心法站，不涉金流</span>
-            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜看不懂數據前，先小額／模擬</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜這市場地雷別踩</span>
           </div>
         </div>
       </div>
@@ -589,7 +666,7 @@
           <p class="st-desc">存股順便領好康，減輕日常用品負擔——搭配 AI 自動投票（Dex 獨門）省下每年逐間投票的工。</p>
           <div class="st-tags">
             <span class="tag tag-auto">⚙️ <b>AI 自動投票</b><span class="badge-own">獨門</span></span>
-            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜只挑符合條件的標的</span>
+            <span class="tag tag-poka">🔒 <b>防呆閥</b>｜挑選符合自己條件的標的（零股）</span>
           </div>
         </div>
       </div>
