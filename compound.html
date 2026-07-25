@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dex 投資複利計算器</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#f6f9fd; --surface:#ffffff; --surface2:#eef3fa; --line:#dbe4f0;
+  --text:#17273c; --muted:#647085; --faint:#94a0b2;
+  --accent:#3d8bf5; --accent-bg:#e7f0fe;
+  --red:#d84636; --red-bg:#fcecea; --amber:#d98a1f; --amber-bg:#fbf1de;
+  --green:#1f9d63; --green-bg:#e4f5ec; --gold:#c9922a; --gold-bg:#f8efd6;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; line-height:1.6; padding:0 16px 24px;}
+.wrap{max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:20px;}
+.topbar{position:sticky; top:0; z-index:20; background:rgba(246,249,253,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); margin:0 -16px 4px; padding:10px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:flex-end;}
+.saveline{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.saveline button{border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer; font-family:inherit;}
+#saveBtn{background:var(--accent); border:none; color:#fff; font-weight:600;}
+#pdfBtn{background:var(--green); border:none; color:#fff; font-weight:600;}
+#pdfBtn:hover{background:#157a4b;}
+#resetBtn{background:var(--surface2); border:1px solid var(--line); color:var(--muted);}
+#resetBtn:hover{border-color:var(--accent); color:var(--text);}
+#savedAt{font-size:11px; color:var(--muted);}
+.title{display:flex; align-items:center; gap:12px; margin-top:8px;}
+.title img{flex-shrink:0; border-radius:8px;}
+.title h1{font-size:21px; font-weight:700; margin:0;}
+.title p{color:var(--muted); font-size:13px; margin:2px 0 0;}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
+.hd{display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+.hd i{font-size:20px; color:var(--accent);}
+.hd .t{font-size:16px; font-weight:600;}
+.tabs{display:flex; gap:8px; margin-bottom:14px;}
+.tabs button{border-radius:999px; padding:6px 16px; font-size:13px; cursor:pointer; font-family:inherit; border:1px solid var(--line); background:var(--surface2); color:var(--muted);}
+.tabs button.on{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+.fields{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px;}
+label.f{font-size:12px; color:var(--muted); display:block;}
+input{width:100%; background:var(--surface2); border:1px solid var(--line); border-radius:8px; color:var(--text); padding:8px 10px; font-size:14px; margin-top:4px; font-family:inherit;}
+input:focus{outline:none; border-color:var(--accent);}
+.hint{font-size:12px; color:var(--muted); margin-top:10px;}
+.metrics{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;}
+.metric{background:var(--accent); border-radius:10px; padding:14px;}
+.metric.gap{background:var(--gold);}
+.metric .k{font-size:12px; color:rgba(255,255,255,.85); margin-bottom:4px;}
+.metric .v{font-size:22px; font-weight:700; color:#fff;}
+.metric .s{font-size:11px; color:rgba(255,255,255,.78); margin-top:2px;}
+.tablebox{overflow-x:auto; border:1px solid var(--line); border-radius:12px;}
+table{width:100%; border-collapse:collapse; font-size:13px; min-width:620px;}
+thead th{background:var(--accent); color:#fff; font-weight:600; padding:8px 6px; text-align:center; white-space:nowrap;}
+thead tr.sub th{background:#2f76d6; font-size:11px; font-weight:500;}
+th.sep, td.sep{border-left:1px solid rgba(255,255,255,.35);}
+tbody td.sep{border-left:1px solid var(--line);}
+tbody td{padding:5px 6px; text-align:right; white-space:nowrap;}
+tbody td.age{text-align:center; font-weight:600; color:var(--muted);}
+tbody tr:nth-child(even){background:var(--surface2);}
+tbody tr.last{background:var(--gold-bg); border-top:2px solid var(--gold);}
+tbody tr.last td{font-weight:700;}
+tbody td .asset{font-weight:600;}
+tbody td.dash{color:var(--faint);}
+input.inv{width:70px; padding:3px 6px; font-size:12px; text-align:right; margin:0;}
+.ban{background:var(--red-bg); border-radius:12px; padding:12px 14px;}
+.ban .h{display:flex; align-items:center; gap:6px; margin-bottom:6px;}
+.ban .h i{font-size:18px; color:var(--red);}
+.ban .h span{font-size:14px; font-weight:600; color:var(--red);}
+.ban li{font-size:12px; color:#a33526; line-height:1.7; margin-bottom:5px;}
+.ban ul{margin:6px 0 0; padding:0 0 0 18px;}
+.foot{color:var(--faint); font-size:11px; line-height:1.7; text-align:center; padding:4px 0 8px;}
+.foot b{color:var(--muted);}
+@media(max-width:560px){
+  .fields{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .metrics{grid-template-columns:1fr;}
+}
+@media print{
+  *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important;}
+  body{background:#fff !important; padding:0 8px !important;}
+  .topbar{display:none !important;}
+  .card,.metrics,.ban{page-break-inside:avoid;}
+  .tablebox{overflow:visible;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="saveline">
+      <button id="saveBtn"><i class="ti ti-device-floppy"></i> 儲存</button>
+      <button id="pdfBtn"><i class="ti ti-file-type-pdf"></i> 匯出PDF檔</button>
+      <button id="resetBtn"><i class="ti ti-refresh"></i> 清空重填</button>
+      <span id="savedAt">尚未儲存</span>
+    </div>
+  </div>
+
+  <div class="title">
+    <img src="logo.png" width="46" height="46" alt="Dex 生活投資 logo">
+    <div>
+      <h1>Dex 投資複利計算器 <span id="todayDate" style="font-size:13px; font-weight:400; color:var(--muted);"></span></h1>
+      <p>早開始 10 年，差距有多大 — Dex 生活投資</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd"><i class="ti ti-adjustments"></i><span class="t">參數設定</span></div>
+    <div class="tabs">
+      <button id="tabDiff" class="on">金額不一樣</button>
+      <button id="tabSame">金額一樣</button>
+    </div>
+    <div class="fields">
+      <label class="f">報酬率（%／年）<input type="number" id="rate" value="6" min="0" max="100" step="0.5"></label>
+      <label class="f">(A) 開始歲數<input type="number" id="startA" value="20" min="1" max="99"></label>
+      <label class="f">(B) 開始歲數<input type="number" id="startB" value="30" min="1" max="99"></label>
+      <label class="f">結束歲數<input type="number" id="endAge" value="60" min="2" max="100"></label>
+    </div>
+    <div class="fields" id="sameBox" style="margin-top:10px; display:none;">
+      <label class="f">每年投入金額（萬元，兩邊相同）<input type="number" id="sameAmt" value="1" min="0" step="0.5"></label>
+    </div>
+    <div class="hint" id="modeHint">單位：萬元。「金額不一樣」＝表格中每一年的投入金額都可以個別修改；報酬率為假設估算值，非保證獲利。</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="k">(A) 較早開始 · 最終資產</div><div class="v" id="mA">－</div><div class="s" id="mAs">累積本金 －</div></div>
+    <div class="metric"><div class="k">(B) 較晚開始 · 最終資產</div><div class="v" id="mB">－</div><div class="s" id="mBs">累積本金 －</div></div>
+    <div class="metric gap"><div class="k">差距（A − B）</div><div class="v" id="mGap">－</div><div class="s" id="mGaps">早開始多滾出來的部分</div></div>
+  </div>
+
+  <div class="card">
+    <div class="hd"><i class="ti ti-table"></i><span class="t">逐年試算表</span></div>
+    <div class="tablebox">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">歲數</th>
+            <th colspan="3" class="sep">(A) 較早開始</th>
+            <th colspan="3" class="sep">(B) 較晚開始</th>
+          </tr>
+          <tr class="sub">
+            <th class="sep">投資金額</th><th>累積本金</th><th>累積資產</th>
+            <th class="sep">投資金額</th><th>累積本金</th><th>累積資產</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="hint">計算方式：每年年底結算，<b>當年資產 = 前一年資產 ×(1+報酬率) + 當年投入</b>。最後一年的投入欄位不開放編輯（沿用前一年金額），與原版計算一致。</div>
+  </div>
+
+  <div class="ban">
+    <div class="h"><i class="ti ti-alert-triangle"></i><span>獲利與風險警示</span></div>
+    <ul>
+      <li>本表為<b>假設估算</b>，非投資建議，<b>不保證獲利</b>。實際報酬每年會上下波動，不會像表格一樣平滑成長。</li>
+      <li>過去績效不代表未來績效；填入越高的報酬率，越該問自己「這個數字憑什麼長期成立」。</li>
+      <li>表格沒有計入通膨、稅費、交易成本與匯率變動，實際購買力會低於帳面數字。</li>
+      <li>複利的前提是<b>本金不中斷、也不被迫賣出</b>。崩盤或收入中斷時仍要有現金流撐住，才輪得到複利發揮。</li>
+      <li>使用槓桿會同時放大獲利與虧損，本工具的試算不適用於借錢投資的情境。</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <b>© Dex 生活投資</b>　本表僅供個人試算與教學使用，保留一切權利；未經授權請勿重製、散布或商業使用。<br>
+    資料只存在你自己的瀏覽器（localStorage），不會上傳到任何伺服器。
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var KEY='dex_compound_calc';
+  var el=function(id){return document.getElementById(id);};
+  var num=function(id,d){var v=parseFloat(el(id).value); return isNaN(v)?(d||0):v;};
+  var MODE='diff';                 // diff = 金額不一樣, same = 金額一樣
+  var invA={}, invB={};            // {歲數: 投入金額}
+
+  function fmt(n){return (Math.round(n*10)/10).toLocaleString('en-US',{minimumFractionDigits:1, maximumFractionDigits:1});}
+  function fmtP(n){return Math.round(n).toLocaleString('en-US');}
+
+  function invOf(col, age){
+    if(MODE==='same') return num('sameAmt',1);
+    var m=(col==='A')?invA:invB;
+    return (m[age]===undefined || m[age]===null || m[age]==='') ? 1 : parseFloat(m[age])||0;
+  }
+
+  // 逐年累積：asset = asset*(1+r) + inv
+  function series(start, end, rate, col){
+    var asset=0, principal=0, out={};
+    for(var age=start; age<=end; age++){
+      var inv=invOf(col, age);
+      principal+=inv;
+      asset=asset*(1+rate)+inv;
+      out[age]={inv:inv, principal:principal, asset:asset};
+    }
+    return out;
+  }
+
+  function render(){
+    var rate=num('rate',6)/100;
+    var sA=Math.round(num('startA',20)), sB=Math.round(num('startB',30)), end=Math.round(num('endAge',60));
+    if(end<=Math.min(sA,sB)) end=Math.min(sA,sB)+1;
+
+    var A=series(sA,end,rate,'A'), B=series(sB,end,rate,'B');
+    var first=Math.min(sA,sB), html='';
+
+    for(var age=first; age<=end; age++){
+      var a=A[age], b=B[age], last=(age===end);
+      html+='<tr class="'+(last?'last':'')+'">';
+      html+='<td class="age">'+age+'</td>';
+      html+=cell(a,'A',age,last);
+      html+=cell(b,'B',age,last);
+      html+='</tr>';
+    }
+    el('tbody').innerHTML=html;
+
+    // 綁定每列投入金額輸入
+    Array.prototype.forEach.call(document.querySelectorAll('input.inv'), function(i){
+      i.addEventListener('input',function(){
+        var m=(i.getAttribute('data-col')==='A')?invA:invB;
+        m[i.getAttribute('data-age')]=i.value;
+        render();
+      });
+    });
+
+    var fa=A[end], fb=B[end];
+    el('mA').textContent = fa ? fmt(fa.asset)+' 萬' : '－';
+    el('mAs').textContent= fa ? '累積本金 '+fmtP(fa.principal)+' 萬・'+sA+'→'+end+' 歲' : '累積本金 －';
+    el('mB').textContent = fb ? fmt(fb.asset)+' 萬' : '－';
+    el('mBs').textContent= fb ? '累積本金 '+fmtP(fb.principal)+' 萬・'+sB+'→'+end+' 歲' : '累積本金 －';
+    if(fa&&fb){
+      var gap=fa.asset-fb.asset;
+      el('mGap').textContent=fmt(gap)+' 萬';
+      var extra=fa.principal-fb.principal;
+      el('mGaps').textContent='多投入 '+fmtP(extra)+' 萬，多滾出 '+fmt(gap)+' 萬';
+    } else { el('mGap').textContent='－'; }
+
+    save(false);
+  }
+
+  function cell(row, col, age, last){
+    if(!row) return '<td class="sep dash">-</td><td class="dash">-</td><td class="dash">-</td>';
+    var invCell = last
+      ? '<td class="sep dash">-</td>'
+      : '<td class="sep"><input class="inv" type="number" min="0" step="0.5" data-col="'+col+'" data-age="'+age+'" value="'+row.inv+'"></td>';
+    return invCell+'<td>'+fmtP(row.principal)+'</td><td class="asset">'+fmt(row.asset)+'</td>';
+  }
+
+  function setMode(m){
+    MODE=m;
+    el('tabDiff').className = (m==='diff')?'on':'';
+    el('tabSame').className = (m==='same')?'on':'';
+    el('sameBox').style.display = (m==='same')?'grid':'none';
+    el('modeHint').innerHTML = (m==='same')
+      ? '單位：萬元。「金額一樣」＝ A、B 每年都投入同一個金額，單純比較「早開始 vs 晚開始」的差別；報酬率為假設估算值，非保證獲利。'
+      : '單位：萬元。「金額不一樣」＝表格中每一年的投入金額都可以個別修改；報酬率為假設估算值，非保證獲利。';
+    render();
+  }
+
+  function stamp(){var d=new Date(),p=function(x){return (x<10?'0':'')+x;};return p(d.getMonth()+1)+'/'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());}
+  function save(withStamp){
+    var s={mode:MODE, rate:el('rate').value, startA:el('startA').value, startB:el('startB').value,
+           endAge:el('endAge').value, sameAmt:el('sameAmt').value, invA:invA, invB:invB};
+    if(withStamp){ s.__at=stamp(); el('savedAt').textContent='已儲存 '+s.__at; }
+    else { try{var o=JSON.parse(localStorage.getItem(KEY)||'{}'); if(o.__at) s.__at=o.__at;}catch(e){} }
+    try{ localStorage.setItem(KEY,JSON.stringify(s)); }catch(e){}
+  }
+  function load(){
+    try{
+      var s=JSON.parse(localStorage.getItem(KEY)||'{}');
+      if(s.rate!==undefined) el('rate').value=s.rate;
+      if(s.startA!==undefined) el('startA').value=s.startA;
+      if(s.startB!==undefined) el('startB').value=s.startB;
+      if(s.endAge!==undefined) el('endAge').value=s.endAge;
+      if(s.sameAmt!==undefined) el('sameAmt').value=s.sameAmt;
+      invA=s.invA||{}; invB=s.invB||{};
+      if(s.__at) el('savedAt').textContent='已儲存 '+s.__at;
+      MODE=s.mode||'diff';
+    }catch(e){}
+  }
+
+  ['rate','startA','startB','endAge','sameAmt'].forEach(function(f){ el(f).addEventListener('input',render); });
+  el('tabDiff').addEventListener('click',function(){setMode('diff');});
+  el('tabSame').addEventListener('click',function(){setMode('same');});
+  el('saveBtn').addEventListener('click',function(){save(true);});
+  el('resetBtn').addEventListener('click',function(){
+    if(!confirm('確定清空所有輸入，回到預設值？')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    invA={}; invB={};
+    el('rate').value=6; el('startA').value=20; el('startB').value=30; el('endAge').value=60; el('sameAmt').value=1;
+    el('savedAt').textContent='已清空';
+    setMode('diff');
+  });
+  el('pdfBtn').addEventListener('click',function(){
+    var d=new Date(), p=function(x){return (x<10?'0':'')+x;};
+    var name='Dex投資複利計算器_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate());
+    var old=document.title; document.title=name;
+    window.print();
+    setTimeout(function(){document.title=old;},1000);
+  });
+
+  var d=new Date();
+  el('todayDate').textContent=d.getFullYear()+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+('0'+d.getDate()).slice(-2);
+  load();
+  setMode(MODE);
+})();
+</script>
+</body>
+</html>
