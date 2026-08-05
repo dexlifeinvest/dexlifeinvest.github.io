@@ -231,6 +231,11 @@ tbody tr:hover{background:var(--surface2);}
       </table>
     </div>
     <div class="hint">持有越久，樣本數越少（因為越靠近今天的進場點還沒走完那段時間），這是回測的正常現象，不是資料缺漏。</div>
+    <div class="hint" style="border-left:3px solid var(--amber); padding-left:10px; margin-top:10px;">
+      <b>10 年、20 年這兩列要小心解讀</b>：<span id="longNote"></span>
+      這些持有期間彼此高度重疊、幾乎共用同一段歷史，所以高機率<b>不代表「有那麼多次獨立的成功機會」</b>，
+      只能理解為「歷史上凡是真的抱滿這麼久的，絕大多數收在正的」。抱越久勝算越高是事實，但別把它當成保證。
+    </div>
   </div>
 
   <!-- ===== 回本天數 ===== -->
@@ -565,7 +570,8 @@ let priceGeo=null;
 
 /* ============ 對照表 ============ */
 const ROWS=[[1,"1 個交易日"],[5,"1 週（5 日）"],[20,"1 個月（20 日）"],[60,"3 個月（60 日）"],
-  [120,"半年（120 日）"],[250,"1 年（250 日）"],[500,"2 年（500 日）"],[750,"3 年（750 日）"],[1250,"5 年（1250 日）"]];
+  [120,"半年（120 日）"],[250,"1 年（250 日）"],[500,"2 年（500 日）"],[750,"3 年（750 日）"],
+  [1250,"5 年（1250 日）"],[2500,"10 年（2500 日）"],[5000,"20 年（5000 日）"]];
 function drawTable(){
   let h="";
   for(const [t,label] of ROWS){
@@ -581,6 +587,15 @@ function drawTable(){
       +`<td style="color:var(--muted);">${num(s.n)}</td></tr>`;
   }
   $("tableBody").innerHTML=h;
+
+  /* 長期持有的最後一個可用進場日 — 讓「樣本從哪裡來」講清楚 */
+  const idx=S.eligIdx, hi=S.hi, parts=[];
+  for(const [t,yr] of [[2500,"10"],[5000,"20"]]){
+    let last=-1;
+    for(const i of idx){ if(i+t<=hi) last=i; else break; }
+    if(last>=0) parts.push(`能算滿 ${yr} 年的進場點只到 ${fmtD(D[last])} 為止`);
+  }
+  $("longNote").textContent = parts.length ? parts.join("、")+"；" : "目前條件下樣本不足以計算這兩列；";
 }
 
 /* ============ 指標 ============ */
