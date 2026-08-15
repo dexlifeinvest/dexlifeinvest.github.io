@@ -276,6 +276,7 @@ tbody tr:hover{background:var(--surface2);}
       <div class="drawrow"><span>最深帳面虧損金額</span><span id="dDDmoney">—</span></div>
       <div class="drawrow"><span>持有一年後報酬</span><span id="dY1">—</span></div>
       <div class="drawrow"><span>抱到今天的報酬</span><span id="dNow">—</span></div>
+      <div class="drawrow"><span>抱到今天的損益金額</span><span id="dNowMoney">—</span></div>
     </div>
     <div class="hint">每抽一次就是一次「如果我當年隨便挑一天進場」的模擬。多抽幾次會發現：買在哪一天的運氣成分，遠比想像中大 — 但只要拉長時間，運氣的影響會被稀釋掉。</div>
   </div>
@@ -645,6 +646,9 @@ $("drawBtn").addEventListener("click",()=>{
   $("dY1").className = y1===null? "" : (y1>=0?"pos":"neg");
   const nw=P[N-1]/P[i]-1;
   $("dNow").textContent=pct(nw); $("dNow").className=nw>=0?"pos":"neg";
+  const nwAmt=(+amtEl.value||0)*nw;
+  $("dNowMoney").textContent = (nwAmt>=0?"+":"-")+money(Math.abs(nwAmt));
+  $("dNowMoney").className = nw>=0?"pos":"neg";
   drawPrice();
 });
 
@@ -825,7 +829,7 @@ $("resetBtn").addEventListener("click",()=>{
   y0El.value=Y0; y1El.value=Y1; basisEl.value="O"; filterEl.value="all";
   amtEl.value=100000; holdEl.value=250;
   S.lastDraw=null;
-  ["dDate","dPrice","dDays","dDD","dDDmoney","dY1","dNow"].forEach(id=>{$(id).textContent="—"; $(id).className="";});
+  ["dDate","dPrice","dDays","dDD","dDDmoney","dY1","dNow","dNowMoney"].forEach(id=>{$(id).textContent="—"; $(id).className="";});
   $("savedAt").textContent="尚未儲存";
   build();
 });
