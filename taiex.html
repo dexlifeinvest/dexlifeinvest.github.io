@@ -273,6 +273,7 @@ tbody tr:hover{background:var(--surface2);}
       <div class="drawrow"><span>買進價格</span><span id="dPrice">—</span></div>
       <div class="drawrow"><span>幾個交易日後回到正報酬</span><span id="dDays">—</span></div>
       <div class="drawrow"><span>期間最深帳面虧損</span><span id="dDD">—</span></div>
+      <div class="drawrow"><span>最深帳面虧損金額</span><span id="dDDmoney">—</span></div>
       <div class="drawrow"><span>持有一年後報酬</span><span id="dY1">—</span></div>
       <div class="drawrow"><span>抱到今天的報酬</span><span id="dNow">—</span></div>
     </div>
@@ -636,6 +637,9 @@ $("drawBtn").addEventListener("click",()=>{
     $("dDays").className="neg";
   }
   $("dDD").textContent=pct(dd); $("dDD").className=dd<0?"neg":"";
+  const ddAmt=(+amtEl.value||0)*dd;
+  $("dDDmoney").textContent = dd<0 ? "-"+money(Math.abs(ddAmt)) : money(0);
+  $("dDDmoney").className = dd<0?"neg":"";
   const y1 = i+250<=S.hi ? P[i+250]/P[i]-1 : null;
   $("dY1").textContent = y1===null? "資料不足（進場點太靠近今天）" : pct(y1);
   $("dY1").className = y1===null? "" : (y1>=0?"pos":"neg");
@@ -821,7 +825,7 @@ $("resetBtn").addEventListener("click",()=>{
   y0El.value=Y0; y1El.value=Y1; basisEl.value="O"; filterEl.value="all";
   amtEl.value=100000; holdEl.value=250;
   S.lastDraw=null;
-  ["dDate","dPrice","dDays","dDD","dY1","dNow"].forEach(id=>{$(id).textContent="—"; $(id).className="";});
+  ["dDate","dPrice","dDays","dDD","dDDmoney","dY1","dNow"].forEach(id=>{$(id).textContent="—"; $(id).className="";});
   $("savedAt").textContent="尚未儲存";
   build();
 });
