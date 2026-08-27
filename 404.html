@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>找不到這個頁面｜Dex 生活投資</title>
+<style>
+  :root{
+    --bg:#f6f9fd; --card:#fff; --ink:#17273c; --muted:#647085;
+    --accent:#3d8bf5; --accent-soft:#e7f0fe; --line:#dbe4f0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+    font-size:16px; line-height:1.7;
+    display:flex; align-items:center; justify-content:center; padding:24px 16px;
+  }
+  .wrap{width:100%; max-width:520px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:28px 24px; box-shadow:0 2px 10px rgba(23,39,60,.05);
+  }
+  .code{font-size:44px; font-weight:800; letter-spacing:-1px; margin:0; color:var(--accent)}
+  h1{font-size:19px; margin:6px 0 10px}
+  p{margin:0 0 18px; color:var(--muted); font-size:14.5px}
+  .hint{
+    background:var(--accent-soft); color:#1c5cab; border-radius:10px;
+    padding:11px 14px; font-size:13.5px; margin:0 0 22px; line-height:1.65;
+  }
+  h2{font-size:13px; color:var(--muted); letter-spacing:.5px; margin:0 0 10px}
+  a.tool{
+    display:block; text-decoration:none; color:var(--ink);
+    border:1px solid var(--line); border-radius:11px;
+    padding:13px 15px; margin-bottom:9px; transition:.15s;
+  }
+  a.tool:hover,a.tool:active{border-color:var(--accent); background:var(--accent-soft)}
+  a.tool b{display:block; font-size:15px}
+  a.tool span{font-size:12.5px; color:var(--muted)}
+  footer{text-align:center; font-size:12px; color:var(--muted); margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="code">404</p>
+    <h1>這個網址沒有東西</h1>
+    <p>可能是網址打錯了，或該頁面已經換位置。</p>
+    <div class="hint">
+      小提醒：網址<b>區分大小寫</b>，手機鍵盤常會自動把第一個字母變大寫
+      （例如 <code>Etf</code> 就會找不到，要用 <code>etf</code>）。
+      直接點下面的連結最保險。
+    </div>
+
+    <h2>目前可以用的工具</h2>
+    <a class="tool" href="/etf/">
+      <b>ETF 風險報酬比較器</b>
+      <span>11 檔 ETF 的年化報酬、波動與最大回檔，同一段期間一起比</span>
+    </a>
+    <a class="tool" href="/taiex.html">
+      <b>台灣加權指數回測器</b>
+      <span>買在任何一天，要抱多久才會由虧轉盈</span>
+    </a>
+    <a class="tool" href="/compound.html">
+      <b>投資複利計算器</b>
+      <span>時間與報酬率如何把本金滾大</span>
+    </a>
+    <a class="tool" href="/asset-flow/">
+      <b>資產分流防錯系統</b>
+      <span>收入進來以後，該怎麼分配到各個桶子</span>
+    </a>
+    <a class="tool" href="/stress-test/">
+      <b>資產配置壓力測試</b>
+      <span>股災來的時候，你的配置撐不撐得住</span>
+    </a>
+    <a class="tool" href="/lose-win/">
+      <b>七個輸家行為 × 贏家的選擇</b>
+      <span>先學會不賠錢，再談賺多少</span>
+    </a>
+    <a class="tool" href="/">
+      <b>回到首頁</b>
+      <span>產線式理財 · 自動化資產配置系統</span>
+    </a>
+  </div>
+  <footer>© Dex 生活投資</footer>
+</div>
+</body>
+</html>
