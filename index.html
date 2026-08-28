@@ -112,6 +112,28 @@
     animation:spin 14s linear infinite;
   }
   @keyframes spin{to{transform:rotate(360deg)}}
+  /* ===== HERO 跑馬燈 ===== */
+  .marquee{
+    position:relative;margin:0 auto 30px;max-width:760px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+  }
+  .marquee-track{display:flex;width:max-content;animation:marquee-scroll 26s linear infinite}
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track{animation-play-state:paused}
+  .marquee .chip{
+    flex:none;margin-right:10px;padding:7px 16px;border-radius:999px;
+    background:var(--panel2);border:1px solid var(--line-strong);
+    color:var(--blue-soft);font-size:13.5px;letter-spacing:.02em;white-space:nowrap;
+  }
+  .marquee .chip.is-gold{color:var(--gold-soft);border-color:rgba(255,168,61,.28);
+    background:linear-gradient(180deg,rgba(255,168,61,.10),rgba(255,168,61,.03))}
+  .marquee .chip.is-off{color:var(--muted-2);border-color:var(--line);background:transparent}
+  @keyframes marquee-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (max-width:560px){.marquee .chip{font-size:12.5px;padding:6px 13px}}
+  @media (prefers-reduced-motion:reduce){.marquee-track{animation:none}
+    .marquee{-webkit-mask-image:none;mask-image:none;overflow-x:auto}}
+
   .radar .core svg{width:76px;height:76px}
   .radar .sweep{
     position:absolute;inset:0;border-radius:50%;
@@ -469,6 +491,20 @@
 <!-- ===== HERO ===== -->
 <header class="hero">
   <div class="wrap">
+    <div class="marquee" aria-label="投資是為了解放時間，享受生活，陪伴所愛的人，而不是盯盤焦慮，越投資越不開心">
+      <div class="marquee-track">
+        <span class="chip is-gold">投資是為了解放時間</span>
+        <span class="chip">享受生活</span>
+        <span class="chip">陪伴所愛的人</span>
+        <span class="chip is-off">而不是盯盤焦慮</span>
+        <span class="chip is-off">越投資越不開心</span>
+        <span class="chip is-gold">投資是為了解放時間</span>
+        <span class="chip">享受生活</span>
+        <span class="chip">陪伴所愛的人</span>
+        <span class="chip is-off">而不是盯盤焦慮</span>
+        <span class="chip is-off">越投資越不開心</span>
+      </div>
+    </div>
     <div class="radar">
       <div class="ring"></div><div class="ring"></div><div class="ring"></div>
       <div class="sweep"></div>
