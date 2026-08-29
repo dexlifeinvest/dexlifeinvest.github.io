@@ -86,6 +86,8 @@ body{
 .dates input{border:1px solid var(--line); border-radius:8px; padding:6px 10px;
   font-size:13.5px; font-family:inherit; color:var(--ink); background:var(--card)}
 .dates span{font-size:13px; color:var(--muted)}
+#rangeInfo{font-size:12.5px; color:var(--muted); margin-top:9px; line-height:1.7}
+#rangeInfo b{color:var(--ink)}
 
 /* 標的勾選 */
 .pickgroup{margin-bottom:12px}
@@ -247,6 +249,7 @@ footer .copy{text-align:center; padding:6px 0 0}
       <input type="date" id="dStart"><span>到</span><input type="date" id="dEnd">
       <button class="btn" id="btnApplyDate"><i class="ti ti-check"></i>套用</button>
     </div>
+    <div id="rangeInfo"></div>
   </div>
 
   <div class="ctl-row">
@@ -295,7 +298,7 @@ footer .copy{text-align:center; padding:6px 0 0}
 <!-- ============ 風險報酬定位 ============ -->
 <div class="card" id="s-scatter">
   <h2><i class="ti ti-target-arrow"></i>風險報酬定位圖</h2>
-  <p class="desc">橫軸是年化波動（顛簸程度），縱軸是年化報酬。<b>越靠左上越理想</b>：同樣的報酬，路上比較不晃。圓圈越大代表最大回檔越深。</p>
+  <p class="desc">橫軸是年化波動（顛簸程度），縱軸是年化報酬。<b>越靠左上越理想</b>：同樣的報酬，路上比較不晃。圖示越大代表最大回檔越深。</p>
   <div class="legend" id="scatterLegend"></div>
   <div class="chartbox" id="scatterBox">
     <svg id="scatterSvg"></svg>
@@ -411,6 +414,8 @@ const MAX_SERIES = 8;
 const LS_KEY = "dex_etf_compare_v1";
 const CAT_ORDER = ["市值型","高股息","房地產","債券","自訂"];
 const CAT_SHAPE = {"市值型":"circle","高股息":"square","房地產":"triangle","債券":"diamond","自訂":"cross"};
+/* 定位圖用「形狀＋顏色」雙重區分：市值型紅、高股息藍、房地產與債券同走咖啡色 */
+const CAT_COLOR = {"市值型":"#d6453f","高股息":"#2a78d6","房地產":"#8a5a2b","債券":"#8a5a2b","自訂":"#6b7280"};
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -699,7 +704,7 @@ function drawScatter(R){
   const X = v => pl + (v - vlo)/(vhi - vlo) * iw;
   const Y = v => pt + (1 - (v - rlo)/(rhi - rlo)) * ih;
   const maxMdd = Math.max(0.05, ...pts.map(p=>Math.abs(p.mdd)));
-  const Rr = m => 6 + Math.abs(m.mdd)/maxMdd * 12;
+  const Rr = m => 4 + Math.abs(m.mdd)/maxMdd * 7;
 
   let g = "";
   for(const t of niceTicks(rlo, rhi, 5)){
@@ -727,8 +732,9 @@ function drawScatter(R){
     const x = X(m.vol), y = Y(m.cagr), r = Rr(m);
     const s = allSeries()[m.code] || {};
     const shape = CAT_SHAPE[s.cat] || "circle";
+    const col = CAT_COLOR[s.cat] || CAT_COLOR["自訂"];
     marks += shapePath(shape, x, y, r)
-      + ` fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="2"/>`;
+      + ` fill="${col}" fill-opacity=".28" stroke="${col}" stroke-width="1.8"/>`;
     scatterPts.push({m, x, y, r});
     labels.push({code:m.code, x, y0:y - r - 6, y:y - r - 6});
   }
@@ -750,11 +756,12 @@ function drawScatter(R){
   const cats = [...new Set(pts.map(m => (allSeries()[m.code]||{}).cat || "自訂"))]
     .sort((a,b) => CAT_ORDER.indexOf(a) - CAT_ORDER.indexOf(b));
   $("scatterLegend").innerHTML = cats.map(c => {
+    const cc = CAT_COLOR[c] || CAT_COLOR["自訂"];
     const sh = `<svg width="16" height="16" viewBox="0 0 16 16" style="vertical-align:-3px">`
-      + shapePath(CAT_SHAPE[c] || "circle", 8, 8, 5)
-      + ` fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1.6"/></svg>`;
+      + shapePath(CAT_SHAPE[c] || "circle", 8, 8, 4.5)
+      + ` fill="${cc}" fill-opacity=".28" stroke="${cc}" stroke-width="1.6"/></svg>`;
     return `<span class="lg">${sh}${esc(c)}</span>`;
-  }).join("") + `<span class="lg" style="color:var(--muted)">圓圈大小＝最大回檔深度</span>`;
+  }).join("") + `<span class="lg" style="color:var(--muted)">圖示大小＝最大回檔深度</span>`;
 }
 
 /* ---------- 3. 回檔曲線 ---------- */
@@ -1006,6 +1013,7 @@ function renderPicks(){
           setTimeout(()=>{ if($("pickNote").querySelector(".warn")) render(); }, 3200);
           return;
         }
+        ST.sel.push(c);
       }
       render(); save(true);
     });
@@ -1031,6 +1039,20 @@ function applyRange(){
   }
   ST.end = last;
   $("dStart").value = ST.start; $("dEnd").value = ST.end;
+}
+
+/* 選了什麼期間，實際就是從哪一天算到哪一天 —— 對齊共同起點會讓起日被往後推，
+   把這件事直接寫在膠囊下方，免得學員以為期間沒有生效。 */
+function renderRangeInfo(R){
+  const from = DATA.dates[R.a], to = DATA.dates[R.b];
+  const days = R.b - R.a;
+  const yrs = (days / 244).toFixed(1);
+  let h = `實際比較區間：<b>${from}</b> ～ <b>${to}</b>（約 ${yrs} 年）`;
+  if(ST.align && R.w.lateStarters.length && R.a > R.w.a){
+    h += `　·　起日被推到 <b>${from}</b>：${esc(R.w.lateStarters.join("、"))} 那時才上市，`
+       + `想看更長的歷史請取消勾選它們，或切到「各自最早」。`;
+  }
+  $("rangeInfo").innerHTML = h;
 }
 
 function renderNotes(R){
@@ -1061,8 +1083,10 @@ function render(){
     : "全部標的起點都設成 100（只算股價，不含配息）。";
   $("printMeta").textContent = `期間 ${DATA.dates[R.a]} ～ ${DATA.dates[R.b]}　｜　`
     + (ST.mode==="tr" ? "含息總報酬" : "只看股價") + `　｜　列印於 ${new Date().toLocaleDateString("zh-TW")}`;
+  renderRangePills();
   renderPicks();
   renderNotes(R);
+  renderRangeInfo(R);
   drawTrend(R); drawScatter(R); drawDD(R); drawTable(R);
 }
 </script>
