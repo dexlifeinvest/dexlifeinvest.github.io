@@ -66,7 +66,7 @@ body{margin:0; background:var(--bg); color:var(--ink);
 .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px}
 table{border-collapse:collapse; width:100%; min-width:940px; font-size:13.5px}
 th,td{padding:9px 10px; text-align:right; white-space:nowrap; border-bottom:1px solid var(--line)}
-th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3){text-align:left}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:nth-child(5),td:nth-child(5){text-align:left}
 thead th{background:var(--accent-soft); color:#1c5cab; font-weight:600; cursor:pointer; position:sticky; top:0}
 thead th:hover{color:var(--accent)}
 thead th .ti{font-size:13px; opacity:.6}
@@ -156,6 +156,7 @@ tbody tr:hover{background:var(--accent-soft)}
         <th data-k="r">#</th>
         <th data-k="code">代號</th>
         <th data-k="name">名稱</th>
+        <th data-k="price">價格 <i class="ti ti-arrows-sort"></i></th>
         <th data-k="cat">類型</th>
         <th data-k="aum">規模(億) <i class="ti ti-arrows-sort"></i></th>
         <th data-k="freq">配息頻率</th>
@@ -164,7 +165,6 @@ tbody tr:hover{background:var(--accent-soft)}
         <th data-k="med">填息中位數(天) <i class="ti ti-arrows-sort"></i></th>
         <th data-k="vol">日均量(張) <i class="ti ti-arrows-sort"></i></th>
         <th data-k="fee">年度費用率 <i class="ti ti-arrows-sort"></i></th>
-        <th data-k="price">價格 <i class="ti ti-arrows-sort"></i></th>
       </tr></thead>
       <tbody id="tbody"></tbody>
     </table>
@@ -275,6 +275,7 @@ function render(){
       `<td class="mut">${e.r}</td>`+
       `<td><span class="code">${e.code}</span></td>`+
       `<td class="nm">${e.name}</td>`+
+      `<td class="${pxCls}">${e.price!=null ? e.price.toFixed(2) : "—"}</td>`+
       `<td><span class="tag t${e.cat}">${e.sub}</span></td>`+
       `<td class="big">${nfInt(e.aum)}</td>`+
       `<td>${e.freq}</td>`+
@@ -282,8 +283,8 @@ function render(){
       `<td>${fillTxt}</td>`+
       `<td>${medTxt}</td>`+
       `<td>${nfInt(e.vol)}</td>`+
-      `<td>${feeTxt}</td>`+
-      `<td class="${pxCls}">${e.price!=null ? e.price.toFixed(2) : "—"}</td>`;
+      `<td>${feeTxt}</td>`;
+
     tb.appendChild(tr);
   });
 }

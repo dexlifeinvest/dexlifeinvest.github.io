@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台灣前15大債券ETF儀表板</title>
+<link rel="icon" href="icon-bond.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#f6f9fd; --card:#ffffff; --ink:#17273c; --muted:#647085;
+  --accent:#3d8bf5; --accent-soft:#e7f0fe; --line:#dbe4f0;
+  --red:#d84636; --red-bg:#fcecea; --amber:#d98a1f; --amber-bg:#fbf1de;
+  --green:#1f9d63; --green-bg:#e4f5ec; --gold:#c9922a; --gold-bg:#f8efd6;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; line-height:1.55; font-size:15px}
+.topbar{background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20}
+.topbar-in{max-width:1180px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:12px; flex:1; min-width:220px}
+.brand img{width:42px; height:42px; border-radius:9px}
+.brand h1{font-size:18px; margin:0}
+.brand p{font-size:12px; color:var(--muted); margin:1px 0 0}
+.btn{border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:9px;
+  padding:8px 12px; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px}
+.btn:hover{border-color:var(--accent); color:var(--accent)}
+.btn.pdf{background:var(--green); border-color:var(--green); color:#fff}
+.btn.pdf:hover{filter:brightness(1.06); color:#fff}
+.btn.upd{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn.upd:hover{filter:brightness(1.06); color:#fff}
+.btn.upd.spin .ti{animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.saved{font-size:12px; color:var(--muted)}
+.wrap{max-width:1180px; margin:0 auto; padding:18px}
+.card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:16px}
+.card h2{font-size:17px; margin:0 0 4px; display:flex; align-items:center; gap:8px}
+.card h2 .ti{color:var(--accent); font-size:19px}
+.desc{font-size:13px; color:var(--muted); margin:0 0 12px}
+.ctrls{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+.pills{display:flex; gap:7px; flex-wrap:wrap}
+.pill{border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:20px;
+  padding:5px 13px; font-size:13px; cursor:pointer}
+.pill:hover{border-color:var(--accent)}
+.pill.on{background:var(--accent); border-color:var(--accent); color:#fff}
+.searchbox{display:flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:20px; padding:4px 12px; background:var(--card)}
+.searchbox:focus-within{border-color:var(--accent)}
+.searchbox .ti{color:var(--muted); font-size:16px}
+.searchbox input{border:none; outline:none; font-size:13.5px; background:transparent; color:var(--ink); width:160px; font-family:inherit}
+.ms{position:relative}
+.suggest{position:absolute; top:calc(100% + 4px); left:0; z-index:30; background:var(--card); border:1px solid var(--line); border-radius:10px; min-width:250px; max-height:280px; overflow-y:auto; box-shadow:0 6px 20px rgba(20,40,80,.14)}
+.suggest .opt{padding:8px 12px; font-size:13px; cursor:pointer; display:flex; gap:9px; align-items:center}
+.suggest .opt:hover{background:var(--accent-soft)}
+.suggest .opt .code{min-width:60px; font-weight:700; color:var(--accent)}
+.suggest .none{padding:10px 12px; font-size:12.5px; color:var(--muted)}
+.selrow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px}
+.selrow[hidden]{display:none}
+.chip{display:inline-flex; align-items:center; gap:6px; background:var(--accent-soft); color:#1c5cab; border-radius:16px; padding:4px 6px 4px 11px; font-size:12.5px}
+.chip b{font-weight:700}
+.chip .x{cursor:pointer; display:flex; color:#5a86bd}
+.chip .x:hover{color:var(--red)}
+.status{font-size:12.5px; color:var(--muted); margin-top:10px; display:flex; align-items:center; gap:6px}
+.dot{width:8px; height:8px; border-radius:50%; display:inline-block; background:var(--muted)}
+.dot.ok{background:var(--green)} .dot.warn{background:var(--amber)} .dot.load{background:var(--accent)}
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px}
+table{border-collapse:collapse; width:100%; min-width:1000px; font-size:13px}
+th,td{padding:8px 8px; text-align:right; white-space:nowrap; border-bottom:1px solid var(--line)}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:nth-child(5),td:nth-child(5){text-align:left}
+thead th{background:var(--accent-soft); color:#1c5cab; font-weight:600; cursor:pointer; position:sticky; top:0}
+thead th:hover{color:var(--accent)}
+thead th .ti{font-size:13px; opacity:.6}
+tbody tr:hover{background:var(--accent-soft)}
+.code{font-weight:700; color:var(--accent)}
+.nm{color:var(--ink)}
+.tag{display:inline-block; font-size:11.5px; padding:2px 8px; border-radius:20px; background:var(--accent-soft); color:#1c5cab}
+.tag.t美國公債{background:#e7f0fe; color:#1c5cab}
+.tag.t投等公司債{background:var(--gold-bg); color:#8a6417}
+.tag.t金融債{background:var(--green-bg); color:#12724a}
+.tag.t綜合債{background:#efe9fb; color:#5b3fb0}
+.big{font-weight:700}
+.mut{color:var(--muted)}
+.neg{color:var(--red); font-weight:700}
+.pos{color:var(--green); font-weight:700}
+.hot{color:var(--amber); font-weight:700}
+.pxlive{color:var(--green); font-weight:700}
+.pxsnap{color:var(--ink); font-weight:700}
+.learn p{font-size:13.5px; margin:7px 0}
+.learn b{color:var(--ink)}
+.keybox{background:var(--accent-soft); color:#1c5cab; border-radius:10px; padding:11px 14px; font-size:13px; margin:0 0 12px; line-height:1.7}
+.foot{font-size:12px; color:var(--muted); line-height:1.7}
+.foot .warnbox{background:var(--amber-bg); border-radius:10px; padding:11px 14px; margin:10px 0; color:#7a4f10}
+.print-head{display:none}
+@media (max-width:560px){
+  .wrap{padding:12px} .brand h1{font-size:16px}
+  .card{padding:13px 13px}
+  .searchbox input{width:130px}
+}
+@media print{
+  .topbar,.ctrls,.status,.learn,.btn,.selrow{display:none !important}
+  body{background:#fff} .card{border:none; padding:0}
+  .print-head{display:block; margin-bottom:10px}
+  .print-head h1{font-size:18px; margin:0 0 3px} .print-head p{font-size:11px; color:#555; margin:0}
+  table{min-width:0; font-size:11px} th,td{padding:5px 6px}
+  thead th{background:#e7f0fe !important}
+  .card,tr{page-break-inside:avoid}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="topbar-in">
+  <div class="brand">
+    <img src="logo.png" alt="Dex 生活投資 logo" onerror="this.style.display='none'">
+    <div>
+      <h1>台灣前 15 大債券 ETF 儀表板</h1>
+      <p>美國公債 × 投等公司債 × 金融債｜規模最大的 15 檔，全部在上櫃掛牌</p>
+    </div>
+  </div>
+  <button class="btn" id="btnRefresh"><i class="ti ti-refresh"></i>重新抓資料</button>
+  <button class="btn pdf" id="btnPdf"><i class="ti ti-file-type-pdf"></i>匯出PDF檔</button>
+  <span class="saved" id="savedAt"></span>
+</div></div>
+
+<div class="wrap">
+
+<div class="print-head">
+  <h1>台灣前 15 大債券 ETF 比較表</h1>
+  <p id="printMeta"></p>
+</div>
+
+<div class="card">
+  <h2><i class="ti ti-filter"></i>篩選與排序</h2>
+  <p class="desc">點類型只看某一類；點表頭欄位可排序（再點一次換升／降冪）。開檔會自動抓最新收盤價與近一年配息，殖利率、總報酬、波動、回檔全部即時重算。</p>
+  <div class="ctrls">
+    <div class="pills" id="catPills"></div>
+    <div class="ms">
+      <div class="searchbox">
+        <i class="ti ti-search"></i>
+        <input id="search" type="text" placeholder="搜尋代號或名稱（可複選比較）…" autocomplete="off">
+      </div>
+      <div class="suggest" id="suggest" hidden></div>
+    </div>
+    <button class="btn upd" id="btnUpdate"><i class="ti ti-cloud-download"></i>更新最新資料</button>
+  </div>
+  <div class="selrow" id="selRow" hidden>
+    <span class="mut" style="font-size:12.5px"><i class="ti ti-git-compare"></i> 比較清單：</span>
+    <span id="selChips"></span>
+    <button class="btn" id="btnClrSel" style="padding:3px 9px; font-size:12px"><i class="ti ti-x"></i>清除比較</button>
+  </div>
+  <div class="status" id="liveStatus"><span class="dot"></span>準備讀取資料…</div>
+</div>
+
+<div class="card">
+  <h2><i class="ti ti-table"></i>規模前 15 大債券 ETF</h2>
+  <div class="keybox">
+    <b>看債券 ETF 只看殖利率會出事。</b>殖利率是「配了多少」，<b>近一年總報酬</b>才是「實際賺賠多少」（價差＋配息）。
+    債券價格跟利率反向：市場利率往上，債券價格就往下，長天期跌得最凶 —— 這就是為什麼配 5%、一年下來卻可能還是負的。
+  </div>
+  <div class="tablewrap">
+    <table id="tbl">
+      <thead><tr>
+        <th data-k="r">#</th>
+        <th data-k="code">代號</th>
+        <th data-k="name">名稱</th>
+        <th data-k="price">價格 <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="cat">類型</th>
+        <th data-k="aum">規模(億) <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="freq">配息頻率</th>
+        <th data-k="yield">殖利率 <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="tr">近1年總報酬 <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="vol">年化波動 <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="mdd">近1年最大回檔 <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="fee">總費用率 <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="avgvol">日均量(張) <i class="ti ti-arrows-sort"></i></th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card learn">
+  <h2><i class="ti ti-bulb"></i>怎麼看這張表</h2>
+  <p><b>規模</b>：債券 ETF 規模越大，流動性越好、被清算下市的風險越低。前 15 大都在 600 億以上，買賣不太會卡住。</p>
+  <p><b>配息頻率</b>：由近一年實際除息次數自動判定（12 次＝月配、4 次＝季配）。月配現金流平順，但配息頻繁不等於配得多，要搭殖利率一起看。</p>
+  <p><b>殖利率</b>：近一年配息總額 ÷ 目前股價，即時計算。債券 ETF 的配息來自債息，相對穩定，但<b>不保證不變</b> —— 舊債到期、換進新債，配息水準就會跟著市場利率走。</p>
+  <p><b>近一年總報酬</b>：（現在價格 − 一年前價格 ＋ 這一年配息）÷ 一年前價格。<b>這欄才是真正賺賠</b>。看到殖利率 5% 但總報酬是負的，代表配到的息被價差吃掉了。</p>
+  <p><b>年化波動</b>：價格上下晃動的幅度，是債券 ETF 的<b>利率敏感度代理指標</b>。長天期美債（20 年以上）波動通常最大，短天期與短存續的投等債最溫和。波動大的債券 ETF 不是「比較賺」，是「比較會晃」。</p>
+  <p><b>近一年最大回檔</b>：這一年內從高點跌下來最深的幅度。債券被當成「保守資產」，但長天期債券在升息年份的回檔可以超過 20% —— 先看這欄，再決定要不要把它當作資產配置裡的「安全部位」。</p>
+  <p><b>總費用率</b>：每年直接從淨值扣掉的實際成本。債券報酬本來就以個位數為主，費用率差 0.2%，長期下來咬掉的比例比股票型更有感。</p>
+  <p><b>日均量</b>：近 20 個交易日的平均成交張數。量太小的標的，買賣價差（滑價）會變成隱形成本，大額進出要特別留意。</p>
+  <p><b>匯率風險</b>：這 15 檔全部投資美元計價債券，新台幣升值會侵蝕以台幣計算的報酬 —— 表上的總報酬已經內含這個影響。</p>
+</div>
+
+<div class="card foot">
+  <div class="warnbox">
+    ⚠️ <b>投資有風險，本工具僅供教學參考、非投資建議，也不保證獲利。</b>
+    債券 ETF <b>不保本、不保息</b>：同時有利率風險（升息時價格下跌）、信用風險（發債公司違約）與匯率風險（美元兌新台幣波動）。
+    配息可能來自本金或收益平準金，配息率不等於報酬率。過去績效不代表未來表現，實際數字請以各投信公告與券商報價為準。
+  </div>
+  <p>價格、配息、成交量來源：FinMind 開放資料（TWSE／TPEx 原始資料），開檔即時更新；殖利率、總報酬、年化波動、最大回檔皆由日收盤價與除息紀錄即時計算。</p>
+  <p>規模、總費用率為內嵌快照（資料日 <span id="snapDate"></span>，來源 MoneyDJ ETF 基智網）。名單為規模前 15 大的原型債券 ETF，均於<b>證券櫃檯買賣中心（上櫃）</b>掛牌；國泰 20 年美債的美元計價級別 00687C 與 00687B 為同一檔基金，已排除避免重複。</p>
+  <p>© Dex 生活投資，保留一切權利。未經授權請勿重製、散布或作商業用途。</p>
+</div>
+
+</div>
+
+<script>
+const SNAP_DATE = "2026/09/11";
+const FINMIND = "https://api.finmindtrade.com/api/v4/data";
+const LS_KEY = "bond15_live_v1";
+
+/* 內嵌快照：規模(億元)、總費用率(%)、經理費(%)、成立日、快照價、快照殖利率(%)、快照近一年報酬(%)
+   規模與費用率資料日 2026-09-11（MoneyDJ），其餘欄位開檔由 FinMind 即時重算 */
+const BONDS = [
+ {r:1, code:"00937B", name:"群益ESG投等債20+",  cat:"投等公司債", sub:"ESG投等債20+", aum:2402.6, fee:0.26, mgmt:0.20, incept:"2023/11/27", price:14.11, ySnap:6.12, trSnap:0.01},
+ {r:2, code:"00679B", name:"元大美債20年",      cat:"美國公債",   sub:"美債20年+",    aum:1562.5, fee:0.14, mgmt:0.10, incept:"2017/01/11", price:25.26, ySnap:4.43, trSnap:-1.58},
+ {r:3, code:"00751B", name:"元大AAA至A公司債",  cat:"投等公司債", sub:"AAA–A公司債",  aum:1555.6, fee:0.25, mgmt:0.18, incept:"2018/09/20", price:29.82, ySnap:5.63, trSnap:-2.72},
+ {r:4, code:"00720B", name:"元大投資級公司債",  cat:"投等公司債", sub:"投等公司債",   aum:1259.6, fee:0.39, mgmt:0.30, incept:"2018/01/19", price:31.33, ySnap:5.90, trSnap:-0.64},
+ {r:5, code:"00725B", name:"國泰投資級公司債",  cat:"投等公司債", sub:"投等公司債",   aum:1229.5, fee:0.37, mgmt:0.28, incept:"2018/01/29", price:33.40, ySnap:6.00, trSnap:0.17},
+ {r:6, code:"00687B", name:"國泰20年美債",      cat:"美國公債",   sub:"美債20年+",    aum:1125.0, fee:0.15, mgmt:0.10, incept:"2017/04/06", price:26.59, ySnap:4.35, trSnap:-1.50},
+ {r:7, code:"00772B", name:"中信高評級公司債",  cat:"投等公司債", sub:"高評級公司債", aum:1068.4, fee:0.31, mgmt:0.20, incept:"2019/01/19", price:31.85, ySnap:5.16, trSnap:-1.10},
+ {r:8, code:"00933B", name:"國泰10Y+金融債",    cat:"金融債",     sub:"金融債10Y+",   aum:993.6,  fee:0.28, mgmt:0.20, incept:"2023/10/04", price:15.27, ySnap:5.68, trSnap:0.39},
+ {r:9, code:"00724B", name:"群益投資級金融債",  cat:"金融債",     sub:"投等金融債",   aum:970.1,  fee:0.28, mgmt:0.20, incept:"2017/12/08", price:32.13, ySnap:5.97, trSnap:0.59},
+ {r:10,code:"00761B", name:"國泰A級公司債",     cat:"投等公司債", sub:"A級公司債",    aum:885.6,  fee:0.26, mgmt:0.18, incept:"2018/11/20", price:32.43, ySnap:5.14, trSnap:-1.34},
+ {r:11,code:"00773B", name:"中信優先金融債",    cat:"金融債",     sub:"優先順位金融債",aum:883.1, fee:0.29, mgmt:0.20, incept:"2019/01/19", price:34.09, ySnap:5.01, trSnap:-0.07},
+ {r:12,code:"00746B", name:"富邦A級公司債",     cat:"投等公司債", sub:"A級公司債",    aum:859.7,  fee:0.25, mgmt:0.18, incept:"2018/08/01", price:33.79, ySnap:5.05, trSnap:0.01},
+ {r:13,code:"00740B", name:"富邦全球投等債",    cat:"綜合債",     sub:"全球投等債",   aum:802.9,  fee:0.31, mgmt:0.40, incept:"2018/05/30", price:36.73, ySnap:5.89, trSnap:0.31},
+ {r:14,code:"00792B", name:"群益A級公司債",     cat:"投等公司債", sub:"A級公司債",    aum:698.5,  fee:0.27, mgmt:0.20, incept:"2019/03/27", price:30.24, ySnap:5.82, trSnap:-0.35},
+ {r:15,code:"00777B", name:"凱基AAA至A公司債",  cat:"投等公司債", sub:"AAA–A公司債",  aum:635.6,  fee:0.25, mgmt:0.18, incept:"2019/01/29", price:30.56, ySnap:5.40, trSnap:-2.60}
+];
+
+const nfInt = n => (n==null || !isFinite(n)) ? "—" : Math.round(n).toLocaleString("en-US");
+const pct1 = n => (n==null || !isFinite(n)) ? "—" : n.toFixed(1) + "%";
+/* 進位後落在 0.0 的數字不要印成 -0.0%，也不該被塗成紅色 */
+const snap0 = n => (n==null || !isFinite(n)) ? null : (Math.abs(n) < 0.05 ? 0 : n);
+const sPct = n => (n==null || !isFinite(n)) ? "—" : (n>=0?"+":"") + n.toFixed(1) + "%";
+const freqLabel = n => n>=11 ? "月配" : (n>=3 ? "季配" : (n>=2 ? "半年配" : (n===1 ? "年配" : "—")));
+
+/* 有即時資料就用即時值，否則退回快照值 */
+const yieldOf = e => e.yLive != null ? e.yLive : e.ySnap;
+const trOf    = e => e.trLive != null ? e.trLive : e.trSnap;
+
+let sortKey = "aum", sortDir = -1, catFilter = "全部", selected = [];
+const CATS = ["全部","美國公債","投等公司債","金融債","綜合債"];
+
+/* ---------- 畫面 ---------- */
+function buildPills(){
+  const box = document.getElementById("catPills");
+  box.innerHTML = "";
+  CATS.forEach(c=>{
+    const b = document.createElement("button");
+    b.className = "pill" + (c===catFilter ? " on":"");
+    b.textContent = c;
+    b.onclick = ()=>{ catFilter = c; buildPills(); render(); };
+    box.appendChild(b);
+  });
+}
+
+function render(){
+  const tb = document.getElementById("tbody");
+  let rows = BONDS.slice();
+  if(selected.length>0) rows = rows.filter(e=>selected.includes(e.code));
+  else if(catFilter !== "全部") rows = rows.filter(e=>e.cat===catFilter);
+  rows.sort((a,b)=>{
+    let x, y;
+    if(sortKey==="yield"){ x = yieldOf(a) ?? -1; y = yieldOf(b) ?? -1; }
+    else if(sortKey==="tr"){ x = trOf(a) ?? -99; y = trOf(b) ?? -99; }
+    else if(sortKey==="vol"){ x = a.volAnn ?? -1; y = b.volAnn ?? -1; }
+    else if(sortKey==="mdd"){ x = a.mdd ?? -99; y = b.mdd ?? -99; }
+    else if(sortKey==="avgvol"){ x = a.avgVol ?? -1; y = b.avgVol ?? -1; }
+    else if(sortKey==="freq"){ x = a.nDiv ?? 0; y = b.nDiv ?? 0; }
+    else if(["code","name","cat"].includes(sortKey)){ return sortDir * String(a[sortKey]).localeCompare(String(b[sortKey]),"zh-Hant"); }
+    else { x = a[sortKey]; y = b[sortKey]; }
+    return sortDir * (x - y);
+  });
+  tb.innerHTML = "";
+  if(rows.length===0){
+    tb.innerHTML = `<tr><td colspan="13" class="mut" style="text-align:center; padding:20px">目前沒有符合的債券 ETF</td></tr>`;
+    return;
+  }
+  rows.forEach(e=>{
+    const tr = snap0(trOf(e));
+    const trTxt = tr==null ? "—" : `<span class="${tr<0?'neg':'pos'}">${sPct(tr)}</span>`;
+    const volTxt = e.volAnn!=null ? `<span class="${e.volAnn>=12?'hot':''}">${pct1(e.volAnn)}</span>` : "—";
+    const mddTxt = e.mdd!=null ? `<span class="${e.mdd<=-10?'neg':''}">${pct1(e.mdd)}</span>` : "—";
+    const freqTxt = e.nDiv!=null ? freqLabel(e.nDiv) : '<span class="mut">—</span>';
+    const yv = yieldOf(e);
+    const trow = document.createElement("tr");
+    trow.innerHTML =
+      `<td class="mut">${e.r}</td>`+
+      `<td><span class="code">${e.code}</span></td>`+
+      `<td class="nm">${e.name}</td>`+
+      `<td class="${e.live?'pxlive':'pxsnap'}">${e.price!=null ? e.price.toFixed(2) : "—"}</td>`+
+      `<td><span class="tag t${e.cat}">${e.sub}</span></td>`+
+      `<td class="big">${nfInt(e.aum)}</td>`+
+      `<td>${freqTxt}</td>`+
+      `<td class="big">${pct1(yv)}</td>`+
+      `<td class="big">${trTxt}</td>`+
+      `<td>${volTxt}</td>`+
+      `<td>${mddTxt}</td>`+
+      `<td>${e.fee.toFixed(2)}%</td>`+
+      `<td>${nfInt(e.avgVol)}</td>`;
+
+    tb.appendChild(trow);
+  });
+}
+
+document.querySelectorAll("thead th").forEach(th=>{
+  th.onclick = ()=>{
+    const k = th.dataset.k;
+    if(sortKey===k) sortDir = -sortDir;
+    else { sortKey = k; sortDir = (["code","name","cat"].includes(k))?1:-1; }
+    render();
+  };
+});
+
+/* ---------- 抓即時資料（FinMind：上櫃債券 ETF 也拿得到） ---------- */
+function fmUrl(dataset, code, start){
+  return `${FINMIND}?dataset=${dataset}&data_id=${encodeURIComponent(code)}&start_date=${start}&_=${Date.now()}`;
+}
+async function fmGet(dataset, code, start){
+  const r = await fetch(fmUrl(dataset, code, start), {cache:"no-store"});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const j = await r.json();
+  if(j.status!==200 || !Array.isArray(j.data)) throw new Error(j.msg||"無資料");
+  return j.data;
+}
+
+/* 一年前的日期字串（以自然日回推 365 天） */
+function cutoffDate(){
+  const d = new Date(Date.now() - 365*864e5);
+  return d.toISOString().slice(0,10);
+}
+
+async function loadOne(e){
+  const start = new Date(Date.now() - 400*864e5).toISOString().slice(0,10);
+  const [px, dv] = await Promise.all([
+    fmGet("TaiwanStockPrice", e.code, start),
+    fmGet("TaiwanStockDividendResult", e.code, start).catch(()=>[])
+  ]);
+  const rows = px.filter(x=>x.close>0).sort((a,b)=> a.date<b.date?-1:1);
+  if(!rows.length) throw new Error("無收盤");
+
+  e.price = +rows[rows.length-1].close;
+  e.live = true;
+  e.lastDate = rows[rows.length-1].date;
+
+  /* 近 20 個交易日平均成交量（股 → 張） */
+  const last20 = rows.slice(-20);
+  e.avgVol = last20.reduce((s,x)=> s + (x.Trading_Volume||0), 0) / last20.length / 1000;
+
+  /* 近一年區間 */
+  const cut = cutoffDate();
+  const win = rows.filter(x=> x.date >= cut);
+  const divs = (dv||[]).filter(x=> x.date >= cut);
+  const divSum = divs.reduce((s,x)=> s + (x.stock_and_cache_dividend||0), 0);
+  e.nDiv = divs.length;
+  e.div1y = divSum;
+  e.yLive = e.price>0 ? divSum / e.price * 100 : null;
+
+  if(win.length > 30){
+    const p0 = +win[0].close;
+    /* 總報酬＝(價差＋這一年配息) ÷ 一年前價格；配息不再投入，算法保守 */
+    e.trLive = (e.price - p0 + divSum) / p0 * 100;
+
+    /* 年化波動：日報酬標準差 × sqrt(252) */
+    const rets = [];
+    for(let i=1;i<win.length;i++){
+      const a = +win[i-1].close, b = +win[i].close;
+      if(a>0 && b>0) rets.push(b/a - 1);
+    }
+    if(rets.length > 20){
+      const m = rets.reduce((s,x)=>s+x,0) / rets.length;
+      const v = rets.reduce((s,x)=> s + (x-m)*(x-m), 0) / (rets.length-1);
+      e.volAnn = Math.sqrt(v) * Math.sqrt(252) * 100;
+    }
+    /* 近一年最大回檔（以收盤價計，不含配息） */
+    let peak = -Infinity, mdd = 0;
+    for(const x of win){
+      const c = +x.close;
+      if(c > peak) peak = c;
+      const dd = c/peak - 1;
+      if(dd < mdd) mdd = dd;
+    }
+    e.mdd = mdd * 100;
+  }
+}
+
+function setStatus(cls, txt){
+  document.getElementById("liveStatus").innerHTML = `<span class="dot ${cls}"></span>${txt}`;
+}
+
+/* 限制同時請求數，避免被 FinMind 限流 */
+async function pool(items, n, fn){
+  let i = 0, ok = 0;
+  const workers = new Array(Math.min(n, items.length)).fill(0).map(async ()=>{
+    while(i < items.length){
+      const it = items[i++];
+      try{ await fn(it); ok++; }catch(err){ /* 保留快照值 */ }
+      setStatus("load", `讀取中… ${ok}/${items.length} 檔完成`);
+    }
+  });
+  await Promise.all(workers);
+  return ok;
+}
+
+async function refreshAll(){
+  const upd = document.getElementById("btnUpdate");
+  if(upd){ upd.classList.add("spin"); upd.disabled = true; }
+  setStatus("load","讀取最新收盤價與近一年配息中…");
+  const ok = await pool(BONDS, 3, loadOne);
+  render();
+  if(ok>0){
+    let latest = "";
+    BONDS.forEach(e=>{ if(e.lastDate && e.lastDate>latest) latest = e.lastDate; });
+    setStatus("ok", `已更新 ${ok}/${BONDS.length} 檔（FinMind，資料日 ${latest||"最新"}）；殖利率、總報酬、波動、回檔皆依最新資料重算。`);
+    saveCache();
+    document.getElementById("savedAt").textContent = "資料更新：" + new Date().toLocaleString("zh-TW");
+  }else{
+    setStatus("warn", `連不上即時資料，顯示 ${SNAP_DATE} 快照（可能是離線或被限流，稍後按「更新最新資料」再試）。`);
+  }
+  if(upd){ upd.classList.remove("spin"); upd.disabled = false; }
+}
+
+/* ---------- 本機記憶 ----------
+   一次開檔要打 15 檔 × 2 個 FinMind 請求，同一天重複開會撞到免費額度上限，
+   所以當天抓過就直接用快取，要最新資料再按「更新最新資料」。 */
+let cacheTs = 0;
+const sameDay = ts => ts>0 && new Date(ts).toDateString() === new Date().toDateString();
+function saveCache(){
+  try{
+    const m = {};
+    BONDS.forEach(e=>{
+      if(e.live) m[e.code] = {price:e.price, yLive:e.yLive, trLive:e.trLive, volAnn:e.volAnn,
+                              mdd:e.mdd, avgVol:e.avgVol, nDiv:e.nDiv, div1y:e.div1y, lastDate:e.lastDate};
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify({m, ts:Date.now()}));
+  }catch(_){}
+}
+function loadCache(){
+  try{
+    const c = JSON.parse(localStorage.getItem(LS_KEY)||"null");
+    if(c && c.m){
+      cacheTs = c.ts || 0;
+      BONDS.forEach(e=>{
+        const s = c.m[e.code];
+        if(s){ Object.assign(e, s); e.live = true; }
+      });
+      if(c.ts) document.getElementById("savedAt").textContent = "上次更新：" + new Date(c.ts).toLocaleString("zh-TW");
+    }
+  }catch(_){}
+}
+
+/* ---------- 多選比較 ---------- */
+const searchEl = document.getElementById("search");
+const suggestEl = document.getElementById("suggest");
+function renderSuggest(){
+  const q = searchEl.value.trim().toLowerCase();
+  if(!q){ suggestEl.hidden = true; suggestEl.innerHTML = ""; return; }
+  const m = BONDS.filter(e=> !selected.includes(e.code) &&
+    (e.code.toLowerCase().includes(q) || e.name.toLowerCase().includes(q))).slice(0,8);
+  suggestEl.innerHTML = m.length
+    ? m.map(e=>`<div class="opt" data-code="${e.code}"><span class="code">${e.code}</span><span>${e.name}</span></div>`).join("")
+    : `<div class="none">查無符合「${q}」</div>`;
+  suggestEl.hidden = false;
+}
+function addSel(code){
+  if(code && !selected.includes(code)) selected.push(code);
+  searchEl.value = ""; suggestEl.hidden = true;
+  renderChips(); render();
+}
+function removeSel(code){ selected = selected.filter(c=>c!==code); renderChips(); render(); }
+function renderChips(){
+  const row = document.getElementById("selRow"), box = document.getElementById("selChips");
+  if(!selected.length){ row.hidden = true; box.innerHTML = ""; return; }
+  row.hidden = false;
+  box.innerHTML = selected.map(code=>{
+    const e = BONDS.find(x=>x.code===code);
+    return `<span class="chip"><b>${code}</b> ${e?e.name:""}<span class="x" data-code="${code}"><i class="ti ti-x"></i></span></span>`;
+  }).join(" ");
+  box.querySelectorAll(".x").forEach(x=> x.onclick = ()=> removeSel(x.dataset.code));
+}
+searchEl.addEventListener("input", renderSuggest);
+searchEl.addEventListener("focus", renderSuggest);
+searchEl.addEventListener("keydown", ev=>{
+  if(ev.key==="Enter"){ const f = suggestEl.querySelector(".opt"); if(f) addSel(f.dataset.code); }
+});
+suggestEl.addEventListener("click", ev=>{ const o = ev.target.closest(".opt"); if(o) addSel(o.dataset.code); });
+document.addEventListener("click", ev=>{ if(!ev.target.closest(".ms")) suggestEl.hidden = true; });
+document.getElementById("btnClrSel").onclick = ()=>{ selected = []; renderChips(); render(); };
+
+/* ---------- 啟動 ---------- */
+document.getElementById("snapDate").textContent = SNAP_DATE;
+document.getElementById("printMeta").textContent =
+  `規模與費用率快照 ${SNAP_DATE}｜價格、配息、報酬開檔即時更新（FinMind）｜© Dex 生活投資`;
+document.getElementById("btnRefresh").onclick = refreshAll;
+document.getElementById("btnUpdate").onclick = refreshAll;
+document.getElementById("btnPdf").onclick = ()=>{
+  const t = document.title;
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+  document.title = "台灣前15大債券ETF_" + stamp;
+  window.print();
+  setTimeout(()=>{ document.title = t; }, 1000);
+};
+
+buildPills();
+loadCache();
+render();
+if(sameDay(cacheTs)){
+  setStatus("ok", `顯示今天 ${new Date(cacheTs).toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"})} 抓的資料（同一天不重複抓，避免被資料來源限流）；要最新收盤請按「更新最新資料」。`);
+}else{
+  refreshAll();
+}
+</script>
+</body>
+</html>
