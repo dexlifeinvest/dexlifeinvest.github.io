@@ -288,6 +288,17 @@ footer .copy{text-align:center; padding:6px 0 0}
 <div class="card" id="s-trend">
   <h2><i class="ti ti-chart-line"></i>累積報酬走勢</h2>
   <p class="desc" id="trendDesc">全部標的起點都設成 100，看同一段期間各自長成什麼樣子。</p>
+
+  <div class="ctl-row" style="margin-bottom:12px">
+    <div class="ctl-label"><i class="ti ti-ruler-2"></i>縱軸顯示</div>
+    <div class="seg" id="ySeg">
+      <button data-y="idx" class="on">指數（起點＝100）</button>
+      <button data-y="pct">累積報酬（%）</button>
+    </div>
+  </div>
+
+  <div class="note info" id="trendKey" style="margin-bottom:12px"><i class="ti ti-help-circle"></i><div></div></div>
+
   <div class="legend" id="trendLegend"></div>
   <div class="chartbox" id="trendBox">
     <svg id="trendSvg"></svg>
@@ -343,6 +354,11 @@ footer .copy{text-align:center; padding:6px 0 0}
 <div class="card" id="s-learn">
   <h2><i class="ti ti-bulb"></i>這三個數字怎麼看</h2>
   <div class="learn">
+    <div>
+      <h4><i class="ti ti-chart-line"></i>累積報酬走勢怎麼讀</h4>
+      <p>縱軸是<b>指數不是報酬率</b>：起始日當天各投入 100 元，看最後變成多少。200 是翻倍、800 是 8 倍（＋700%）。
+         要直接看百分比，把圖上方的「縱軸顯示」切到「累積報酬（%）」。注意這是<b>單筆投入</b>的結果，定期定額的曲線長相不一樣。</p>
+    </div>
     <div>
       <h4><i class="ti ti-trending-up"></i>年化報酬</h4>
       <p>把整段期間的總報酬換算成「平均每年幾 %」。它是回頭看的結果，不是往前看的承諾 —— 換一段期間，數字就會換一個樣子。</p>
@@ -426,7 +442,7 @@ const signPct = (v, d=1) => (v==null || !isFinite(v)) ? "—" : (v>=0?"+":"") + 
 /* ---------- 狀態 ---------- */
 let ST = {
   range: "3y", start: null, end: null,
-  mode: "tr", align: 1,
+  mode: "tr", align: 1, yMode: "idx",
   sel: ["0050","0056","00919","00878","00713","00679B"],
   sortKey: "cagr", sortDir: -1,
   custom: {}          /* 學員自己加的：code -> {name,cat,market,i0,tr,pr,lastDate,dates} */
@@ -602,8 +618,14 @@ let trendGeo = null;
 function drawTrend(R){
   const box = $("trendBox"), svg = $("trendSvg");
   const {W} = svgSize(box), H = W < 560 ? 280 : 360;
-  const pl = 46, pr = W < 560 ? 14 : 66, pt = 14, pb = 30;
+  /* 縱軸刻度在 %ic 模式字比較長（+700%），左邊留白要加寬；桌機還要再塞一行直立軸標題 */
+  const isPct = ST.yMode === "pct";
+  const showYTitle = W >= 560;
+  const pl = (isPct ? 56 : 46) + (showYTitle ? 16 : 0);
+  const pr = W < 560 ? 14 : 66, pt = 14, pb = 30;
   const iw = W - pl - pr, ih = H - pt - pb;
+  /* 縱軸刻度：指數模式直接印數字，% 模式換算成「距離起點漲跌幾 %」 */
+  const yLab = t => isPct ? (t >= 100 ? "+" : "") + Math.round(t - 100) + "%" : String(Math.round(t));
 
   if(!R.rows.length){
     svg.setAttribute("viewBox", `0 0 ${W} 120`);
@@ -627,12 +649,23 @@ function drawTrend(R){
   for(const t of niceTicks(lo, hi, 5)){
     const y = Y(t);
     g += `<line class="gridline" x1="${pl}" y1="${y.toFixed(1)}" x2="${pl+iw}" y2="${y.toFixed(1)}"/>`
-       + `<text class="axis" x="${pl-7}" y="${(y+4).toFixed(1)}" text-anchor="end">${Math.round(t)}</text>`;
+       + `<text class="axis" x="${pl-7}" y="${(y+4).toFixed(1)}" text-anchor="end">${esc(yLab(t))}</text>`;
   }
-  /* 100 基準線 */
+  /* 直立軸標題：不寫清楚縱軸是什麼，800 會被誤讀成 800% */
+  if(showYTitle){
+    const cy = pt + ih/2;
+    g += `<text class="axis" style="font-weight:700" transform="rotate(-90 12 ${cy.toFixed(1)})" `
+       + `x="12" y="${cy.toFixed(1)}" text-anchor="middle">`
+       + (isPct ? "累積報酬（%，含息）" : "累積指數（起點＝100）") + `</text>`;
+  }
+  /* 100 基準線＝本金水位：線以上是賺，以下是還在賠 */
   if(lo < 100 && hi > 100){
     const y = Y(100);
     g += `<line x1="${pl}" y1="${y.toFixed(1)}" x2="${pl+iw}" y2="${y.toFixed(1)}" stroke="#9aa6b6" stroke-width="1" stroke-dasharray="4 3"/>`;
+    /* 手機版圖窄，這行字會壓到線，只在桌機標 */
+    if(showYTitle)
+      g += `<text class="axis" x="${(pl+4).toFixed(1)}" y="${(y-5).toFixed(1)}">`
+         + (isPct ? "0%（本金）" : "100（本金）") + `</text>`;
   }
   /* X 軸 */
   const nx = W < 560 ? 4 : 7;
@@ -879,7 +912,9 @@ bindHover("trendBox","trendSvg","trendTip", sx => {
   if(!rows.length) return null;
   rows.sort((a,b) => b.v - a.v);
   const html = `<b>${DATA.dates[i]}</b><br>` + rows.map(r =>
-    `<span class="k" style="background:${colorOf(r.code)}"></span>${esc(r.code)} <b>${r.v.toFixed(1)}</b> <span style="opacity:.7">(${signPct(r.v/100-1,1)})</span>`
+    ST.yMode === "pct"
+      ? `<span class="k" style="background:${colorOf(r.code)}"></span>${esc(r.code)} <b>${signPct(r.v/100-1,1)}</b> <span style="opacity:.7">(指數 ${r.v.toFixed(1)})</span>`
+      : `<span class="k" style="background:${colorOf(r.code)}"></span>${esc(r.code)} <b>${r.v.toFixed(1)}</b> <span style="opacity:.7">(${signPct(r.v/100-1,1)})</span>`
   ).join("<br>");
   const x = G.pl + (i - G.a)/Math.max(1,(G.b - G.a)) * G.iw;
   return {x, y:Math.max(G.pt, yTop - 10), html, cross:"trendCross"};
@@ -1082,6 +1117,16 @@ function render(){
   $("trendDesc").textContent = ST.mode === "tr"
     ? "全部標的起點都設成 100（含息、股息再投入），看同一段期間各自長成什麼樣子。"
     : "全部標的起點都設成 100（只算股價，不含配息）。";
+  /* 縱軸單位是這張圖最容易被誤讀的地方（800 常被當成 800%），所以把讀法直接寫在圖上面 */
+  $("trendKey").lastElementChild.innerHTML = ST.yMode === "pct"
+    ? `<b>縱軸＝累積報酬（%）</b>：起始日單筆投入一筆錢，抱到當天為止總共漲跌幾 %。`
+      + `<b>＋100% 就是翻一倍</b>，0% 的虛線是本金水位，線以下代表這段期間還在賠。`
+      + (ST.mode === "tr" ? "配息全部在除息當天再投入。" : "此模式不含配息。")
+      + `未扣手續費、證交稅與股利所得稅。`
+    : `<b>縱軸＝累積指數，不是報酬率</b>：起始日當天各投入 100 元（`
+      + (ST.mode === "tr" ? "含息、配息當天再投入" : "只算股價，不含配息")
+      + `），看那 100 元最後變成多少。<b>200＝翻倍（+100%）、400＝4 倍（+300%）、800＝8 倍（+700%）</b>；`
+      + `虛線 100 是本金水位。這是<b>單筆投入</b>的結果，與定期定額的績效不同，也未扣手續費與稅。`;
   $("printMeta").textContent = `期間 ${DATA.dates[R.a]} ～ ${DATA.dates[R.b]}　｜　`
     + (ST.mode==="tr" ? "含息總報酬" : "只看股價") + `　｜　列印於 ${new Date().toLocaleDateString("zh-TW")}`;
   renderRangePills();
@@ -1418,6 +1463,11 @@ $("alignSeg").querySelectorAll("button").forEach(b => b.addEventListener("click"
   $("alignSeg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
   render(); save(true);
 }));
+$("ySeg").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+  ST.yMode = b.dataset.y;
+  $("ySeg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  render(); save(true);
+}));
 $("btnApplyDate").addEventListener("click", () => {
   const a = $("dStart").value, b = $("dEnd").value;
   if(!a || !b || a >= b){
@@ -1459,6 +1509,8 @@ load();
 if(!ST.start) applyRange(); else { $("dStart").value = ST.start; $("dEnd").value = ST.end; }
 $("modeSeg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.mode === ST.mode));
 $("alignSeg").querySelectorAll("button").forEach(x => x.classList.toggle("on", +x.dataset.align === ST.align));
+if(ST.yMode !== "pct") ST.yMode = "idx";   /* 舊存檔沒有這個欄位，補預設 */
+$("ySeg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.y === ST.yMode));
 renderRangePills();
 render();
 $("ftSrcDate").innerHTML = `內建快照建立於 ${DATA.built}。`;
