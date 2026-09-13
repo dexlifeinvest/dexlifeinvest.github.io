@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ETF 配息月曆</title>
+<link rel="icon" href="icon-dividend.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#f6f9fd; --card:#ffffff; --ink:#17273c; --muted:#647085;
+  --accent:#3d8bf5; --accent-soft:#e7f0fe; --line:#dbe4f0;
+  --red:#d84636; --red-bg:#fcecea; --yellow:#d98a1f; --yellow-bg:#fbf1de;
+  --green:#1f9d63; --green-bg:#e4f5ec; --gold:#c9922a; --gold-bg:#f8efd6;
+  --radius:16px; --shadow:0 2px 14px rgba(23,39,60,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',system-ui,sans-serif;
+  line-height:1.55;-webkit-text-size-adjust:100%;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 64px;}
+
+/* 工具列 */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(246,249,253,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px;margin:0 -16px 0;}
+.topbar .saveinfo{color:var(--muted);font-size:12px;margin-left:auto;text-align:right;}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);
+  padding:8px 14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:.15s;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn.pri{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn.pri:hover{filter:brightness(1.05);color:#fff;}
+.btn.green{background:var(--green);color:#fff;border-color:var(--green);}
+.btn.green:hover{filter:brightness(1.05);color:#fff;}
+.btn.ghost{background:transparent;}
+.btn[disabled]{opacity:.6;cursor:wait;}
+
+/* 頁首 */
+header.hero{display:flex;align-items:center;gap:14px;padding:22px 0 6px;}
+header.hero .logo{flex:0 0 auto;width:52px;height:52px;}
+header.hero h1{font-size:26px;margin:0;font-weight:800;letter-spacing:.5px;}
+header.hero p{margin:2px 0 0;color:var(--muted);font-size:14px;}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);
+  font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;margin-left:8px;vertical-align:middle;}
+
+/* sticky nav */
+nav.pills{display:flex;gap:6px;flex-wrap:wrap;margin:0;}
+.tb-div{width:1px;height:22px;background:var(--line);margin:0 2px;}
+nav.pills a{font-size:13px;font-weight:700;color:var(--muted);background:var(--card);
+  border:1px solid var(--line);padding:7px 12px;border-radius:999px;text-decoration:none;white-space:nowrap;}
+nav.pills a:hover{color:var(--accent);border-color:var(--accent);}
+
+section.card{scroll-margin-top:76px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px 18px 20px;margin-top:18px;page-break-inside:avoid;}
+.sec-title{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:800;margin:0 0 4px;}
+.sec-title i{color:var(--accent);font-size:22px;}
+.sec-sub{color:var(--muted);font-size:13px;margin:0 0 14px;}
+
+/* 標的表 */
+/* 標的多的時候清單自己捲，不把整頁拉長；表頭跟著固定 */
+.table-scroll{overflow:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;
+  max-height:440px;border:1px solid var(--line);border-radius:12px;}
+.table-scroll::-webkit-scrollbar{width:10px;height:10px;}
+.table-scroll::-webkit-scrollbar-thumb{background:#c9d6e8;border-radius:999px;}
+.table-scroll::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+table.etf{width:100%;border-collapse:collapse;font-size:14px;min-width:760px;}
+table.etf th{background:var(--accent-soft);color:var(--ink);font-weight:700;font-size:12.5px;
+  padding:9px 8px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:3;}
+table.etf td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+table.etf tr.on{background:var(--accent-soft);}
+.tk{font-weight:800;}
+.nm{font-size:12.5px;color:var(--muted);}
+.cat{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:999px;white-space:nowrap;}
+.cat.market{background:var(--accent-soft);color:var(--accent);}
+.cat.income{background:var(--green-bg);color:var(--green);}
+.cat.bond{background:var(--gold-bg);color:var(--gold);}
+.cat.reit{background:#efe9fb;color:#5b3fb0;}
+.cat.equity{background:#eef1f6;color:var(--muted);}
+input.cell{width:100%;min-width:58px;border:1px solid var(--line);border-radius:8px;
+  padding:5px 7px;font-size:13px;color:var(--ink);background:#fff;font-family:inherit;}
+input.cell:focus{outline:none;border-color:var(--accent);}
+input.cell.wide{min-width:88px;}
+.ro{display:inline-block;font-size:13px;font-weight:700;color:var(--ink);padding:5px 2px;white-space:nowrap;}
+.ro.yld{color:var(--green);}
+.paytag{display:inline-block;font-size:12.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  border-radius:8px;padding:4px 8px;white-space:nowrap;}
+.mini{font-size:10.5px;color:var(--muted);display:block;margin-top:2px;}
+.mini.warn{color:var(--gold);}
+input[type=checkbox].pick{width:20px;height:20px;accent-color:var(--accent);cursor:pointer;}
+.rowdel{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;}
+.rowdel:hover{color:var(--red);}
+.addbar{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 2px;font-size:12px;color:var(--muted);align-items:center;}
+
+/* 我的部位 */
+.pos-empty{color:var(--muted);font-size:14px;padding:10px 2px;}
+.pos-list{display:flex;flex-direction:column;gap:10px;}
+.pos-item{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:#fbfdff;}
+.pos-item .pi-tk{font-weight:800;font-size:15px;min-width:66px;}
+.pos-item .pi-nm{color:var(--muted);font-size:12.5px;flex:1 1 90px;}
+.pos-item .pi-lot{display:flex;align-items:center;gap:6px;}
+.pos-item .pi-lot input{width:72px;}
+.pos-item .pi-year{margin-left:auto;text-align:right;}
+.pi-year .big{font-weight:800;color:var(--green);font-size:16px;}
+.pi-year .sm{font-size:11px;color:var(--muted);}
+
+/* 總覽數字 */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px;}
+.kpi{background:var(--accent-soft);border-radius:12px;padding:13px;text-align:center;}
+.kpi .v{font-size:22px;font-weight:800;color:var(--accent);}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* 各月配息直方圖（直排長條，逐根長出來） */
+.chartwrap{margin:2px 0 20px;}
+.chart-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.chart-head .ch-t{font-size:13.5px;font-weight:800;}
+.chart-head .ch-max{font-size:12px;color:var(--muted);}
+.chart{position:relative;height:212px;border-bottom:1px solid var(--line);margin-bottom:28px;}
+.bars{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;height:100%;align-items:end;}
+.bar{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;}
+.bar .bv{font-size:10.5px;font-weight:800;color:var(--green);white-space:nowrap;}
+.bar.zero .bv{color:#b3bece;font-weight:700;}
+.bar .bfill{width:100%;height:var(--h);min-height:3px;border-radius:8px 8px 3px 3px;
+  background:linear-gradient(180deg,#6bb8ff 0%,#2f9f6b 100%);
+  transform-origin:bottom;animation:growBar .85s cubic-bezier(.22,.9,.3,1) both;animation-delay:var(--d);}
+.bar.zero .bfill{background:#e6ecf5;}
+.bar.now .bfill{background:linear-gradient(180deg,#57a0ff 0%,#2f76d8 100%);
+  box-shadow:0 0 0 2px rgba(61,139,245,.25);}
+.bar .bm{position:absolute;bottom:-23px;font-size:11.5px;font-weight:700;color:var(--muted);}
+.bar.now .bm{color:var(--accent);}
+.bar.now .bm::after{content:'月';}
+.avgline{position:absolute;left:0;right:0;border-top:1px dashed #8fa4c0;pointer-events:none;z-index:2;}
+.avgline span{position:absolute;right:0;top:-17px;font-size:10.5px;color:var(--muted);
+  background:var(--card);padding:0 5px;border-radius:4px;}
+.chart-empty{color:var(--muted);font-size:13px;padding:4px 2px 10px;}
+@keyframes growBar{from{transform:scaleY(0);opacity:.35}to{transform:scaleY(1);opacity:1}}
+@media(max-width:560px){ .bar .bv{display:none} .chart{height:168px} .bars{gap:4px} }
+@media(prefers-reduced-motion:reduce){ .bar .bfill{animation:none} }
+
+/* 月曆 */
+.cal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.mo{border:1px solid var(--line);border-radius:14px;padding:12px 12px 13px;background:#fbfdff;
+  min-height:104px;display:flex;flex-direction:column;page-break-inside:avoid;}
+.mo.paid{background:var(--green-bg);border-color:#bfe6cf;}
+/* 當月：用品牌藍跟綠色的「有配息」區分開 */
+.mo.now{border-color:var(--accent);box-shadow:0 0 0 2px rgba(61,139,245,.20);}
+.mo .mo-now{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;
+  background:var(--accent);color:#fff;font-size:10.5px;font-weight:800;vertical-align:2px;letter-spacing:.3px;}
+.mo .mo-h{display:flex;align-items:baseline;justify-content:space-between;}
+.mo .mo-n{font-size:15px;font-weight:800;}
+.mo .mo-tag{font-size:10.5px;color:var(--muted);}
+.mo .mo-amt{margin-top:8px;font-size:20px;font-weight:800;color:var(--green);}
+.mo.empty .mo-amt{color:var(--muted);font-weight:700;font-size:14px;}
+.mo .mo-break{margin-top:7px;display:flex;flex-direction:column;gap:3px;}
+.mo .mo-break span{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:6px;}
+.mo .mo-break span b{color:var(--ink);font-weight:700;}
+.cal-note{color:var(--muted);font-size:12.5px;margin-top:14px;}
+
+/* 註記/警示 */
+.note{background:var(--yellow-bg);border:1px solid #f0dcb0;border-radius:12px;
+  padding:12px 14px;font-size:13px;color:#8a6316;margin-top:16px;}
+.note b{color:#6e4d11;}
+.disc{margin-top:26px;font-size:12px;color:var(--muted);line-height:1.7;}
+.disc h4{font-size:13px;color:var(--ink);margin:0 0 6px;}
+.disc .ip{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);}
+
+@media(max-width:720px){
+  .kpis{grid-template-columns:1fr;}
+  .cal{grid-template-columns:repeat(2,1fr);}
+  header.hero h1{font-size:22px;}
+}
+@media(max-width:420px){
+  .cal{grid-template-columns:1fr;}
+}
+
+/* 列印 / PDF */
+@media print{
+  :root{--bg:#fff;}
+  body{background:#fff;}
+  .topbar,nav.pills,.addbar,.rowdel{display:none!important;}
+  .table-scroll{max-height:none;overflow:visible;border:none;}
+  table.etf th{position:static;}
+  .wrap{max-width:100%;padding:0 8px;}
+  section.card{box-shadow:none;border:1px solid #ccc;}
+  *{ -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 工具列 -->
+  <div class="topbar">
+    <button class="btn pri" onclick="saveAll()"><i class="ti ti-device-floppy"></i>儲存</button>
+    <button class="btn" id="btnUpdate" onclick="autoUpdate()"><i class="ti ti-cloud-download"></i>自動更新股價</button>
+    <button class="btn green" onclick="exportPDF()"><i class="ti ti-file-type-pdf"></i>匯出PDF檔</button>
+    <button class="btn ghost" onclick="resetAll()"><i class="ti ti-refresh"></i>清空重填</button>
+    <span class="tb-div"></span>
+    <nav class="pills">
+      <a href="#watch"><i class="ti ti-list-check"></i> 標的清單</a>
+      <a href="#pos"><i class="ti ti-wallet"></i> 我的部位</a>
+      <a href="#cal"><i class="ti ti-calendar-dollar"></i> 配息月曆</a>
+    </nav>
+    <span class="saveinfo" id="saveinfo">尚未儲存</span>
+  </div>
+
+  <!-- 頁首 -->
+  <header class="hero">
+    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="50" cy="50" r="46" fill="#e7f0fe" stroke="#3d8bf5" stroke-width="3"/>
+      <g fill="none" stroke="#3d8bf5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M50 74 V50"/><path d="M50 54 L34 40"/><path d="M50 54 L66 40"/>
+        <path d="M50 46 L40 34"/><path d="M50 46 L60 34"/>
+      </g>
+      <g fill="#3d8bf5">
+        <circle cx="50" cy="76" r="5"/><circle cx="34" cy="38" r="4.6"/><circle cx="66" cy="38" r="4.6"/>
+        <circle cx="40" cy="32" r="4.2"/><circle cx="60" cy="32" r="4.2"/><circle cx="50" cy="48" r="3.4"/>
+      </g>
+    </svg>
+    <div>
+      <h1>ETF 配息月曆<span class="badge">現金流規劃</span></h1>
+      <p>選好你的 ETF、填入張數，月曆自動排出每個月大概領多少。打造一條「月月有現金流」的產線。</p>
+    </div>
+  </header>
+
+  <!-- 標的清單 -->
+  <section class="card" id="watch">
+    <div class="sec-title"><i class="ti ti-list-check"></i>標的清單</div>
+    <p class="sec-sub">勾選你持有（或想配置）的標的。<b>類型會自動判斷</b>、<b>除息月與配息月都可以自己輸入</b>（用逗號分隔，例 1,4,7,10）；配息月<b>留空</b>才會自動帶「除息月的隔月」。按上方「自動更新股價」可抓最新收盤價；殖利率為系統推估。下方可自行新增標的；清單<b>可上下捲動</b>，表頭會固定在上面。</p>
+    <div class="legend">
+      <span><span class="cat market">市值型</span></span>
+      <span><span class="cat income">配息型</span></span>
+      <span><span class="cat bond">債券型</span></span>
+      <span><span class="cat reit">房地產</span></span>
+      <span><span class="cat equity">股票型</span></span>
+    </div>
+    <div class="table-scroll">
+      <table class="etf">
+        <thead>
+          <tr>
+            <th style="width:40px">選</th>
+            <th>代號 / 名稱</th>
+            <th>類型</th>
+            <th>最新價格</th>
+            <th>殖利率%</th>
+            <th>除息月<span class="mini">可自行輸入</span></th>
+            <th>配息月<span class="mini">可自行輸入</span></th>
+            <th>上次每股配息</th>
+            <th style="width:34px"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="addbar">
+      <button class="btn" onclick="addRow()"><i class="ti ti-plus"></i>新增標的</button>
+      <span class="mini" id="updateStatus"></span>
+    </div>
+  </section>
+
+  <!-- 我的部位 -->
+  <section class="card" id="pos">
+    <div class="sec-title"><i class="ti ti-wallet"></i>我的部位</div>
+    <p class="sec-sub">填入目前持有的<b>張數</b>（1 張 = 1000 股）。系統以「上次每股配息 × 1000 × 張數」估算每次入帳金額。</p>
+    <div id="poslist"></div>
+    <div class="kpis" id="kpis" style="display:none">
+      <div class="kpi"><div class="v" id="kpiYear">NT$0</div><div class="l">預估年配息</div></div>
+      <div class="kpi"><div class="v" id="kpiMonth">NT$0</div><div class="l">平均每月</div></div>
+      <div class="kpi"><div class="v" id="kpiCount">0</div><div class="l">入帳月數 / 年</div></div>
+    </div>
+  </section>
+
+  <!-- 月曆 -->
+  <section class="card" id="cal">
+    <div class="sec-title"><i class="ti ti-calendar-dollar"></i>配息月曆（1–12 月・實際入帳月）</div>
+    <p class="sec-sub">依各標的的<b>配息月</b>與你的張數，自動排出每月預估配息。長條圖一眼看出哪幾個月特別肥、哪幾個月是空窗。<b>綠色</b>＝該月有錢進帳，<b>藍框＋「這個月份」標籤</b>＝現在所在的月份。</p>
+    <div class="chartwrap" id="chartwrap">
+      <div class="chart-head">
+        <span class="ch-t"><i class="ti ti-chart-bar" style="color:var(--accent)"></i> 各月配息金額比較</span>
+        <span class="ch-max" id="chMax"></span>
+      </div>
+      <div class="chart" id="chart">
+        <div class="avgline" id="avgline" hidden><span></span></div>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="chart-empty" id="chartEmpty">勾選標的並填入張數後，這裡會出現 1–12 月的配息長條圖。</div>
+    </div>
+    <div class="cal" id="calgrid"></div>
+    <p class="cal-note"><i class="ti ti-info-circle"></i> 金額為假設估算。實際除息月、入帳日與填息狀況依各投信公告為準；同一檔每次配息金額會變動，這裡以「上一次」概估。</p>
+  </section>
+
+  <div class="note">
+    <b>⚠️ 這是現金流規劃工具，不是報酬保證。</b> 高殖利率不等於高報酬——若配息來自本金、或股價長期不填息，帳面現金流再漂亮也可能「左手領、右手賠」。配置這類 ETF 的重點，是<b>先求穩、再求現金流</b>，而不是追最高的殖利率數字。
+  </div>
+
+  <div class="disc">
+    <h4>獲利與風險警示</h4>
+    投資一定有風險，ETF 亦有下跌、折價、流動性與成分股變動風險。過去配息與績效不代表未來表現，配息可能含本金返還，且不保證填息。債券型 ETF 受利率與信用風險影響，淨值會波動。使用槓桿或質押會放大虧損。遇到股災／熊市時，保有足夠現金流與緊急預備金，比追逐高息更重要。「自動更新股價」的股價取自台灣證券交易所公開資料（上市 ETF 收盤價，通常為前一交易日）；殖利率為系統依「每股年配息 ÷ 股價」推估，非官方數字；上櫃債券 ETF 無公開跨網來源，需自行填寫。本工具所有數字皆為假設估算，僅供教學與現金流規劃示意，不構成任何投資建議；投資前請自行查證最新公告並評估自身風險承受度。
+    <div class="ip">© Dex 生活投資　保留一切權利。本工具為 Dex 生活投資教學內容，未經授權請勿重製、散布或用於商業用途。</div>
+  </div>
+
+</div>
+
+<script>
+const KEY='dex_etf_dividend_calendar_v2';
+const SEED='2026-09-13';   /* 預設標的清單的版本；改清單就更新這個日期，舊存檔會自動補上新標的 */
+const MONTHS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+/* 預設標的（假設估算，price 為近期收盤概值，按「自動更新股價」可抓最新）
+   exMonths＝除息月；配息月＝除息月＋1（隔月入帳）自動推算 */
+const DEFAULTS=[
+ {tk:'0050',  nm:'元大台灣50',        pick:false, price:107.70, ex:'1,7',                     div:0.60,  lots:0},
+ {tk:'0056',  nm:'元大高股息',        pick:true,  price:55.30,  ex:'1,4,7,10',                div:1.35,  lots:0},
+ {tk:'00878', nm:'國泰永續高股息',    pick:true,  price:34.00,  ex:'2,5,8,11',                div:1.01,  lots:0},
+ {tk:'00919', nm:'群益台灣精選高息',  pick:true,  price:32.48,  ex:'3,6,9,12',                div:1.00,  lots:0},
+ {tk:'00713', nm:'元大台灣高息低波',  pick:false, price:63.85,  ex:'3,6,9,12',                div:1.00,  lots:0},
+ {tk:'00918', nm:'大華優利高填息30',  pick:false, price:35.34,  ex:'3,6,9,12',                div:1.26,  lots:0},
+ {tk:'00929', nm:'復華台灣科技優息',  pick:false, price:28.62,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.38, lots:0},
+ {tk:'00712', nm:'復華富時不動產',    pick:false, price:8.38,   ex:'3,6,9,12',                div:0.235, lots:0},
+ {tk:'00714', nm:'群益道瓊美國地產',  pick:false, price:21.15,  ex:'1,4,7,10',                div:0.123, lots:0},
+ {tk:'00679B',nm:'元大美債20年',      pick:false, price:25.26,  ex:'2,5,8,11',                div:0.28,  lots:0},
+ {tk:'00751B',nm:'元大AAA至A公司債',  pick:false, price:29.82,  ex:'3,6,9,12',                div:0.43,  lots:0},
+ {tk:'00772B',nm:'中信高評級公司債',  pick:false, price:31.85,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.14, lots:0},
+ {tk:'00773B',nm:'中信優先金融債',    pick:false, price:34.09,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.145,lots:0},
+];
+
+let rows=[], lastFetch='';
+
+/* ---------- 類型自動判斷 ---------- */
+function classify(tk,nm){
+  tk=(tk||'').toUpperCase(); nm=nm||'';
+  if(/B$/.test(tk)||/債/.test(nm)) return 'bond';
+  if(/(不動產|地產|REIT|房地產)/.test(nm)) return 'reit';
+  if(/(高股息|高息|優息|優利|高填息|填息|收息|收益|存股|高股利|月配|季配|多元|精選)/.test(nm)) return 'income';
+  if(/(台灣50|臺灣50|台50|臺50|市值|中型100|台灣100|臺灣100|龍頭|加權|MSCI|富時台灣)/.test(nm)) return 'market';
+  return 'equity';
+}
+const CATLABEL={market:'市值型',income:'配息型',bond:'債券型',reit:'房地產',equity:'股票型'};
+const isBond=r=>classify(r.tk,r.nm)==='bond';
+
+/* ---------- 小工具 ---------- */
+const nt=n=>'NT$'+Math.round(n).toLocaleString('en-US');
+const parseMonths=s=>String(s||'').split(/[,，、\s]+/).map(x=>parseInt(x,10)).filter(m=>m>=1&&m<=12);
+const num=v=>{const n=parseFloat(v);return isNaN(n)?0:n;};
+/* 配息月：有手動填就用手動的；留空才自動用「除息月＋1」推算 */
+const payMonthsOf=r=>{
+  const manual=parseMonths(r.pay);
+  if(manual.length) return [...new Set(manual)].sort((a,b)=>a-b);
+  return [...new Set(parseMonths(r.ex).map(m=>m%12+1))].sort((a,b)=>a-b);
+};
+const perPay=r=>num(r.div)*1000*num(r.lots);                 // 每次入帳
+const yieldEst=r=>{const p=num(r.price);return p>0?(num(r.div)*payMonthsOf(r).length/p*100):0;};
+
+function load(){
+  let seed='';
+  try{const s=localStorage.getItem(KEY);
+    if(s){const o=JSON.parse(s); rows=o.rows||[]; lastFetch=o.lastFetch||''; seed=o.seed||'';
+          if(o.savedAt) setSaveInfo(o.savedAt);}
+  }catch(e){}
+  if(!rows.length) rows=DEFAULTS.map(r=>({...r}));
+  /* 舊存檔會蓋掉預設清單，所以之後才加進來的標的要補進去；
+     只在「存檔的清單版本比較舊」時補一次，補完存檔後就不會再把使用者刪掉的列塞回來 */
+  if(seed!==SEED){
+    const have=new Set(rows.map(r=>String(r.tk||'').toUpperCase()));
+    DEFAULTS.forEach(d=>{ if(!have.has(d.tk.toUpperCase())) rows.push({...d, pick:false}); });
+  }
+  if(lastFetch) setUpdateStatus('上次股價更新：'+lastFetch);
+}
+function setSaveInfo(t){document.getElementById('saveinfo').textContent='已儲存 · '+t;}
+function setUpdateStatus(t,warn){const el=document.getElementById('updateStatus');el.textContent=t;el.className='mini'+(warn?' warn':'');}
+
+/* ---------- 標的表 ---------- */
+function renderTable(){
+  const tb=document.getElementById('tbody'); tb.innerHTML='';
+  rows.forEach((r,i)=>{
+    const cat=classify(r.tk,r.nm);
+    const pay=payMonthsOf(r);
+    const tr=document.createElement('tr');
+    tr.className=r.pick?'on':'';
+    tr.innerHTML=`
+      <td><input type="checkbox" class="pick" ${r.pick?'checked':''} onchange="upd(${i},'pick',this.checked)"></td>
+      <td><input class="cell" style="font-weight:800;min-width:78px" value="${r.tk||''}" onchange="upd(${i},'tk',this.value)">
+          <div class="nm"><input class="cell" style="border:none;padding:2px 0;min-width:120px" value="${r.nm||''}" onchange="upd(${i},'nm',this.value)"></div></td>
+      <td><span class="cat ${cat}">${CATLABEL[cat]}</span></td>
+      <td><input class="cell" type="number" step="0.01" value="${r.price}" onchange="upd(${i},'price',this.value)">
+          ${isBond(r)?'<span class="mini warn">上櫃·手動</span>':''}</td>
+      <td><span class="ro yld">${yieldEst(r).toFixed(1)}%</span><span class="mini">推估</span></td>
+      <td><input class="cell wide" value="${r.ex||''}" onchange="upd(${i},'ex',this.value)" placeholder="例 1,4,7,10"></td>
+      <td><input class="cell wide" value="${r.pay||''}" onchange="upd(${i},'pay',this.value)" placeholder="留空＝除息隔月">
+          <span class="mini">${pay.length?'入帳 '+pay.join('・')+' 月':'—'}${r.pay?'（手動）':''}</span></td>
+      <td><input class="cell" type="number" step="0.01" value="${r.div}" onchange="upd(${i},'div',this.value)"></td>
+      <td><button class="rowdel" title="刪除" onclick="delRow(${i})"><i class="ti ti-x"></i></button></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* ---------- 我的部位 ---------- */
+function renderPositions(){
+  const box=document.getElementById('poslist');
+  const picked=rows.map((r,i)=>({r,i})).filter(x=>x.r.pick);
+  if(!picked.length){box.innerHTML='<div class="pos-empty"><i class="ti ti-arrow-up"></i> 還沒選標的。到上方清單勾選「選」欄，就會出現在這裡填張數。</div>';
+    document.getElementById('kpis').style.display='none'; return;}
+  let html='<div class="pos-list">';
+  picked.forEach(({r,i})=>{
+    const times=payMonthsOf(r).length;
+    const year=perPay(r)*times;
+    html+=`<div class="pos-item">
+      <span class="pi-tk">${r.tk||'—'}</span>
+      <span class="pi-nm">${r.nm||''}</span>
+      <span class="pi-lot"><i class="ti ti-stack-2" style="color:var(--accent)"></i>
+        <input class="cell" type="number" min="0" step="1" value="${r.lots}" onchange="upd(${i},'lots',this.value)"> 張</span>
+      <span class="pi-year"><span class="big">${nt(year)}</span><span class="sm">／年（${times} 次配息）</span></span>
+    </div>`;
+  });
+  box.innerHTML=html+'</div>';
+  document.getElementById('kpis').style.display='grid';
+}
+
+/* ---------- 數字跳動（easeOutCubic；第一次捲到才從 0 跑起） ---------- */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let kpiSeen = false;
+function countTo(id, target, fmt, duration){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const from = Number(el.dataset.v || 0);
+  el.dataset.v = target;
+  /* 還沒捲到 KPI 區、或使用者關閉動態效果 → 直接寫上去 */
+  if(reduceMotion || !kpiSeen || from === target){ el.textContent = fmt(target); return; }
+  cancelAnimationFrame(Number(el.dataset.raf || 0));
+  const dur = duration || (from === 0 ? 1400 : 700), t0 = performance.now();
+  const step = t => {
+    const p = Math.min((t - t0) / dur, 1);
+    el.textContent = fmt(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+    if(p < 1) el.dataset.raf = requestAnimationFrame(step);
+  };
+  el.dataset.raf = requestAnimationFrame(step);
+}
+/* KPI 區第一次露臉時，把當下數字從 0 跑一次 */
+function watchKpis(){
+  const box = document.getElementById('kpis');
+  if(!box || reduceMotion) { kpiSeen = true; return; }
+  const obs = new IntersectionObserver(([e]) => {
+    if(!e.isIntersecting) return;
+    obs.disconnect(); kpiSeen = true;
+    ['kpiYear','kpiMonth','kpiCount'].forEach(id=>{
+      const el = document.getElementById(id);
+      const to = Number(el.dataset.v || 0);
+      el.dataset.v = 0;
+      countTo(id, to, id==='kpiCount' ? (v=>Math.round(v)+' 個月') : (v=>nt(v)), 1400);
+    });
+  }, {threshold:.5});
+  obs.observe(box);
+}
+
+/* ---------- 配息月曆 ---------- */
+function renderCalendar(){
+  const picked=rows.filter(r=>r.pick);
+  const totals=Array(12).fill(0), brk=Array.from({length:12},()=>[]);
+  picked.forEach(r=>{
+    const pay=perPay(r); if(pay<=0) return;
+    payMonthsOf(r).forEach(m=>{ totals[m-1]+=pay; brk[m-1].push({tk:r.tk,amt:pay}); });
+  });
+  const nowMonth=new Date().getMonth()+1;   /* 每次重畫都重讀，跨月自動跟上 */
+  renderChart(totals);
+  const grid=document.getElementById('calgrid'); grid.innerHTML='';
+  totals.forEach((t,idx)=>{
+    const paid=t>0, isNow=(idx+1)===nowMonth, cell=document.createElement('div');
+    cell.className='mo '+(paid?'paid':'empty')+(isNow?' now':'');
+    let b=''; if(paid) brk[idx].forEach(x=>{ b+=`<span>${x.tk} <b>${nt(x.amt)}</b></span>`; });
+    cell.innerHTML=`<div class="mo-h"><span class="mo-n">${MONTHS[idx]}${isNow?'<span class="mo-now">這個月份</span>':''}</span><span class="mo-tag">${paid?'有配息':'—'}</span></div>
+      <div class="mo-amt">${paid?nt(t):'無配息'}</div>${paid?`<div class="mo-break">${b}</div>`:''}`;
+    grid.appendChild(cell);
+  });
+  const yearTotal=totals.reduce((a,b)=>a+b,0), payMonths=totals.filter(t=>t>0).length;
+  countTo('kpiYear',  yearTotal,     v=>nt(v));
+  countTo('kpiMonth', yearTotal/12,   v=>nt(v));
+  countTo('kpiCount', payMonths,      v=>Math.round(v)+' 個月');
+}
+
+/* ---------- 各月配息直方圖 ---------- */
+const shortNT = n => n>=10000 ? (n/10000).toFixed(n>=100000?0:1)+'萬' : Math.round(n).toLocaleString('en-US');
+const BAR_TOP = 88;   /* 最高的柱子佔圖高 88%，上面留空間放金額 */
+function renderChart(totals){
+  const chart=document.getElementById('chart'), bars=document.getElementById('bars'),
+        empty=document.getElementById('chartEmpty'), line=document.getElementById('avgline');
+  const max=Math.max(...totals), yearTotal=totals.reduce((a,b)=>a+b,0);
+  if(yearTotal<=0){
+    bars.innerHTML=''; chart.style.display='none'; empty.style.display='block';
+    document.getElementById('chMax').textContent=''; return;
+  }
+  chart.style.display='block'; empty.style.display='none';
+  const nowM=new Date().getMonth()+1;
+  bars.innerHTML=totals.map((t,i)=>{
+    const h = t>0 ? Math.max(t/max*BAR_TOP, 4) : 0;
+    const cls='bar'+(t>0?'':' zero')+((i+1)===nowM?' now':'');
+    return `<div class="${cls}" style="--h:${h.toFixed(1)}%;--d:${i*55}ms" title="${MONTHS[i]}：${t>0?nt(t):'無配息'}">`
+         + `<span class="bv">${t>0?shortNT(t):'—'}</span><span class="bfill"></span>`
+         + `<span class="bm">${i+1}</span></div>`;
+  }).join('');
+  const avg=yearTotal/12;
+  line.hidden=false;
+  line.style.bottom=(avg/max*BAR_TOP)+'%';
+  line.querySelector('span').textContent='平均 '+nt(avg);
+  document.getElementById('chMax').textContent='最高：'+MONTHS[totals.indexOf(max)]+' '+nt(max);
+}
+
+function renderAll(){renderTable();renderPositions();renderCalendar();}
+
+function upd(i,k,v){ rows[i][k]=v; renderAll(); }
+function addRow(){
+  rows.push({tk:'',nm:'新標的',pick:true,price:0,ex:'',pay:'',div:0,lots:0});
+  renderAll();
+  document.getElementById('watch').scrollIntoView({behavior:'smooth',block:'end'});
+}
+function delRow(i){ rows.splice(i,1); renderAll(); }
+
+/* ---------- 自動更新股價（台灣證交所公開資料，CORS 開放，file:// 可直接抓） ---------- */
+async function autoUpdate(){
+  const btn=document.getElementById('btnUpdate');
+  btn.disabled=true; const orig=btn.innerHTML; btn.innerHTML='<i class="ti ti-loader-2"></i>更新中…';
+  setUpdateStatus('連線台灣證交所中…');
+  try{
+    const url='https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY_ALL?response=csv&_='+Date.now();
+    const res=await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const map={}; let dateRoc=null;
+    text.trim().split('\n').forEach(line=>{
+      const c=[...line.matchAll(/"([^"]*)"/g)].map(m=>m[1]);
+      if(c.length>=9 && /^\d{6,7}$/.test(c[0])){ if(!dateRoc)dateRoc=c[0]; map[c[1].toUpperCase()]=c[8]; }
+    });
+    let ok=0, miss=[];
+    rows.forEach(r=>{
+      const code=(r.tk||'').toUpperCase();
+      const raw=map[code];
+      const price=raw?parseFloat(String(raw).replace(/,/g,'')):NaN;
+      if(!isNaN(price)&&price>0){ r.price=price; ok++; } else if(code) miss.push(r.tk);
+    });
+    // ROC 日期 → 西元
+    let dstr='';
+    if(dateRoc){ const y=parseInt(dateRoc.slice(0,3))+1911, m=dateRoc.slice(3,5), d=dateRoc.slice(5,7); dstr=`${y}/${m}/${d}`; }
+    lastFetch=new Date().toLocaleString('zh-TW',{hour12:false});
+    renderAll();
+    let msg=`已更新 ${ok} 檔股價（收盤日 ${dstr||'—'}）`;
+    if(miss.length) msg+=`；${miss.length} 檔查無需手動（${miss.slice(0,6).join('、')}${miss.length>6?'…':''}，多為上櫃債券 ETF）`;
+    setUpdateStatus(msg, miss.length>0);
+  }catch(e){
+    setUpdateStatus('更新失敗：'+e.message+'（可能為離線、或瀏覽器阻擋跨網連線；價格可手動填）', true);
+  }finally{
+    btn.disabled=false; btn.innerHTML=orig;
+  }
+}
+
+/* ---------- 儲存 / 重置 / PDF ---------- */
+function saveAll(){
+  const t=new Date().toLocaleString('zh-TW',{hour12:false});
+  try{localStorage.setItem(KEY,JSON.stringify({rows,savedAt:t,lastFetch,seed:SEED})); setSaveInfo(t);}
+  catch(e){alert('儲存失敗：'+e.message);}
+}
+function resetAll(){
+  if(!confirm('確定要清空並回到預設標的嗎？目前填的張數與修改會不見。')) return;
+  try{localStorage.removeItem(KEY);}catch(e){}
+  rows=DEFAULTS.map(r=>({...r})); lastFetch='';
+  document.getElementById('saveinfo').textContent='尚未儲存';
+  setUpdateStatus('');
+  renderAll();
+}
+function exportPDF(){
+  const orig=document.title, d=new Date(), p=n=>String(n).padStart(2,'0');
+  document.title='ETF配息月曆_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate());
+  window.print();
+  setTimeout(()=>{document.title=orig;},1000);
+}
+
+load(); renderAll(); watchKpis();
+</script>
+</body>
+</html>
