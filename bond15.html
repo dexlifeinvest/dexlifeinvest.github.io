@@ -79,6 +79,7 @@ tbody tr:hover{background:var(--accent-soft)}
 .tag.t綜合債{background:#efe9fb; color:#5b3fb0}
 .big{font-weight:700}
 .mut{color:var(--muted)}
+.dday{font-size:11px; font-weight:400; color:var(--muted); margin-top:2px; white-space:nowrap}
 .neg{color:var(--red); font-weight:700}
 .pos{color:var(--green); font-weight:700}
 .hot{color:var(--amber); font-weight:700}
@@ -166,6 +167,7 @@ tbody tr:hover{background:var(--accent-soft)}
         <th data-k="price">價格 <i class="ti ti-arrows-sort"></i></th>
         <th data-k="cat">類型</th>
         <th data-k="aum">規模(億) <i class="ti ti-arrows-sort"></i></th>
+        <th data-k="dlast">最近配息(元) <i class="ti ti-arrows-sort"></i></th>
         <th data-k="freq">配息頻率</th>
         <th data-k="yield">殖利率 <i class="ti ti-arrows-sort"></i></th>
         <th data-k="tr">近1年總報酬 <i class="ti ti-arrows-sort"></i></th>
@@ -182,6 +184,7 @@ tbody tr:hover{background:var(--accent-soft)}
 <div class="card learn">
   <h2><i class="ti ti-bulb"></i>怎麼看這張表</h2>
   <p><b>規模</b>：債券 ETF 規模越大，流動性越好、被清算下市的風險越低。前 15 大都在 600 億以上，買賣不太會卡住。</p>
+  <p><b>最近配息</b>：最近一次除息時，每 1 單位配到的現金（元），下方小字是除息日。例：配 0.14 元、持有 10 張（10,000 單位），就是領 1,400 元（未扣二代健保補充保費與匯費）。月配與季配的金額不能直接比大小，要換算成殖利率才公平。</p>
   <p><b>配息頻率</b>：由近一年實際除息次數自動判定（12 次＝月配、4 次＝季配）。月配現金流平順，但配息頻繁不等於配得多，要搭殖利率一起看。</p>
   <p><b>殖利率</b>：近一年配息總額 ÷ 目前股價，即時計算。債券 ETF 的配息來自債息，相對穩定，但<b>不保證不變</b> —— 舊債到期、換進新債，配息水準就會跟著市場利率走。</p>
   <p><b>近一年總報酬</b>：（現在價格 − 一年前價格 ＋ 這一年配息）÷ 一年前價格。<b>這欄才是真正賺賠</b>。看到殖利率 5% 但總報酬是負的，代表配到的息被價差吃掉了。</p>
@@ -241,6 +244,18 @@ const freqLabel = n => n>=11 ? "月配" : (n>=3 ? "季配" : (n>=2 ? "半年配"
 const yieldOf = e => e.yLive != null ? e.yLive : e.ySnap;
 const trOf    = e => e.trLive != null ? e.trLive : e.trSnap;
 
+/* 最近一次配息快照（元／單位、除息日），資料日 2026-09-14（FinMind）；開檔抓到即時資料會覆蓋 */
+const DIV_SNAP = {
+  "00937B":[0.072,"2026-08-18"], "00679B":[0.28,"2026-08-21"],  "00751B":[0.43,"2026-06-22"],
+  "00720B":[0.47,"2026-07-21"],  "00725B":[0.49,"2026-07-16"],  "00687B":[0.262,"2026-06-16"],
+  "00772B":[0.14,"2026-08-18"],  "00933B":[0.073,"2026-08-18"], "00724B":[0.483,"2026-07-16"],
+  "00761B":[0.45,"2026-08-18"],  "00773B":[0.145,"2026-08-18"], "00746B":[0.433,"2026-07-16"],
+  "00740B":[0.185,"2026-08-18"], "00792B":[0.453,"2026-06-16"], "00777B":[0.14,"2026-08-18"]
+};
+BONDS.forEach(e=>{ const d = DIV_SNAP[e.code]; if(d){ e.dLast = d[0]; e.dDate = d[1]; } });
+/* 配息金額：去掉尾端多餘的 0，至少留兩位小數（0.14、0.072、0.262） */
+const divAmt = n => (n==null || !isFinite(n)) ? "—" : (Math.round(n*1000)%10 ? n.toFixed(3) : n.toFixed(2));
+
 let sortKey = "aum", sortDir = -1, catFilter = "全部", selected = [];
 const CATS = ["全部","美國公債","投等公司債","金融債","綜合債"];
 
@@ -269,6 +284,7 @@ function render(){
     else if(sortKey==="vol"){ x = a.volAnn ?? -1; y = b.volAnn ?? -1; }
     else if(sortKey==="mdd"){ x = a.mdd ?? -99; y = b.mdd ?? -99; }
     else if(sortKey==="avgvol"){ x = a.avgVol ?? -1; y = b.avgVol ?? -1; }
+    else if(sortKey==="dlast"){ x = a.dLast ?? -1; y = b.dLast ?? -1; }
     else if(sortKey==="freq"){ x = a.nDiv ?? 0; y = b.nDiv ?? 0; }
     else if(["code","name","cat"].includes(sortKey)){ return sortDir * String(a[sortKey]).localeCompare(String(b[sortKey]),"zh-Hant"); }
     else { x = a[sortKey]; y = b[sortKey]; }
@@ -276,7 +292,7 @@ function render(){
   });
   tb.innerHTML = "";
   if(rows.length===0){
-    tb.innerHTML = `<tr><td colspan="13" class="mut" style="text-align:center; padding:20px">目前沒有符合的債券 ETF</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="14" class="mut" style="text-align:center; padding:20px">目前沒有符合的債券 ETF</td></tr>`;
     return;
   }
   rows.forEach(e=>{
@@ -294,6 +310,7 @@ function render(){
       `<td class="${e.live?'pxlive':'pxsnap'}">${e.price!=null ? e.price.toFixed(2) : "—"}</td>`+
       `<td><span class="tag t${e.cat}">${e.sub}</span></td>`+
       `<td class="big">${nfInt(e.aum)}</td>`+
+      `<td class="big">${divAmt(e.dLast)}${e.dDate ? `<div class="dday">${e.dDate.slice(5).replace("-","/")} 除息</div>` : ""}</td>`+
       `<td>${freqTxt}</td>`+
       `<td class="big">${pct1(yv)}</td>`+
       `<td class="big">${trTxt}</td>`+
@@ -357,6 +374,9 @@ async function loadOne(e){
   const divSum = divs.reduce((s,x)=> s + (x.stock_and_cache_dividend||0), 0);
   e.nDiv = divs.length;
   e.div1y = divSum;
+  /* 最近一次配息金額與除息日（FinMind 沒回傳就保留快照） */
+  const lastDv = (dv||[]).filter(x=> x.stock_and_cache_dividend>0).sort((a,b)=> a.date<b.date?-1:1).pop();
+  if(lastDv){ e.dLast = +lastDv.stock_and_cache_dividend; e.dDate = lastDv.date; }
   e.yLive = e.price>0 ? divSum / e.price * 100 : null;
 
   if(win.length > 30){
@@ -433,7 +453,8 @@ function saveCache(){
     const m = {};
     BONDS.forEach(e=>{
       if(e.live) m[e.code] = {price:e.price, yLive:e.yLive, trLive:e.trLive, volAnn:e.volAnn,
-                              mdd:e.mdd, avgVol:e.avgVol, nDiv:e.nDiv, div1y:e.div1y, lastDate:e.lastDate};
+                              mdd:e.mdd, avgVol:e.avgVol, nDiv:e.nDiv, div1y:e.div1y, lastDate:e.lastDate,
+                              dLast:e.dLast, dDate:e.dDate};
     });
     localStorage.setItem(LS_KEY, JSON.stringify({m, ts:Date.now()}));
   }catch(_){}
@@ -445,7 +466,11 @@ function loadCache(){
       cacheTs = c.ts || 0;
       BONDS.forEach(e=>{
         const s = c.m[e.code];
-        if(s){ Object.assign(e, s); e.live = true; }
+        if(s){
+          /* 舊版快取沒有配息金額欄位，別用 undefined 蓋掉快照 */
+          Object.keys(s).forEach(k=>{ if(s[k]!==undefined && s[k]!==null) e[k] = s[k]; });
+          e.live = true;
+        }
       });
       if(c.ts) document.getElementById("savedAt").textContent = "上次更新：" + new Date(c.ts).toLocaleString("zh-TW");
     }
