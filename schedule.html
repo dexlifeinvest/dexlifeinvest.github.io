@@ -78,6 +78,7 @@ table.etf tr.on{background:var(--accent-soft);}
 .cat.bond{background:var(--gold-bg);color:var(--gold);}
 .cat.reit{background:#efe9fb;color:#5b3fb0;}
 .cat.equity{background:#eef1f6;color:var(--muted);}
+.cat.industry{background:#fdeee3;color:#c2551b;}
 input.cell{width:100%;min-width:58px;border:1px solid var(--line);border-radius:8px;
   padding:5px 7px;font-size:13px;color:var(--ink);background:#fff;font-family:inherit;}
 input.cell:focus{outline:none;border-color:var(--accent);}
@@ -232,6 +233,7 @@ input[type=checkbox].pick{width:20px;height:20px;accent-color:var(--accent);curs
     <p class="sec-sub">勾選你持有（或想配置）的標的。<b>類型會自動判斷</b>、<b>除息月與配息月都可以自己輸入</b>（用逗號分隔，例 1,4,7,10）；配息月<b>留空</b>才會自動帶「除息月的隔月」。按上方「自動更新股價」可抓最新收盤價；殖利率為系統推估。下方可自行新增標的；清單<b>可上下捲動</b>，表頭會固定在上面。</p>
     <div class="legend">
       <span><span class="cat market">市值型</span></span>
+      <span><span class="cat industry">產業型</span></span>
       <span><span class="cat income">配息型</span></span>
       <span><span class="cat bond">債券型</span></span>
       <span><span class="cat reit">房地產</span></span>
@@ -306,40 +308,47 @@ input[type=checkbox].pick{width:20px;height:20px;accent-color:var(--accent);curs
 
 <script>
 const KEY='dex_etf_dividend_calendar_v2';
-const SEED='2026-09-13';   /* 預設標的清單的版本；改清單就更新這個日期，舊存檔會自動補上新標的 */
+const SEED='2026-09-28';   /* 預設標的清單的版本；改清單就更新這個日期，舊存檔會自動補上新標的 */
 const MONTHS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
 /* 預設標的（假設估算，price 為近期收盤概值，按「自動更新股價」可抓最新）
    exMonths＝除息月；配息月＝除息月＋1（隔月入帳）自動推算 */
 const DEFAULTS=[
  {tk:'0050',  nm:'元大台灣50',        pick:false, price:107.70, ex:'1,7',                     div:0.60,  lots:0},
+ {tk:'00926', nm:'凱基全球菁英55',    pick:false, price:26.54,  ex:'12',                      div:1.47,  lots:0, cat:'market'},
  {tk:'0056',  nm:'元大高股息',        pick:true,  price:55.30,  ex:'1,4,7,10',                div:1.35,  lots:0},
  {tk:'00878', nm:'國泰永續高股息',    pick:true,  price:34.00,  ex:'2,5,8,11',                div:1.01,  lots:0},
  {tk:'00919', nm:'群益台灣精選高息',  pick:true,  price:32.48,  ex:'3,6,9,12',                div:1.00,  lots:0},
  {tk:'00713', nm:'元大台灣高息低波',  pick:false, price:63.85,  ex:'3,6,9,12',                div:1.00,  lots:0},
  {tk:'00918', nm:'大華優利高填息30',  pick:false, price:35.34,  ex:'3,6,9,12',                div:1.26,  lots:0},
  {tk:'00929', nm:'復華台灣科技優息',  pick:false, price:28.62,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.38, lots:0},
+ /* 00927 每次配息落差很大（近四次 0.22／0／0.94／1.88），用「上次 1.88」推估殖利率會膨脹到近 19%，這裡改填近四次平均 */
+ {tk:'00927', nm:'群益半導體收益',    pick:false, price:39.77,  ex:'1,4,7,10',                div:0.76,  lots:0, cat:'industry'},
  {tk:'00712', nm:'復華富時不動產',    pick:false, price:8.38,   ex:'3,6,9,12',                div:0.235, lots:0},
  {tk:'00714', nm:'群益道瓊美國地產',  pick:false, price:21.15,  ex:'1,4,7,10',                div:0.123, lots:0},
  {tk:'00679B',nm:'元大美債20年',      pick:false, price:25.26,  ex:'2,5,8,11',                div:0.28,  lots:0},
- {tk:'00751B',nm:'元大AAA至A公司債',  pick:false, price:29.82,  ex:'3,6,9,12',                div:0.43,  lots:0},
  {tk:'00772B',nm:'中信高評級公司債',  pick:false, price:31.85,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.14, lots:0},
  {tk:'00773B',nm:'中信優先金融債',    pick:false, price:34.09,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.145,lots:0},
 ];
 
+/* 從預設清單拿掉的標的：舊存檔裡若沒持有（張數 0）就一併移除，有持有的保留 */
+const REMOVED=['00751B'];
+
 let rows=[], lastFetch='';
 
 /* ---------- 類型自動判斷 ---------- */
-function classify(tk,nm){
+function classify(tk,nm,cat){
+  if(cat && CATLABEL[cat]) return cat;   /* 預設標的可直接指定類型（名稱判斷不準時用） */
   tk=(tk||'').toUpperCase(); nm=nm||'';
   if(/B$/.test(tk)||/債/.test(nm)) return 'bond';
   if(/(不動產|地產|REIT|房地產)/.test(nm)) return 'reit';
   if(/(高股息|高息|優息|優利|高填息|填息|收息|收益|存股|高股利|月配|季配|多元|精選)/.test(nm)) return 'income';
-  if(/(台灣50|臺灣50|台50|臺50|市值|中型100|台灣100|臺灣100|龍頭|加權|MSCI|富時台灣)/.test(nm)) return 'market';
+  if(/(台灣50|臺灣50|台50|臺50|市值|中型100|台灣100|臺灣100|龍頭|加權|MSCI|富時台灣|全球菁英)/.test(nm)) return 'market';
+  if(/(半導體|科技|電子|AI|電動車|5G|網通|通訊|生技|金融|晶片)/.test(nm)) return 'industry';
   return 'equity';
 }
-const CATLABEL={market:'市值型',income:'配息型',bond:'債券型',reit:'房地產',equity:'股票型'};
-const isBond=r=>classify(r.tk,r.nm)==='bond';
+const CATLABEL={market:'市值型',industry:'產業型',income:'配息型',bond:'債券型',reit:'房地產',equity:'股票型'};
+const isBond=r=>classify(r.tk,r.nm,r.cat)==='bond';
 
 /* ---------- 小工具 ---------- */
 const nt=n=>'NT$'+Math.round(n).toLocaleString('en-US');
@@ -364,8 +373,11 @@ function load(){
   /* 舊存檔會蓋掉預設清單，所以之後才加進來的標的要補進去；
      只在「存檔的清單版本比較舊」時補一次，補完存檔後就不會再把使用者刪掉的列塞回來 */
   if(seed!==SEED){
+    rows=rows.filter(r=>!(REMOVED.includes(String(r.tk||'').toUpperCase()) && num(r.lots)<=0));
     const have=new Set(rows.map(r=>String(r.tk||'').toUpperCase()));
     DEFAULTS.forEach(d=>{ if(!have.has(d.tk.toUpperCase())) rows.push({...d, pick:false}); });
+    /* 使用者自己先加過同代號的列，補上預設指定的類型 */
+    rows.forEach(r=>{ const d=DEFAULTS.find(x=>x.tk.toUpperCase()===String(r.tk||'').toUpperCase()); if(d&&d.cat&&!r.cat) r.cat=d.cat; });
   }
   if(lastFetch) setUpdateStatus('上次股價更新：'+lastFetch);
 }
@@ -376,7 +388,7 @@ function setUpdateStatus(t,warn){const el=document.getElementById('updateStatus'
 function renderTable(){
   const tb=document.getElementById('tbody'); tb.innerHTML='';
   rows.forEach((r,i)=>{
-    const cat=classify(r.tk,r.nm);
+    const cat=classify(r.tk,r.nm,r.cat);
     const pay=payMonthsOf(r);
     const tr=document.createElement('tr');
     tr.className=r.pick?'on':'';
