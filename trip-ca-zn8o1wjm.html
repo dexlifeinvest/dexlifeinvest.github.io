@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>加拿大旅行手冊</title>
+<meta name="description" content="2026/10/20–11/1 加拿大 12 日遊每日手冊：行程、必帶、景點、餐飲、注意事項、英文與即時天氣、極光 Kp。">
+<meta name="theme-color" content="#1d5b3c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef3f2; --surface:#ffffff; --ink:#15302b; --muted:#5b6f6b; --line:#d3dedb;
+  --sign:#1d5b3c; --sign-ink:#ffffff; --lake:#14838a; --lake-soft:#dff0ef;
+  --maple:#b8402c; --maple-soft:#f8e4df; --aurora:#2f9e6a; --gold:#9a6b12;
+  --radius-s:6px; --radius-m:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1820; --surface:#14232d; --ink:#e3ece9; --muted:#93a8a3; --line:#25404a;
+    --sign:#1d5b3c; --sign-ink:#ffffff; --lake:#4fc1c6; --lake-soft:#163640;
+    --maple:#f08a74; --maple-soft:#3a2420; --aurora:#6fdc9f; --gold:#e2b45a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1820; --surface:#14232d; --ink:#e3ece9; --muted:#93a8a3; --line:#25404a;
+  --sign:#1d5b3c; --sign-ink:#ffffff; --lake:#4fc1c6; --lake-soft:#163640;
+  --maple:#f08a74; --maple-soft:#3a2420; --aurora:#6fdc9f; --gold:#e2b45a;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Noto Sans TC",system-ui,sans-serif;}
+a{color:var(--lake);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,label:focus-within{outline:3px solid var(--lake);outline-offset:2px;border-radius:4px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+/* top bar */
+.top{background:var(--sign);color:var(--sign-ink);padding:14px 0 10px}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;justify-content:space-between}
+.top h1{margin:0;font:900 1.25rem/1.2 "Noto Serif TC",serif;letter-spacing:.04em}
+.clocks{display:flex;gap:14px;font-size:.82rem;opacity:.92}
+.clocks b{font-weight:700;font-variant-numeric:tabular-nums}
+.theme-btn{white-space:nowrap;background:none;border:1px solid rgba(255,255,255,.5);color:inherit;border-radius:999px;padding:2px 10px;font:inherit;font-size:.78rem;cursor:pointer}
+.status{font-size:.85rem;opacity:.9;width:100%}
+
+/* day strip */
+nav.days{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.days .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.days .wrap::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font:inherit;font-size:.88rem;cursor:pointer;line-height:1.3;text-align:center}
+.tab small{display:block;font-size:.7rem;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--sign);border-color:var(--sign);color:#fff}
+.tab[aria-selected="true"] small{color:#d6eadf}
+.tab.today{box-shadow:inset 0 0 0 2px var(--gold)}
+
+/* highway sign header: the one memorable element */
+.sign{margin:20px 0 16px;background:var(--sign);color:var(--sign-ink);border-radius:14px;padding:6px}
+.sign-in{border:2px solid rgba(255,255,255,.9);border-radius:10px;padding:14px 16px 16px}
+.sign .when{font-size:.9rem;opacity:.9}
+.sign h2{margin:2px 0 6px;font:900 clamp(1.5rem,6vw,2.1rem)/1.25 "Noto Serif TC",serif;letter-spacing:.03em}
+.sign .route{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-weight:700}
+.sign .route span.arrow{opacity:.75}
+.sign .stay{margin-top:10px;font-size:.88rem;opacity:.95}
+.sign .stay a{color:#fff}
+
+/* glance row */
+.glance{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:620px){.glance.two{grid-template-columns:1fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-m);padding:14px 16px}
+.panel h3{margin:0 0 6px;font-size:1rem}
+.wx-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wx-temp{font:900 1.9rem/1 "Noto Serif TC",serif;font-variant-numeric:tabular-nums}
+.wx-meta{color:var(--muted);font-size:.86rem}
+.hint{color:var(--muted);font-size:.86rem;margin:6px 0 0}
+.kp-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.kp{flex:1 1 60px;border-radius:var(--radius-s);padding:6px 8px;background:var(--lake-soft);font-size:.8rem;text-align:center}
+.kp b{display:block;font:900 1.3rem/1.2 "Noto Serif TC",serif}
+.kp.hi{background:var(--aurora);color:#04150c}
+.clouds{display:flex;gap:3px;margin-top:8px;align-items:flex-end;height:54px}
+.clouds div{flex:1;background:var(--muted);opacity:.35;border-radius:3px 3px 0 0;position:relative;min-height:3px}
+.clouds div.clear{background:var(--aurora);opacity:1}
+.cloud-axis{display:flex;gap:3px;font-size:.66rem;color:var(--muted)}
+.cloud-axis span{flex:1;text-align:center}
+
+/* sections */
+section.block{margin:26px 0}
+section.block > h3{font:900 1.15rem/1.3 "Noto Serif TC",serif;margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{display:grid;grid-template-columns:4.6rem 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.timeline .t{font-weight:700;color:var(--lake);font-variant-numeric:tabular-nums;font-size:.92rem;padding-top:1px}
+.badge{display:inline-block;font-size:.72rem;padding:0 7px;border-radius:999px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+.badge.book{background:var(--lake-soft);color:var(--lake);border:1px solid var(--lake)}
+.badge.fly{background:var(--sign);color:#fff}
+.badge.warn{background:var(--maple-soft);color:var(--maple);border:1px solid var(--maple)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:7px 4px;cursor:pointer;border-radius:6px}
+.checks input{width:20px;height:20px;margin-top:3px;accent-color:var(--sign);flex:none}
+.checks input:checked + span{color:var(--muted);text-decoration:line-through}
+.places{display:grid;gap:10px}
+.place{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:10px 12px}
+.place .n{font-weight:700}
+.place .d{font-size:.9rem;color:var(--muted);margin-top:2px}
+.place .map{font-size:.85rem;white-space:nowrap}
+.place header{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.notes{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.notes li{padding:10px 12px;border-left:4px solid var(--maple);background:var(--maple-soft);border-radius:0 var(--radius-s) var(--radius-s) 0;font-size:.95rem}
+.notes li.info{border-left-color:var(--lake);background:var(--lake-soft)}
+
+/* english */
+.vocab{width:100%;border-collapse:collapse;font-size:.92rem}
+.vocab td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.vocab td.en{font-weight:700;width:38%}
+.vocab td.use{color:var(--muted);font-size:.84rem}
+.say{border:none;background:var(--lake-soft);color:var(--lake);border-radius:999px;width:28px;height:28px;cursor:pointer;flex:none;font-size:.85rem;line-height:28px;padding:0}
+.phr{display:grid;gap:8px}
+.phr div{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:9px 12px;display:flex;gap:10px;align-items:flex-start}
+.phr .ctx{font-size:.8rem;color:var(--muted)}
+.phr .s{font-weight:500}
+details.more{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:4px 12px}
+details.more summary{cursor:pointer;padding:6px 0;font-weight:700}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{display:inline-block;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.88rem;text-decoration:none}
+.linkgroup{margin-bottom:18px}
+.linkgroup h4{margin:0 0 8px;font-size:.95rem}
+.search{width:100%;font:inherit;padding:10px 12px;border-radius:var(--radius-s);border:1px solid var(--line);background:var(--surface);color:var(--ink);margin-bottom:12px}
+.wordhead{font-weight:700;margin:16px 0 4px;color:var(--lake);font-size:.9rem}
+footer{color:var(--muted);font-size:.8rem;padding:30px 0 50px}
+.progress{font-size:.85rem;color:var(--muted);margin:-4px 0 8px}
+@media (prefers-reduced-motion: no-preference){
+  .sign{animation:signIn .35s ease-out}
+  @keyframes signIn{from{transform:translateY(-6px);opacity:.4}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>加拿大旅行手冊</h1>
+    <div class="clocks" aria-label="目前時間">
+      <span>台灣 <b id="c-tw">--:--</b></span>
+      <span>溫哥華 <b id="c-van">--:--</b></span>
+      <span>黃刀鎮・班夫 <b id="c-mt">--:--</b></span>
+      <button class="theme-btn" id="themeBtn" type="button">深淺色</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+</header>
+<nav class="days" aria-label="每日分頁"><div class="wrap" role="tablist" id="tabs"></div></nav>
+<main class="wrap" id="main" tabindex="-1"></main>
+<footer class="wrap">
+  天氣來自 Open-Meteo，極光 Kp 預報來自 NOAA SWPC，網路不通時會改顯示連結。勾選的清單只存在這支手機的瀏覽器裡。
+</footer>
+
+<script>
+const VOCAB = [{"title": "10/20（二）台北 → 溫哥華", "words": [["courtesy shuttle", "免費接駁車", "機場找飯店接駁車的站牌，也寫 complimentary shuttle"], ["quad room", "四人房", "櫃台確認房型：one double and one quad"], ["queen bed / twin beds", "加大雙人床／兩張單人床", "確認床型"], ["incidental deposit", "雜費押金", "入住時刷卡預扣，也叫 pre-authorization"], ["luggage cart", "行李推車", "向櫃台借"], ["washroom", "洗手間", "加拿大通用說法，很少說 restroom 或 toilet"], ["diner", "美式家庭餐館", "Denny's 這類 24 小時餐廳"], ["all-day breakfast", "全天供應早餐", "Denny's 菜單分類"], ["hash browns", "薯餅／煎薯絲", "早餐配菜"], ["sunny-side up / over easy / scrambled", "單面煎／兩面半熟／炒蛋", "點蛋時店員會問 How would you like your eggs?"], ["free refills", "免費續杯", "咖啡、汽水"], ["for here or to go", "內用或外帶", "速食店結帳必問"], ["tap", "感應付款", "刷卡機前說 Can I tap?"], ["loonie / toonie", "1 加幣／2 加幣硬幣", "找零、給小費時會聽到"], ["gratuity", "小費", "帳單或刷卡機上的選項，等同 tip"]], "phrases": [["機場找接駁車", "Where do I catch the shuttle to Accent Inns?"], ["飯店入住", "Hi, we have a reservation for two rooms, one double and one quad."], ["問隔天接駁車", "What time does the airport shuttle leave tomorrow morning?"], ["餐廳帶位", "Could we get a table for six?"], ["點蛋", "I'll have my eggs over easy, please."], ["速食店點餐", "Can I get a Big Mac meal, for here?"], ["結帳", "Could we get the bill, please? Can I tap?"]]}, {"title": "10/21（三）溫哥華 → 黃刀鎮", "words": [["aurora borealis", "北極光", "正式名稱，口語多說 northern lights"], ["aurora viewing / aurora hunting", "營地觀賞／開車追光", "極光團的兩種方式"], ["pick-up time", "集合接送時間", "導遊每晚通知"], ["KP index", "極光活動指數", "極光預報，數字越高越強"], ["cloud cover / overcast", "雲量／陰天", "決定看不看得到極光"], ["clear skies", "晴空", "導遊說 We need clear skies tonight"], ["tripod / long exposure", "腳架／長曝光", "拍極光"], ["balance", "尾款", "現場付極光團尾款"], ["toque", "毛帽", "加拿大用字，唸「突克」"], ["host", "房東", "Airbnb 訊息"], ["self check-in", "自助入住", "不會有人在現場交鑰匙"], ["smart lock / door code", "智慧鎖／門鎖密碼", "入住當天生效"], ["house rules / quiet hours", "房屋守則／安靜時段", "晚上 11 點到早上 7 點"], ["thermostat", "溫控器", "調暖氣"], ["carbon monoxide detector / smoke alarm", "一氧化碳警報器／煙霧警報器", "房源安全設備"], ["linens", "床單毛巾類", "房東說明備品"], ["produce", "生鮮蔬果", "超市分區，重音在前"], ["deli", "熟食櫃", "超市買現成的菜"], ["aisle", "走道", "問店員東西在哪：Which aisle?"], ["self-checkout", "自助結帳", "超市、Walmart"], ["by the slice", "單片賣", "Freshslice Pizza"], ["stir-fry", "熱炒", "Wok Box 菜單"]], "phrases": [["跟接機人員會合", "Hi, we're a group of six with Morning Star Travel."], ["問極光集合", "What time is the pick-up tonight, and where should we wait?"], ["付極光團尾款", "We'd like to pay the balance in cash. Could we get a receipt?"], ["門鎖打不開（傳訊給房東）", "The door code isn't working. Could you send us a new one?"], ["問暖氣", "How do we turn up the heat?"], ["超市找東西", "Excuse me, which aisle are the instant noodles in?"], ["超市結帳", "Could I get a bag, please?"]]}, {"title": "10/22（四）黃刀鎮", "words": [["visitor centre", "遊客中心", "加拿大拼法是 centre，路牌都這樣寫"], ["certificate", "證書", "遊客中心領「北緯 60 度」證書"], ["lapel pin", "徽章別針", "遊客中心送的小刀造型別針"], ["bush pilot", "叢林飛行員", "Bush Pilots Monument 飛行員紀念碑"], ["monument", "紀念碑", "導覽景點"], ["welcome sign", "歡迎碑", "拍照點"], ["Old Town", "老城區", "導覽與隔天自由行"], ["Indigenous / First Nations", "原住民／第一民族", "介紹 Ndilo 社區時的正式用語"], ["Dene", "甸尼族", "當地原住民族，唸「甸內」"], ["teepee", "圓錐帳篷", "極光營地的前景，也拼 tipi"], ["dome", "圓頂屋", "營地的全景星空屋"], ["reflection", "倒影", "湖面拍極光倒影"], ["heated", "有暖氣的", "營地休息的 heated cabin"], ["bison", "美洲野牛", "自費活動 bison viewing，唸「拜森」"], ["ATV", "四輪越野車", "自費活動"], ["waterfall hike", "瀑布健行", "自費活動"], ["hot and sour soup", "酸辣湯", "Gold Range Bistro"], ["spring roll", "春捲", "Gold Range Bistro"], ["shrimp fried rice", "蝦仁炒飯", "Sushi Cafe"], ["takeout", "外帶", "打電話或現場說 I'd like to order takeout"]], "phrases": [["導覽停留時間", "How long do we have here?"], ["請人幫忙拍照", "Would you mind taking a photo of us?"], ["遊客中心領證書", "Could we get the certificates, please? There are six of us."], ["訂外帶", "I'd like to place a takeout order. How long will it take?"], ["問自費活動", "Is there still space on the bison tour tomorrow? How much is it per person?"], ["問極光機率", "What are the chances of seeing the aurora tonight?"], ["營地取暖", "Is there somewhere we can warm up?"]]}, {"title": "10/23（五）黃刀鎮", "words": [["fare / transfer", "車資／轉乘券", "公車上跟司機要 transfer，轉車免費"], ["postmark", "郵戳", "郵局蓋北極熊郵戳"], ["postage", "郵資", "寄明信片回台灣：postage to Taiwan"], ["houseboat", "船屋", "老城區湖上"], ["floatplane", "水上飛機", "老城區湖邊"], ["midnight sun", "永晝", "伴手禮店 Gallery of the Midnight Sun"], ["soapstone carving", "皂石雕刻", "伴手禮店常見的原住民工藝品"], ["catch of the day", "當日漁獲", "Bullocks' 沒有固定魚種，店員會口頭介紹"], ["pickerel", "梭鱸", "當地湖魚，也叫 walleye"], ["Arctic char", "北極紅點鮭", "常見魚種，char 唸「恰」"], ["whitefish", "白鮭", "常見魚種"], ["deep-fried / pan-fried / grilled", "油炸／乾煎／炙烤", "選魚的做法"], ["ribeye", "肋眼牛排", "Buffalo ribeye 水牛肋眼"], ["portion", "份量", "How big are the portions?"], ["to share", "分食", "We'd like to share，請店家多給盤子"], ["separate bills", "分開結帳", "加拿大說 bill，不太說 check"], ["memorial", "紀念碑", "North of 60° Mining Memorial"], ["heritage centre", "文化遺產館", "Prince of Wales Northern Heritage Centre"], ["exhibit", "展覽、展品", "博物館"], ["free admission", "免費入場", "博物館門口"], ["trail", "步道", "Frame Lake Trail"]], "phrases": [["搭公車", "Does this bus go to Old Town? Could I get a transfer, please?"], ["郵局寄明信片", "I'd like to send these postcards to Taiwan. Could you use the polar bear postmark?"], ["餐廳報到", "We have a reservation for six at noon."], ["問今天有什麼魚", "What's the catch of the day?"], ["問份量", "How many dishes would you recommend for six people?"], ["要分食", "We're going to share. Could we have some extra plates?"], ["伴手禮店", "Is this made locally?"], ["博物館", "Is admission free? Is there a place to leave our coats?"]]}, {"title": "10/24（六）黃刀鎮 → 卡加利 → 坎莫爾", "words": [["baggage storage", "行李寄放", "卡加利機場寄放大行李"], ["hot food counter", "熱食櫃", "超市熟食區"], ["rotisserie chicken", "旋轉烤全雞", "超市熱食櫃，適合 6 人分"], ["chowder", "濃湯（奶油底）", "Save-On 的 potato bacon chowder"], ["fruit tray", "水果盒", "生鮮區"], ["member price", "會員價", "標價牌兩個價錢時，便宜的要會員卡"], ["pharmacy", "藥局", "Safeway 內、Shoppers"], ["liquor store", "酒類專賣店", "亞伯達省超市不賣酒，要另外去"], ["register your licence plate", "登錄車牌", "Save-On 停車場掃 QR code"], ["3BR", "三房", "房源標題縮寫，BR 是 bedroom"], ["w/", "含、附", "房源標題縮寫，就是 with"], ["patio", "露台", "這間民宿有 private patio"], ["haven", "避風港、世外桃源", "房源名稱 Rockies Haven"], ["hamlet", "小村落", "Harvie Heights 的行政區劃"], ["bear-proof bin", "防熊垃圾箱", "這一帶垃圾不能放室外，要丟專用箱"], ["the Rockies", "洛磯山脈", "Rocky Mountains 的口語說法"]], "phrases": [["機場寄放行李", "We'd like to store two large suitcases until Tuesday afternoon."], ["問會員價", "Is this price for members only?"], ["問熟食", "Is the hot food still available?"], ["問營業時間", "What time do you close tonight?"], ["告知房東抵達時間", "We'll arrive around 8 p.m. Is self check-in OK at that time?"], ["問垃圾怎麼丟", "Where should we put the garbage?"], ["餐廳候位", "Table for six, please. How long is the wait?"]]}, {"title": "10/25（日）班夫", "words": [["park pass", "國家公園通行證", "放在 dashboard（儀表板）上備查"], ["viewpoint / lookout", "觀景點", "路牌，Surprise Corner Viewpoint"], ["gondola", "纜車", "Banff Gondola，重音在第一音節"], ["upload time", "上山搭乘時間", "票上寫 Upload Time 10:10 AM；下山是 download"], ["summit", "山頂", "纜車山頂站"], ["observation deck", "觀景台", "山頂建築頂樓"], ["boardwalk", "木棧道", "山頂走到氣象站的步道"], ["weather station", "氣象站", "Sanson's Peak 上的舊氣象觀測站"], ["elevation", "海拔", "山頂解說牌"], ["parkade", "立體停車場", "加拿大用字，Bear Street Parkade"], ["prime rib", "爐烤牛肋排", "Melissa's 招牌，整塊慢烤再切片"], ["sirloin / striploin", "沙朗／紐約客", "牛排部位"], ["rare / medium rare / medium / medium well / well done", "一分／三分／五分／七分／全熟", "店員問 How would you like it cooked? 行程表建議的三分熟是 medium rare"], ["sides", "配菜", "牛排附的馬鈴薯、蔬菜，可選"], ["gravy", "肉汁醬", "淋在馬鈴薯泥上"], ["cascade", "階梯式小瀑布", "Cascade of Time Garden"], ["falls", "瀑布", "Bow Falls，地名裡常用複數"], ["scoop / waffle cone", "一球／餅乾甜筒", "Cows 冰淇淋：a single scoop in a waffle cone"], ["pastry", "酥皮點心", "BeaverTails 是炸麵團點心"], ["cinnamon sugar", "肉桂糖", "BeaverTails 經典口味"], ["hazelnut spread", "榛果巧克力醬", "BeaverTails 的 Nutella 口味"], ["elk", "加拿大馬鹿", "小鎮和路邊常見，保持距離"], ["bighorn sheep", "大角羊", "明尼旺卡湖附近常見"], ["grizzly / black bear", "灰熊／黑熊", "路邊警示牌"], ["wind chill", "風寒（體感溫度）", "湖邊看日落時的天氣預報"]], "phrases": [["纜車排隊", "We have tickets for the 10:10 upload. Where do we line up?"], ["領免費明信片", "Where can I pick up the free postcard?"], ["餐廳報到", "We have a reservation at 12:30 for six."], ["點牛排", "I'll have the prime rib, medium rare, please."], ["問配菜", "What sides does it come with?"], ["分開結帳", "Could we get separate bills?"], ["點冰淇淋", "Can I get a single scoop of this one in a waffle cone?"], ["點 BeaverTails", "One cinnamon sugar with lemon, please."], ["問停車", "Is parking free here? Is there a time limit?"]]}, {"title": "10/26（一）路易絲湖、翡翠湖、強斯頓峽谷", "words": [["glacier", "冰河", "路易絲湖後方的 Victoria Glacier"], ["glacier-fed", "冰河融水補注的", "解說牌形容湖水來源"], ["turquoise", "土耳其藍", "形容湖水顏色，唸「特闊伊茲」"], ["rock flour", "岩粉", "湖水呈乳藍色的原因，解說牌常見"], ["chateau", "城堡飯店", "Fairmont Chateau Lake Louise，唸「夏豆」"], ["lakeshore", "湖畔", "Lakeshore Trail 湖畔步道"], ["lot full", "停車場已滿", "路易絲湖停車場入口的電子看板"], ["lodge", "山林旅館", "Emerald Lake Lodge"], ["canoe", "獨木舟", "湖邊租船處，唸「可怒」"], ["loop trail", "環狀步道", "翡翠湖環湖一圈 5.2 km"], ["out and back", "原路折返", "步道類型，相對於 loop"], ["soup of the day", "今日例湯", "Trailhead Café"], ["wrap", "捲餅", "咖啡廳輕食"], ["pullout", "路邊停車處", "Morant's Curve 這類路邊景點的停車空間"], ["freight train", "貨運列車", "Morant's Curve 等火車經過拍照"], ["parkway", "景觀公路", "Bow Valley Parkway（1A 公路）"], ["canyon", "峽谷", "Johnston Canyon"], ["trailhead", "步道口", "停車場旁的步道起點"], ["Lower Falls / Upper Falls", "下瀑布／上瀑布", "強斯頓峽谷的兩個終點"], ["catwalk", "懸空棧道", "峽谷岩壁上的鐵製步道"], ["round trip", "來回", "指示牌寫的距離多半是 round trip"], ["icy / slippery", "結冰的／濕滑的", "步道警告牌"], ["ice cleats", "簡易冰爪", "套在鞋底防滑，也叫 microspikes"], ["wetland / marsh", "濕地／沼澤", "Vermilion Lakes、Backswamp"], ["dusk / dawn", "黃昏／黎明", "野生動物最活躍的時段，路牌會提醒"]], "phrases": [["停車場滿了", "Is the lot full? Where else can we park?"], ["問步道狀況", "Is the trail icy today? Do we need cleats?"], ["問路程時間", "How long does it take to get to the Upper Falls?"], ["問例湯", "What's the soup of the day?"], ["改外帶", "Can I get that to go?"], ["問洗手間", "Is there a washroom nearby?"], ["請人讓路拍照", "Excuse me, could we squeeze in for a quick photo?"]]}, {"title": "10/27（二）坎莫爾 → 卡加利 → 溫哥華", "words": [["creek", "小溪", "Policeman Creek Boardwalk"], ["peak", "山峰", "Three Sisters 三姊妹峰"], ["toasted", "烤過的", "點貝果會被問 Toasted?"], ["cream cheese", "奶油乳酪", "Roasted Garlic & Herb cream cheese"], ["everything bagel", "綜合種子貝果", "貝果口味，表面撒芝麻、罌粟籽、蒜、洋蔥"], ["breakfast sandwich", "早餐三明治", "BCLT + Egg 這類夾蛋的貝果"], ["BCLT", "培根、起司、生菜、番茄", "菜單縮寫，比 BLT 多了 cheese"], ["condo", "公寓大樓的一戶", "溫哥華民宿的房型，condominium 的縮寫"], ["unit number", "戶號", "找房間、叫外送時用"], ["key fob", "感應鎖扣", "進大樓大門和搭電梯要感應"], ["lockbox", "鑰匙密碼盒", "房東常用來交鑰匙"], ["buzzer / intercom", "門鈴對講機", "大樓門口，房東可能說 buzz unit…"], ["concierge", "大樓管理櫃台", "大廳，唸「康西耶舉」"], ["amenities", "設施與備品", "房源說明"], ["convenience store", "便利商店", "民宿旁的 Granville Food Mart"], ["walk-in", "現場候位（未訂位）", "找晚餐：Do you take walk-ins?"], ["waitlist", "候位名單", "客滿時登記"]], "phrases": [["點貝果", "Can I get a BCLT with egg on an everything bagel, toasted?"], ["外帶半打", "Half a dozen bagels to go, please."], ["落地後通知房東", "We've just landed and will be there in about an hour. How do we get the keys?"], ["問進大樓方式", "Do we need the fob for the elevator?"], ["餐廳現場候位", "Do you take walk-ins? We're a party of six."], ["登記候位", "Could you put us on the waitlist?"]]}, {"title": "10/28（三）史丹利公園、English Bay、煤氣鎮、加拿大廣場", "words": [["seawall", "海堤步道", "史丹利公園環島的 The Seawall"], ["hourly rate", "每小時費率", "腳踏車租借店價目表"], ["helmet / lock", "安全帽／車鎖", "租車時確認有沒有附：Are they included?"], ["one-way", "單向", "海堤自行車道只能逆時針騎"], ["totem pole", "圖騰柱", "Brockton Point 的 Totem Poles"], ["lighthouse", "燈塔", "Brockton Point Lighthouse"], ["lagoon", "潟湖", "Lost Lagoon，唸「勒古恩」"], ["wetsuit", "潛水衣", "Girl in a Wetsuit 雕像"], ["statue / sculpture", "雕像／雕塑", "公園與 The Drop 水滴雕塑"], ["steam clock", "蒸汽鐘", "Gastown Steam Clock"], ["whistle / chime", "鳴笛／報時音樂", "蒸汽鐘每 15 分鐘鳴笛、整點奏樂"], ["cobblestone", "鵝卵石路面", "煤氣鎮街道"], ["fridge magnet", "冰箱磁鐵", "楓樹廣場紀念品店"], ["alley", "巷子", "粉紅巷 Alley Oop"], ["Art Deco", "裝飾藝術風格", "海運大廈 Marine Building 的建築風格"], ["lobby", "大廳", "海運大廈開放參觀的部分"], ["food cart", "餐車、小吃攤", "Japadog"], ["toppings", "配料", "Japadog 選熱狗上的配料"], ["flavour", "口味", "加拿大拼法多一個 u，Bella Gelateria 菜單"], ["sample", "試吃", "冰淇淋店：Can I try a sample?"], ["waterfront", "濱海區", "Waterfront Station、Canada Place 一帶"], ["pier", "碼頭棧橋", "Canada Place 本身是伸入海港的 pier"], ["harbour", "海港", "加拿大拼法，Vancouver Harbour"], ["seaplane", "水上飛機", "加拿大廣場旁的起降區"], ["blue hour", "藍調時刻", "日落後 20 到 40 分鐘，拍夜景最佳"], ["bay", "海灣", "English Bay"], ["Inukshuk", "因紐特石堆人形地標", "English Bay 拍照點，唸「伊努克舒克」"], ["driftwood", "漂流木", "海灘上的大原木，可以坐著休息"]], "phrases": [["租腳踏車", "We'd like to rent six bikes for two hours. Are helmets and locks included?"], ["問押金", "Do you need a deposit or ID?"], ["問路", "Which way to the totem poles?"], ["點熱狗", "What's your most popular one?"], ["試吃冰淇淋", "Could I try this flavour?"], ["點冰淇淋", "A small cup with two flavours, please."], ["買紀念品", "Do you have any other designs?"]]}, {"title": "10/29（四）列治文、高貴林", "words": [["pumpkin patch", "南瓜園", "Richmond Country Farms"], ["ticket booth", "售票亭", "現場買門票"], ["admission", "門票、入場費", "Admission includes… 後面列包含的項目"], ["wagon ride", "拖車遊園", "門票含的遊園車，也叫 hayride"], ["corn maze", "玉米田迷宮", "園區設施"], ["petting zoo", "可愛動物區", "園區的動物農場"], ["jack-o'-lantern", "南瓜燈", "萬聖節裝飾"], ["muddy", "泥濘的", "下過雨的南瓜田，建議穿防水的鞋"], ["dim sum", "港式點心", "鮑粵軒 Yue Restaurant"], ["steamed", "蒸的", "點心單分類"], ["shrimp dumpling", "蝦餃", "點心單，粵語拼音寫 har gow"], ["BBQ pork bun", "叉燒包", "點心單"], ["rice noodle roll", "腸粉", "點心單"], ["congee", "粥", "點心單，唸「康吉」"], ["wharf", "碼頭", "Steveston Fisherman's Wharf，wh 的 h 不發音"], ["fishing village", "漁村", "Steveston 的介紹"], ["cannery", "罐頭工廠", "碼頭旁的 Gulf of Georgia Cannery 古蹟"], ["halibut / cod", "大比目魚／鱈魚", "Pajo's 炸魚要選魚種，halibut 較貴"], ["tartar sauce", "塔塔醬", "炸魚沾醬"], ["malt vinegar", "麥芽醋", "桌上的醋，當地人淋在薯條上"], ["coleslaw", "高麗菜沙拉", "炸魚薯條的配菜"], ["sea lion", "海獅", "碼頭邊偶爾看得到"], ["costume", "造型服裝", "萬聖節活動"], ["trick-or-treat", "不給糖就搗蛋", "萬聖節活動"], ["haunted", "鬧鬼的", "活動主題區名稱常用"], ["haunted house / haunted yard", "鬼屋／佈置成鬼屋的住家前院", "高貴林這兩處都是私人住家自己佈置的"], ["jump scare", "突然跳出來嚇人", "鬼屋裡的驚嚇橋段"], ["lineup", "排隊人龍", "加拿大口語，美國多說 line"], ["donation box", "捐款箱", "住家鬼屋多半免費參觀、自由捐款做公益"], ["residential street", "住宅區街道", "行程表提醒車不要開進 Rae Street 巷內"], ["cul-de-sac", "死巷", "Forestridge Place 這類住宅巷，唸「卡德薩克」"], ["residents only", "住戶專用（停車）", "路邊停車標誌，看到就別停"]], "phrases": [["南瓜園買票", "Six adult tickets, please. Does that include the wagon ride and a pumpkin?"], ["飲茶報到", "We have a reservation at 1 p.m. for six."], ["加茶水", "Could we get more hot water for the tea?"], ["打包", "Could we get this to go?"], ["點炸魚薯條", "Two-piece cod and chips, please."], ["鬼屋排隊", "Where does the line start? How long is the wait?"], ["問能不能停", "Is it OK to park here, or is it residents only?"], ["自由捐款", "Can we make a donation here?"]]}, {"title": "10/30（五）上午：還車、格蘭維爾島", "words": [["public market", "公共市場", "Granville Island Public Market"], ["vendor / stall", "攤商／攤位", "市場內"], ["ferry dock", "渡輪碼頭", "搭 Aquabus 的地方"], ["one-way / round-trip ticket", "單程票／來回票", "Aquabus 上船買票"], ["lobster roll", "龍蝦堡", "The Lobster Man"], ["glazed", "裹糖霜的", "Lee's Donuts，Honey Dip 就是蜂蜜糖霜"], ["a dozen / half a dozen", "一打／半打", "買甜甜圈的單位"], ["pot pie", "酥皮鹹派", "A La Mode，酥皮蓋在濃湯餡上"], ["clam chowder", "蛤蠣巧達濃湯", "A La Mode 派的內餡之一"], ["canelé", "可麗露", "La Bise Bakery，法文字，唸「卡勒雷」"], ["drip coffee", "濾滴式咖啡（一般黑咖啡）", "JJ Bean，菜單上相對於 espresso 類"], ["rooftop patio", "頂樓露台", "市場樓上可以看港灣"], ["busker", "街頭藝人", "島上到處有表演"], ["artisan", "手工藝職人", "Net Loft 的小店"], ["beads", "串珠", "Net Loft 飾品店"], ["silo", "筒倉", "島上的水泥桶彩繪，唸「賽洛」"], ["mural", "壁畫", "水泥桶上的彩繪"], ["plus tax", "未稅價", "標價都不含稅，結帳時才加"], ["GST / PST", "聯邦消費稅／省銷售稅", "收據上的兩行稅"], ["art gallery", "美術館", "Vancouver Art Gallery"]], "phrases": [["買船票", "Six tickets to Granville Island, one way, please."], ["問含稅價", "Is tax included?"], ["買甜甜圈", "Half a dozen Honey Dip, please."], ["請店家加熱", "Could you warm it up?"], ["找座位", "Is there anywhere to sit?"], ["問辣度", "Is it spicy? Can you make it mild?"], ["問尺寸", "Do you have this in a medium?"]]}, {"title": "10/30（五）下午：耶魯鎮、Outlet → 機場", "words": [["luggage storage", "行李寄放", "Bounce App 預約的寄放點"], ["promo code", "優惠碼", "Bounce 結帳時輸入"], ["drop off / pick up", "寄放／領取", "寄放點的時間選項"], ["roundhouse", "扇形火車庫", "Roundhouse Community Centre，舊機關車庫改建"], ["steam locomotive", "蒸汽火車頭", "Roundhouse 內展示的 Engine 374"], ["warehouse", "倉庫", "耶魯鎮的建築多是舊倉庫改建"], ["fall foliage", "秋天紅葉", "David Lam Park 賞楓"], ["croissant", "可頌", "Angus T Bakery，唸「可瑞松」"], ["liquid nitrogen", "液態氮", "Mister 冰淇淋店的做法"], ["crème brûlée", "焦糖布蕾", "Mister 的招牌口味"], ["poutine", "肉汁起司薯條", "加拿大國民小吃，薯條淋肉汁加起司，唸「普廷」"], ["cheese curds", "起司凝塊", "poutine 裡的起司"], ["clearance", "清倉特價", "Outlet 店內標示"], ["final sale", "售出不退換", "折扣品標籤，結帳前看清楚"], ["BOGO", "買一送一", "buy one, get one 的縮寫，BOGO 50% 是第二件半價"], ["guest services", "服務中心", "Outlet 二樓，問置物櫃和折扣券"], ["coupon book", "折扣券本", "在服務中心詢問"], ["locker", "置物櫃", "放隨身行李"], ["fitting room", "試衣間", "服飾店"], ["exchange / refund", "換貨／退款", "結帳時問 What's your return policy?"]], "phrases": [["寄行李", "Hi, I have a Bounce booking for six bags."], ["提早退房", "We're checking out early. Where should we leave the keys?"], ["問菜色差別", "What's the difference between these two?"], ["問營業到幾點", "What time does the mall close tonight?"], ["問折扣券", "Do you have a coupon book for visitors?"], ["確認折扣", "Is this an extra 30% off the ticketed price?"], ["確認退換", "Is this final sale?"], ["試穿", "Can I try this on?"]]}, {"title": "機場用語", "words": [["eTA", "電子旅行證", "入境加拿大的許可，綁在護照上"], ["border services officer", "邊境檢查官", "溫哥華入境查驗"], ["kiosk", "自助機台", "入境申報、內陸段報到都會用到"], ["declaration", "申報", "入境機台問有沒有攜帶食物、現金等"], ["purpose of your visit", "入境目的", "檢查官常問，回答 sightseeing"], ["baggage claim / carousel", "行李提領處／轉盤", "下機領行李"], ["oversized baggage", "超大行李", "腳架袋等可能從另一個出口出來"], ["domestic / international", "國內線／國際線", "溫哥華機場分區，內陸段走 domestic"], ["bag drop", "行李托運櫃台", "機台報到後去這裡交行李"], ["bag tag", "行李條", "機台印出來自己貼"], ["checked bag / carry-on", "托運行李／手提行李", "報到時確認件數"], ["baggage fee", "托運行李費", "內陸段依票種可能另收，報到時確認"], ["baggage allowance / overweight", "免費額度／超重", "內陸段額度通常比國際段少"], ["security screening", "安檢", "登機前"], ["lithium battery", "鋰電池", "行動電源（power bank）不能托運"], ["boarding zone", "登機梯次", "加航、西捷按 zone 登機，印在登機證上"], ["gate change", "更改登機門", "廣播與看板"], ["gate check", "登機門托運", "小飛機放不下的手提箱，在登機門交出去"], ["overhead bin", "座位上方置物櫃", "機上"], ["de-icing", "機身除冰", "黃刀鎮起飛前可能延誤的原因"], ["delayed / cancelled", "延誤／取消", "航班看板"], ["arrivals / departures", "入境層／出境層", "機場樓層指標"]], "phrases": [["入境回答目的", "We're here for sightseeing, for eleven days."], ["入境回答住宿", "We're staying in Yellowknife, Canmore and Vancouver."], ["托運行李", "We'd like to check six bags to Yellowknife. Is there a fee?"], ["要求坐一起", "Could we get seats together?"], ["問航班狀態", "Is the flight on time?"], ["問手提箱", "Do I need to gate-check this bag?"], ["行李沒出來", "My bag didn't come out. Where do I file a report?"]]}, {"title": "租車與加油用語", "words": [["confirmation number", "訂位確認碼", "櫃台報到"], ["International Driving Permit", "國際駕照", "跟台灣駕照正本一起出示"], ["additional driver", "第二駕駛", "現場加購，按天計費"], ["security deposit / hold", "押金／信用卡預扣", "取車時刷主駕駛的卡"], ["LDW / CDW", "車輛損失免責險", "兩個名稱指同一類保障"], ["deductible", "自付額", "出事時自己要負擔的上限"], ["liability", "第三責任險", "櫃台可能推銷加保"], ["roadside assistance", "道路救援", "Vancity 的訂單已含"], ["or similar", "同級車", "訂單寫 Dodge Durango or similar，不保證車型"], ["upgrade", "升等", "櫃台推銷，不需要就婉拒"], ["unlimited kilometres", "不限里程", "Hertz 訂單已含"], ["full to full", "滿油取、滿油還", "油料政策"], ["prepaid fuel", "預付油資", "櫃台推銷項目，自己加滿較省"], ["winter tires / M+S", "冬季胎／泥雪胎標示", "10/26 進 BC 省的翡翠湖路段，冬季規定要有，取車時跟櫃台確認"], ["walk-around", "環車檢查", "取車、還車時錄影"], ["scratch / dent / chip", "刮痕／凹痕／玻璃小裂點", "檢查車況時指給店員看"], ["rental agreement", "租賃合約", "既有損傷要註記在上面"], ["drop-off", "還車", "Rental Car Return 指標"], ["after-hours return", "非營業時間還車", "Vancity 營業 8:00–18:00，10/30 早上 8:00 開門就還，用不到"], ["regular / premium", "87 無鉛／高級汽油", "加油機選油品，一般加 regular"], ["pump", "加油機", "現金付款要先報 pump number"], ["pay at the pump / pay inside", "機台刷卡／進店付款", "自助加油兩種付法"], ["all-way stop", "四向停車再開", "STOP 牌下方的副牌"], ["yield", "讓路", "路口、匯入車道"], ["school zone", "學校區", "速限 30，抓得很嚴"], ["pay station", "停車繳費機", "路邊停車先繳費，輸入車牌"], ["tow-away zone", "拖吊區", "禁停標誌"]], "phrases": [["櫃台報到", "Hi, I have a reservation under Tsai. Here's my confirmation number."], ["加第二駕駛", "I'd like to add an additional driver. How much is it per day?"], ["確認保險", "Does the rate already include LDW? What's the deductible?"], ["婉拒推銷", "No, thank you. I'll decline the upgrade and the prepaid fuel."], ["問冬季胎", "Does this car have winter tires?"], ["指出既有損傷", "There's a scratch here. Could you note it on the agreement?"], ["確認還車油量", "Should I return it with a full tank?"], ["問非營業時間還車", "Can I return the car after hours?"], ["還車拿收據", "Could I get a final receipt?"], ["現金加油", "Sixty dollars on pump five, please."]]}];
+
+const gm = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+const CITY = {
+  yvr:{name:"溫哥華機場", lat:49.1967, lon:-123.1815, tz:"America/Vancouver"},
+  van:{name:"溫哥華", lat:49.2827, lon:-123.1207, tz:"America/Vancouver"},
+  rich:{name:"列治文", lat:49.1666, lon:-123.1336, tz:"America/Vancouver"},
+  yk:{name:"黃刀鎮", lat:62.4540, lon:-114.3718, tz:"America/Edmonton"},
+  canmore:{name:"坎莫爾", lat:51.0884, lon:-115.3479, tz:"America/Edmonton"},
+  banff:{name:"班夫", lat:51.1784, lon:-115.5708, tz:"America/Edmonton"},
+  louise:{name:"路易絲湖", lat:51.4254, lon:-116.1773, tz:"America/Edmonton"}
+};
+const L = {
+  ci:["華航航班動態","https://www.china-airlines.com/tw/zh/fly/prepare-for-the-flight/flight-status"],
+  ac:["加拿大航空航班動態","https://www.aircanada.com/ca/en/aco/home/fly/flight-information/flight-status.html"],
+  ws:["西捷航班動態","https://www.westjet.com/en-ca/flights/status"],
+  yvr:["溫哥華機場 YVR","https://www.yvr.ca/en/passengers"],
+  yyc:["卡加利機場 YYC","https://www.yyc.com/"],
+  eta:["加拿大 eTA 官方","https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/eta.html"],
+  ecyk:["加拿大氣象局：黃刀鎮","https://weather.gc.ca/en/location/index.html?coords=62.454,-114.372"],
+  ecbanff:["加拿大氣象局：班夫","https://weather.gc.ca/en/location/index.html?coords=51.178,-115.571"],
+  ecvan:["加拿大氣象局：溫哥華","https://weather.gc.ca/en/location/index.html?coords=49.283,-123.121"],
+  astro:["加拿大氣象局：夜間雲量預報","https://weather.gc.ca/astro/index_e.html"],
+  swpc:["NOAA 極光預報","https://www.swpc.noaa.gov/communities/aurora-dashboard-experimental"],
+  swl:["SpaceWeatherLive 極光","https://www.spaceweatherlive.com/en/auroral-activity.html"],
+  swc:["加拿大太空天氣","https://www.spaceweather.gc.ca/"],
+  ab511:["亞伯達路況 511","https://511.alberta.ca/"],
+  drivebc:["BC 省路況 DriveBC","https://www.drivebc.ca/"],
+  parks:["班夫國家公園官方","https://parks.canada.ca/pn-np/ab/banff"],
+  yoho:["幽鶴國家公園官方","https://parks.canada.ca/pn-np/bc/yoho"],
+  bcwinter:["BC 冬季胎規定","https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/traveller-information/seasonal/winter-driving/winter-tire-and-chain-up-routes"],
+  gondola:["Banff Gondola","https://www.banffjaspercollection.com/attractions/banff-gondola/"],
+  translink:["TransLink 路線規劃","https://www.translink.ca/trip-planner"],
+  bounce:["Bounce 行李寄放","https://bounce.com/"],
+  outlet:["Vancouver Designer Outlet","https://www.vancouverdesigneroutlet.com/"],
+  granville:["Granville Island","https://granvilleisland.com/"],
+  rcf:["Richmond Country Farms","https://www.richmondcountryfarms.com/"],
+  hertz:["Hertz","https://www.hertz.ca/"],
+  vancity:["Vancity Car Rentals","https://www.vancitycars.com/"],
+  sunset:["日出日落時間","https://www.timeanddate.com/sun/canada/banff"],
+  xe:["匯率換算","https://www.xe.com/currencyconverter/convert/?Amount=1&From=CAD&To=TWD"]
+};
+const lk = (...keys) => keys.map(k => L[k]);
+
+const PRE = {
+  id:"pre", tab:"出發前", sub:"準備",
+  todos:[
+    "Vancity 租車改成 10/29 8:00 取、10/30 8:00 還，並收到新的確認信",
+    "鮑粵軒 13:00 訂位改到 10/29（四）",
+    "取消 10/31 的 OEB 早午餐訂位",
+    "確認兩間高貴林鬼屋 10/29 晚上有開（Forestridge 去年說是最後一年）",
+    "確認溫哥華 Airbnb 有沒有停車位，10/29 晚上車要停過夜",
+    "列印班夫國家公園通行證（只有紙本有效，要放在擋風玻璃內側）",
+    "下載 Google Maps 離線地圖：班夫到 Jasper、黃刀鎮、溫哥華",
+    "準備加幣現金：極光尾款 CAD 1,880（6 人合計）＋司機小費每人 CAD 35＋零用",
+    "投保旅平險，確認保險期間涵蓋到 11/1",
+    "10/29 晚上用 Bounce App 預約隔天的行李寄放（優惠碼 FIRSTBOOKING）"
+  ],
+  packing:[
+    ["證件與錢", ["護照","電子機票","台灣駕照正本＋國際駕照（駕駛人）","信用卡（租車要用主駕駛的卡）","加幣現金"]],
+    ["衣物", ["白天的衣服","內衣褲、襪子","睡衣","禦寒外套","毛帽、手套","太陽眼鏡","防水防滑的鞋"]],
+    ["3C", ["手機與充電器","行動電源（只能隨身，不能托運）","萬用轉接頭","網路卡","耳機","腳架（拍極光）"]],
+    ["日用品", ["盥洗用品、毛巾","保養品、防曬","隱形眼鏡／眼鏡","常備藥：腸胃、過敏、止痛、感冒","口罩","梳子、刮鬍刀、小鏡子"]],
+    ["其他", ["錢包、鑰匙","水瓶或保溫瓶","行李秤","塑膠袋、購物袋（市場和南瓜園要自備）","雨傘","酒精噴瓶","暖暖包"]]
+  ],
+  notes:[
+    ["時差：溫哥華慢台灣 15 小時；黃刀鎮、班夫慢台灣 14 小時（比溫哥華快 1 小時）。","info"],
+    ["標價不含稅，結帳另加約 5–12%；餐廳另給 15–20% 小費。","info"],
+    ["這個網頁放在 GitHub Pages 是公開的，訂位代號、房東電話、門鎖密碼請不要放上來，留在手機裡就好。","warn"]
+  ]
+};
+
+const DAYS = [
+{ id:"d1", date:"2026-10-20", dow:"二", n:1, title:"出發", route:["台南","桃園","溫哥華"], wx:"yvr",
+  stay:{n:"Accent Inns Vancouver Airport", a:"10551 St Edwards Dr, Richmond, BC", note:"雙人房＋四人房，不含早餐；Check-in 14:20"},
+  timeline:[
+    ["18:20","台南高鐵站集合"],
+    ["21:00 前","桃園機場報到"],
+    ["23:35","華航 CI032 起飛","fly"],
+    ["19:20","抵達溫哥華（當地時間，同一天）"],
+    ["抵達後","領行李，到 3 樓搭飯店免費接駁車，每小時 :15、:45 各一班"],
+    ["晚上","飯店附近吃晚餐"]
+  ],
+  bring:["護照","電子機票","台灣駕照＋國際駕照","信用卡、加幣現金","行動電源放隨身包","網路卡先裝好"],
+  spots:[],
+  food:[
+    ["McDonald's","飯店步行約 4 分鐘，05:00–00:00","McDonald's St Edwards Dr Richmond BC"],
+    ["Denny's","飯店步行約 6 分鐘，24 小時營業","Denny's St Edwards Dr Richmond BC"]
+  ],
+  notes:[
+    ["入境前確認 eTA 已核准（CAD 7），入境時用機台申報。","info"],
+    ["接駁車要現場排隊，預計搭 20:45 那班。","info"]
+  ],
+  vocab:[0], extra:["airport"], links:lk("ci","yvr","eta","ecvan")
+},
+{ id:"d2", date:"2026-10-21", dow:"三", n:2, title:"飛往黃刀鎮", route:["溫哥華","黃刀鎮"], wx:"yk", aurora:"yk",
+  stay:{n:"黃刀鎮 Airbnb", a:"430 Norseman Dr, Yellowknife, NT", note:"Check-in 16:00–23:00；安靜時段 23:00–07:00"},
+  timeline:[
+    ["09:50","退房，搭 10:00 或 10:30 接駁車到機場"],
+    ["11:30","報到；早午餐在機場吃，機上沒有餐點"],
+    ["13:40","加拿大航空 AC8024 起飛","fly"],
+    ["17:06","抵達黃刀鎮（比溫哥華快 1 小時），旅行社接機到民宿"],
+    ["傍晚","民宿附近吃晚餐、超市採買（來不及就明天下午）"],
+    ["20–22 點","營地看極光＋巴士追極光，集合時間依導遊通知","book"]
+  ],
+  bring:["極光團尾款現金 CAD 1,880","司機小費每人 CAD 35","全套禦寒衣物、毛帽、手套","腳架、行動電源（低溫很耗電）"],
+  spots:[],
+  food:[
+    ["Wok Box","民宿步行 11 分鐘","Wok Box Yellowknife"],
+    ["Freshslice Pizza","民宿步行 12 分鐘","Freshslice Pizza Yellowknife"],
+    ["超市旁的麥當勞、星巴克","採買順便吃","Your Independent Grocer Old Airport Road Yellowknife"]
+  ],
+  shops:[
+    ["Your Independent Grocer","步行 10 分鐘，再走 5 分鐘有 Walmart（沒有生鮮）和 Stanton Plaza","Your Independent Grocer Old Airport Road Yellowknife"],
+    ["Lakeshore Co-op","步行 20 分鐘","Lakeshore Co-operatives Yellowknife"]
+  ],
+  notes:[
+    ["極光團是星辰之旅四天三夜，含接送機；尾款付現時記得要收據。","info"],
+    ["零下的夜晚手機電量掉很快，備用電池放在貼身口袋。","warn"]
+  ],
+  vocab:[1], extra:["airport"], links:lk("ac","ecyk","astro","swpc","swl")
+},
+{ id:"d3", date:"2026-10-22", dow:"四", n:3, title:"黃刀鎮", route:["市區導覽","民宿","極光營地"], wx:"yk", aurora:"yk",
+  stay:{n:"黃刀鎮 Airbnb", a:"430 Norseman Dr, Yellowknife, NT"},
+  timeline:[
+    ["早上","民宿吃早餐"],
+    ["上午／中午","極光團附贈的市區導覽約 1.5 小時（日期由導遊通知），或自費活動","book"],
+    ["下午","超市採買或民宿休息；若導覽在下午就早上先去買"],
+    ["晚上","營地看極光＋巴士追極光","book"]
+  ],
+  bring:["禦寒衣物","相機、腳架","導覽日要帶護照以外的輕便包"],
+  spots:[
+    ["飛行員紀念碑 Bush Pilots Monument","導覽會到，老城區高處的觀景點","Bush Pilots Monument Yellowknife"],
+    ["黃刀鎮遊客中心","領北緯 60 度證書與小刀別針","Northern Frontier Visitors Centre Yellowknife"],
+    ["Ndilo 原住民社區與老城區","車遊","Ndilo Yellowknife"],
+    ["極光營地","Dene 族帳篷、全景星空屋、大湖倒影三種拍法","Yellowknife aurora village"]
+  ],
+  food:[
+    ["Gold Range Bistro","中餐，酸辣湯和特製春捲，可外帶回民宿","Gold Range Bistro Yellowknife"],
+    ["Sushi Cafe","蝦炒飯","Sushi Cafe Yellowknife"]
+  ],
+  notes:[
+    ["附贈導覽若不在今天，就和明天的行程對調，逛完再去超市。","info"],
+    ["自費活動參考價：秋季瀑布健行 CAD 95、ATV 一人一車 CAD 150、野牛觀賞 CAD 125。","info"]
+  ],
+  vocab:[2], links:lk("ecyk","astro","swpc","swl")
+},
+{ id:"d4", date:"2026-10-23", dow:"五", n:4, title:"黃刀鎮市區", route:["郵局","老城區","博物館","極光營地"], wx:"yk", aurora:"yk",
+  stay:{n:"黃刀鎮 Airbnb", a:"430 Norseman Dr, Yellowknife, NT", note:"明天退房"},
+  timeline:[
+    ["10:00","出門，搭公車到市區約 20 分鐘（每次 CAD 3，轉乘免費）"],
+    ["上午","黃刀郵局寄明信片、蓋北極熊章；老城區散步"],
+    ["12:00","Bullocks' Bistro 午餐","book"],
+    ["下午","北緯 60° 礦業紀念碑、博物館、旗幟走廊、Frame Lake 步道"],
+    ["傍晚","回民宿吃晚餐，先把去班夫的行李整理好"],
+    ["晚上","最後一晚極光","book"]
+  ],
+  bring:["公車零錢 CAD 3／人","明信片和寫好的地址","購物袋"],
+  spots:[
+    ["黃刀郵局","遊客中心旁，寄明信片可蓋北極熊章","4902 Franklin Ave Yellowknife"],
+    ["Ragged Ass Road","有名的街名，打卡點","Ragged Ass Road Yellowknife"],
+    ["船屋與水上飛機區","老城區湖邊","Yellowknife Old Town floatplane"],
+    ["Gallery of the Midnight Sun","伴手禮店，離餐廳走路 5 分鐘","Gallery of the Midnight Sun Yellowknife"],
+    ["North of 60° Mining Memorial","北緯 60° 礦業紀念碑","North of 60 Mining Memorial Yellowknife"],
+    ["Prince of Wales Northern Heritage Centre","黃刀鎮博物館，免費","Prince of Wales Northern Heritage Centre"],
+    ["Ceremonial Circle 旗幟走廊","博物館旁拍照","Ceremonial Circle Yellowknife"],
+    ["Frame Lake Trail","市政府後方，走一小段就好","Frame Lake Trail Yellowknife"]
+  ],
+  food:[
+    ["Bullocks' Bistro（已訂位 12:00）","炸魚看當天有什麼魚，必點水牛肋眼；份量大，6 人點 4–5 人份","Bullocks Bistro Yellowknife"]
+  ],
+  notes:[
+    ["明天退房時間要再確認：Airbnb 確認信寫 10:00 前，行程表寫 11:00。","warn"]
+  ],
+  vocab:[3], links:lk("ecyk","astro","swpc")
+},
+{ id:"d5", date:"2026-10-24", dow:"六", n:5, title:"飛往卡加利、開往坎莫爾", route:["黃刀鎮","卡加利","坎莫爾"], wx:"canmore",
+  stay:{n:"Harvie Heights Airbnb", a:"750 Harvie Heights Rd, Harvie Heights, AB", note:"Check-in 16:00–23:00"},
+  timeline:[
+    ["上午","民宿附近買早午餐（黃刀機場只有一家餐廳）"],
+    ["11:00","退房，旅行社送機"],
+    ["12:00 前","機場報到"],
+    ["14:15","西捷 WS684 起飛","fly"],
+    ["16:30","抵達卡加利，領行李後到 Hertz 櫃台取車（Large SUV）","book"],
+    ["取車後","車廂放不下的大行李寄放在出境樓層 14–15 門之間，CAD 12／件"],
+    ["傍晚","開 1.5 小時到坎莫爾，先去超市再進民宿"]
+  ],
+  bring:["駕照正本＋國際駕照＋護照","主駕駛的信用卡（押金約 CAD 400）","手機架","列印好的國家公園通行證"],
+  spots:[],
+  food:[
+    ["Save-On-Foods","坎莫爾最大的超市，熟食多，推薦馬鈴薯培根濃湯和水果盒；營業到 22:00","Save-On-Foods Canmore"],
+    ["Safeway Canmore","有大停車場和藥局，熟食評價不錯","Safeway Canmore"]
+  ],
+  notes:[
+    ["取車、還車都要全程錄影車況，有刮傷當場請店員註記。","warn"],
+    ["問櫃台車子是不是冬季胎（至少 M+S 標示）：10/26 去翡翠湖會進 BC 省，10/1 起規定要有。","warn"],
+    ["現場加買第二駕駛。","info"],
+    ["Save-On 停車場要在入口掃 QR Code 登錄車牌才免費。","info"],
+    ["亞伯達超市不賣酒，要另外去 liquor store。","info"]
+  ],
+  vocab:[4], extra:["airport","rental"], links:lk("ws","yyc","hertz","ab511","ecbanff")
+},
+{ id:"d6", date:"2026-10-25", dow:"日", n:6, title:"班夫", route:["班夫地標","硫磺山纜車","班夫大道","明尼旺卡湖"], wx:"banff", aurora:"banff",
+  stay:{n:"Harvie Heights Airbnb", a:"750 Harvie Heights Rd, Harvie Heights, AB"},
+  timeline:[
+    ["08:30","出門，國家公園通行證放在擋風玻璃前"],
+    ["約 08:45","班夫地標（座標 51°10'56.1\"N 115°34'47.6\"W）"],
+    ["09:20 前","驚奇角：過馬路爬一段步道到平台"],
+    ["10:10","硫磺山纜車，已預約不能遲到；山頂走到氣象站來回 30 分鐘","book"],
+    ["12:30","Melissa's MisSteak 午餐","book"],
+    ["下午","時光瀑布花園、弓河瀑布（約 1.5 公里，20 分鐘）、班夫大道點心"],
+    ["16:30","從班夫大道出發到明尼旺卡湖（20 分鐘），日落約 18:20"],
+    ["晚上","夜晚的班夫大道拍照，回民宿吃晚餐"]
+  ],
+  bring:["國家公園通行證（紙本）","纜車訂位確認","防風外套、手套（湖邊很冷）","腳架"],
+  spots:[
+    ["班夫地標","座標 51°10'56.1\"N 115°34'47.6\"W","51.181694,-115.579889"],
+    ["驚奇角 Surprise Corner Viewpoint","停車場過馬路爬步道","Surprise Corner Viewpoint Banff"],
+    ["硫磺山纜車 Banff Gondola","3 樓可領一張免費明信片","Banff Gondola"],
+    ["時光瀑布花園 Cascade of Time Garden","拍班夫全景最佳位置，免門票","Cascade of Time Garden Banff"],
+    ["弓河瀑布 Bow Falls Viewpoint","步行約 20 分鐘","Bow Falls Viewpoint"],
+    ["明尼旺卡湖 Lake Minnewanka","日落、晚上有極光也來這裡","Lake Minnewanka"]
+  ],
+  food:[
+    ["Melissa's MisSteak（已訂位 12:30）","亞伯達牛排，網友建議點三分熟（medium rare）","Melissa's Missteak Banff"],
+    ["Cows Ice Cream","班夫大道上，最好吃的冰淇淋之一","Cows Ice Cream Banff"],
+    ["BeaverTails","海狸尾巴炸麵團，推薦肉桂糖配檸檬或 Nutella","BeaverTails Banff"]
+  ],
+  parking:[
+    ["Bear Street Parkade","Nesters Market 旁，3–4 樓免費，走到餐廳 3 分鐘","Bear Street Parkade Banff"],
+    ["Bow Ave 路邊","也有免費停車格","Bow Avenue Banff"],
+    ["Banff 火車站停車場","很大但比較遠，找不到再去","Banff train station parking"]
+  ],
+  notes:[
+    ["班夫鎮市區速限 30 km/h，是最多人被開單的地方；國家公園內 90，高速公路 110。","warn"],
+    ["黎明和黃昏野生動物最活躍，看到路邊有車停下就減速。","warn"],
+    ["班夫緯度比黃刀鎮低很多，通常要 Kp 5 左右才有機會看到極光。","info"]
+  ],
+  vocab:[5], extra:["rental"], links:lk("gondola","parks","ecbanff","ab511","swpc")
+},
+{ id:"d7", date:"2026-10-26", dow:"一", n:7, title:"路易絲湖、翡翠湖", route:["路易絲湖","翡翠湖","強斯頓峽谷"], wx:"louise",
+  stay:{n:"Harvie Heights Airbnb", a:"750 Harvie Heights Rd, Harvie Heights, AB", note:"明天 11:00 前退房"},
+  timeline:[
+    ["日出前","出發到路易絲湖（車程 1 小時），日出約 08:20，前一天再確認出門時間"],
+    ["早上","路易絲湖：沿湖 Lakeshore 步道，來回 4 公里約 30 分鐘"],
+    ["上午","翡翠湖（車程 30 分鐘），停留約 1 小時，環湖 5.2 公里可隨時折返"],
+    ["中午","Samson Mall 午餐（車程 30 分鐘）"],
+    ["下午","走 1A 公路經 Morant's Curve，再到強斯頓峽谷，來回約 2 小時"],
+    ["傍晚","硃砂湖 Vermilion Lakes、Backswamp 拍照"]
+  ],
+  bring:["防滑鞋或簡易冰爪（峽谷可能結冰）","國家公園通行證","保溫瓶熱飲","零食"],
+  spots:[
+    ["路易絲湖 Lake Louise","城堡飯店的公共停車場免費，停滿就上不去","Lake Louise"],
+    ["翡翠湖 Emerald Lake","幽鶴國家公園最大的湖，在 BC 省","Emerald Lake Yoho"],
+    ["Morant's Curve","世界最美彎道，加幣 10 元的背景","Morant's Curve"],
+    ["強斯頓峽谷 Johnston Canyon","入口有兩個免費停車場，先走下瀑布再到上瀑布","Johnston Canyon"],
+    ["Vermilion Lakes Viewpoint","人少的祕境，開到湖邊才有空地停車和迴轉","Vermilion Lakes"],
+    ["Backswamp Viewpoint","沿弓河的鳥瞰點，離對岸山更近","Backswamp Viewpoint Banff"]
+  ],
+  food:[
+    ["Trailhead Café","三明治、咖啡，CA$10–20，出餐快","Trailhead Cafe Lake Louise"],
+    ["Bill Peyto's Café","漢堡、牛排、義大利麵，要坐下來吃","Bill Peyto's Cafe Lake Louise"]
+  ],
+  notes:[
+    ["翡翠湖在 BC 省，10/1 到 4/30 指定公路要冬季胎或雪鏈，路上看到標誌要遵守。","warn"],
+    ["峽谷步道 10 月可能結冰，穿防滑鞋。","warn"]
+  ],
+  vocab:[6], extra:["rental"], links:lk("parks","yoho","drivebc","ab511","bcwinter")
+},
+{ id:"d8", date:"2026-10-27", dow:"二", n:8, title:"回溫哥華", route:["坎莫爾","卡加利","溫哥華"], wx:"canmore",
+  stay:{n:"2-4 Modern Home Vancouver", a:"1133 Hornby St, Vancouver, BC", note:"Check-in 15:00"},
+  timeline:[
+    ["09:00","退房，導航到 Canmore Main Street"],
+    ["上午","Policeman Creek Boardwalk 看三姊妹峰；Rocky Mountain Bagel 早餐"],
+    ["14:00 前","離開班夫往卡加利機場，還車前加滿油"],
+    ["15:30–16:00","還車、領回寄放的大行李"],
+    ["16:30","機場報到"],
+    ["18:30","加拿大航空 AC221 起飛","fly"],
+    ["19:10","抵達溫哥華（慢 1 小時），搭 Canada Line 到 Yaletown-Roundhouse 約 35 分鐘，再走 10 分鐘"]
+  ],
+  bring:["加油收據","還車時拍油表照片","刷卡搭車的信用卡或 Apple Pay"],
+  spots:[
+    ["Canmore Main Street","坎莫爾主要購物街","Canmore Main Street"],
+    ["Policeman Creek Boardwalk","可以看到三姊妹峰","Policeman Creek Boardwalk Canmore"]
+  ],
+  food:[
+    ["Rocky Mountain Bagel","坎莫爾最好吃的早餐；推薦 BCLT + Egg、Amigo、Roasted Garlic & Herb cream cheese","Rocky Mountain Bagel Co Canmore"]
+  ],
+  shops:[
+    ["IGA","民宿步行 7 分鐘，營業到 22:00","IGA Hornby Street Vancouver"],
+    ["Granville Food Mart","步行 4 分鐘，24 小時","Granville Food Mart Vancouver"],
+    ["Nesters Market","步行 7 分鐘，營業到 22:00","Nesters Market Yaletown"],
+    ["Your Independent Grocer（Davie St）","步行 10 分鐘，營業到 24:00","Your Independent Grocer Davie Street Vancouver"]
+  ],
+  notes:[
+    ["搭 SkyTrain 進出站都要感應，而且要用同一張卡或同一支手機；90 分鐘內轉乘免費。","warn"],
+    ["10/24 寄放在卡加利機場的大行李記得領回。","warn"]
+  ],
+  vocab:[7], extra:["airport","rental"], links:lk("ac","yyc","yvr","translink","ecvan")
+},
+{ id:"d9", date:"2026-10-28", dow:"三", n:9, title:"史丹利公園、煤氣鎮", route:["史丹利公園","English Bay","煤氣鎮","加拿大廣場"], wx:"van",
+  stay:{n:"2-4 Modern Home Vancouver", a:"1133 Hornby St, Vancouver, BC"},
+  timeline:[
+    ["上午","史丹利公園，天氣好就租腳踏車（約 CAD 7／小時起），停留 2–3 小時"],
+    ["中午","English Bay，接著到煤氣鎮吃午餐"],
+    ["下午","煤氣鎮：蒸汽鐘、楓樹廣場、Granville Square、粉紅巷、海運大廈"],
+    ["17:50 後","加拿大廣場看夕陽，日落後 20–40 分鐘最好拍"],
+    ["晚上","民宿吃晚餐"]
+  ],
+  bring:["好走的鞋","防風外套","雨傘（溫哥華 10 月常下雨）"],
+  spots:[
+    ["史丹利公園 Stanley Park","圖騰柱、Prospect Point、Brockton Point 燈塔、潛水服少女雕像、海堤步道、Siwash Rock、Lost Lagoon","Stanley Park Vancouver"],
+    ["腳踏車租借（Denman St.）","Yes Cycle、Freedom Bikes、Bikes and Blades","Denman Street bike rental Vancouver"],
+    ["English Bay","A-maze-ing Laughter 笑臉雕像、Inukshuk","English Bay Beach"],
+    ["Gastown 蒸汽鐘","每 15 分鐘鳴笛、整點奏樂","Gastown Steam Clock"],
+    ["楓樹廣場 Maple Tree Square","買漂亮磁鐵","Maple Tree Square Vancouver"],
+    ["Granville Square","地鐵站往廣場方向有 Vancouver 地標","Granville Square Vancouver"],
+    ["粉紅巷 Alley Oop","Twice〈LIKEY〉MV 拍攝地","Alley Oop Vancouver"],
+    ["海運大廈 Marine Building","1930 年完工，開放 8:30–17:00","Marine Building Vancouver"],
+    ["加拿大廣場 Canada Place","夕陽、夜景與水滴雕塑 The Drop","Canada Place"]
+  ],
+  food:[
+    ["Japadog","日式熱狗，溫哥華有名的街頭小吃","Japadog Vancouver"],
+    ["Bella Gelateria","世界冠軍的義式冰淇淋","Bella Gelateria Vancouver"]
+  ],
+  notes:[
+    ["避開 E. Hastings St：全溫哥華治安最差的一條街，離蒸汽鐘只有 10 分鐘。","warn"],
+    ["海堤自行車道是單向，要逆時針騎。","info"]
+  ],
+  vocab:[8], links:lk("translink","ecvan")
+},
+{ id:"d10", date:"2026-10-29", dow:"四", n:10, title:"列治文、高貴林", route:["列治文","漁人碼頭","高貴林"], wx:"rich",
+  stay:{n:"2-4 Modern Home Vancouver", a:"1133 Hornby St, Vancouver, BC", note:"明天退房"},
+  timeline:[
+    ["08:00","Vancity 取車（1110 Howe St，民宿步行 3 分鐘）","book"],
+    ["09:00","列治文南瓜園（車程 20 分鐘），平日門票 CAD 15＋稅"],
+    ["13:00","鮑粵軒大酒樓午餐","book"],
+    ["下午","列治文漁人碼頭（車程 15 分鐘）、Garry Point Park"],
+    ["傍晚","開 1 小時到高貴林"],
+    ["17:00–22:00","Nightmare on Rae Street"],
+    ["18:00–21:30","Forestridge Haunted Yard（和 Rae Street 相距 15 分鐘）"],
+    ["晚上","回市區前加滿油，晚上 Bounce 預約明天的寄放"]
+  ],
+  bring:["駕照＋國際駕照","購物袋（南瓜園的南瓜和蘋果要自己裝）","防水的鞋","零錢（鬼屋可自由捐款）"],
+  spots:[
+    ["Richmond Country Farms 南瓜園","09:00–16:00；門票含遊園車、迷宮、動物農場、一顆南瓜＋蘋果","12900 Steveston Hwy Richmond BC"],
+    ["Steveston Fisherman's Wharf","列治文漁人碼頭","Steveston Fisherman's Wharf"],
+    ["Garry Point Park","漁人碼頭旁的海邊公園","Garry Point Park Richmond"],
+    ["Nightmare on Rae Street","車停 Prairie Ave 或 Fremont St 再走進去，不要開進 Rae St","3313 Rae St Port Coquitlam BC"],
+    ["Forestridge Haunted Yard","車停外圍 Parkway Blvd，走一兩條街進去","2986 Forestridge Place Coquitlam BC"]
+  ],
+  food:[
+    ["鮑粵軒大酒樓 Yue Restaurant（13:00）","溫哥華第一的廣式茶樓","Yue Restaurant Richmond"],
+    ["Pajo's Fish & Chips","開在水上的炸魚薯條，11:00–16:00","Pajo's Fish and Chips Steveston"]
+  ],
+  notes:[
+    ["鮑粵軒原本訂的是 10/30，請確認已改到今天。","warn"],
+    ["Forestridge 去年說是最後一年，出門前到他們的社群確認今晚有開。","warn"],
+    ["車要停過夜：確認民宿有沒有停車位，沒有就找附近的立體停車場。","warn"]
+  ],
+  vocab:[9], extra:["rental"], links:lk("vancity","rcf","translink","ecvan")
+},
+{ id:"d11", date:"2026-10-30", dow:"五", n:11, title:"最後一天、晚上回台灣", route:["格蘭維爾島","耶魯鎮","Outlet","機場"], wx:"van",
+  stay:{n:"夜宿機上", a:"", note:"CI031 10/31 01:35 起飛，11/1 05:40 抵達桃園"},
+  timeline:[
+    ["08:00","還車（加滿油、錄影），Angus T Bakery 也 8:00 開門"],
+    ["09:00","Bounce 寄放點開門，在 Yaletown-Roundhouse 站對面寄行李","book"],
+    ["上午","格蘭維爾島：天晴走路或搭 Aquabus，下雨搭公車；早午餐在市場吃"],
+    ["下午","耶魯鎮；有時間再去 Robson Street"],
+    ["傍晚","取行李，搭 Canada Line 到 Templeton 站，走 5–7 分鐘到 Outlet"],
+    ["20:30–21:00","離開 Outlet"],
+    ["22:00","溫哥華機場報到"],
+    ["01:35","華航 CI031 起飛（10/31 凌晨）","fly"]
+  ],
+  bring:["護照、電子機票","購物袋（市場要自備）","Bounce 預約","退稅單據與收據"],
+  spots:[
+    ["Granville Island Public Market","09:00–18:00，頂樓露台可看港灣和福溪","Granville Island Public Market"],
+    ["Net Loft","市場隔壁紅色建築，飾品、串珠、帽子等小店","Net Loft Granville Island"],
+    ["水泥桶彩繪","島上的大型壁畫","Granville Island silos mural"],
+    ["Roundhouse Community Centre","復古火車展館，09:00–21:45，免費","Roundhouse Community Centre"],
+    ["David Lam Park","賞楓","David Lam Park Vancouver"],
+    ["Robson Street","Granville St 和 Robson St 交叉口一帶，有時間再去","Robson Street Vancouver"],
+    ["Vancouver Designer Outlet","先去 2 樓服務中心找置物櫃、問折扣券","Vancouver Designer Outlet"]
+  ],
+  food:[
+    ["The Lobster Man","龍蝦堡，價格另加 5% 稅","The Lobster Man Granville Island"],
+    ["Lee's Donuts","Honey Dip 甜甜圈","Lee's Donuts Granville Island"],
+    ["JJ Bean","可以自己加料的咖啡","JJ Bean Granville Island"],
+    ["A La Mode","鮭魚酥皮濃湯派，2–3 人一份","A La Mode Granville Island"],
+    ["La Bise Bakery","溫哥華最好吃的可麗露","La Bise Bakery Granville Island"],
+    ["Siegel's Bagels","貝果","Siegel's Bagels Granville Island"],
+    ["Angus T Bakery","可頌專賣，08:00–16:30，建議早上買","Angus T Bakery Vancouver"],
+    ["Mister","液氮冰淇淋，招牌焦糖布蕾","Mister Ice Cream Yaletown"],
+    ["Small Victory","Homer St 咖啡廳，蛋糕好吃","Small Victory Homer Street"]
+  ],
+  notes:[
+    ["行程表寫的「Telepton 站」正確站名是 Templeton。","info"],
+    ["Airbnb 11:00 前退房，8:00 還車時就把行李一起帶出門。","warn"],
+    ["行動電源只能隨身，不能放托運行李。","warn"]
+  ],
+  vocab:[10,11], extra:["airport","rental"], links:lk("ci","yvr","bounce","granville","outlet","translink")
+}
+];
+
+const LINKS = {
+  id:"links", tab:"連結", sub:"天氣・路況",
+  groups:[
+    ["天氣與極光", lk("ecyk","ecbanff","ecvan","astro","swpc","swl","swc","sunset")],
+    ["航班與機場", lk("ci","ac","ws","yvr","yyc","eta")],
+    ["開車與路況", lk("ab511","drivebc","bcwinter","parks","yoho","hertz","vancity")],
+    ["溫哥華", lk("translink","bounce","granville","outlet","rcf")],
+    ["其他", lk("gondola","xe")]
+  ]
+};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let checks = store.get("ca26-checks", {});
+const fmtTime = (tz) => new Intl.DateTimeFormat("zh-TW",{timeZone:tz,hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date());
+const dateIn = (tz) => new Intl.DateTimeFormat("en-CA",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+
+function tick(){
+  $("#c-tw").textContent = fmtTime("Asia/Taipei");
+  $("#c-van").textContent = fmtTime("America/Vancouver");
+  $("#c-mt").textContent = fmtTime("America/Edmonton");
+}
+function statusLine(){
+  const today = dateIn("America/Vancouver");
+  const start = new Date("2026-10-20T00:00:00+08:00");
+  const day = DAYS.find(d => d.date === today);
+  if (day) return `今天是 Day ${day.n}：${day.title}`;
+  const diff = Math.ceil((start - new Date()) / 86400000);
+  if (diff > 0) return `距離出發還有 ${diff} 天`;
+  return "旅程結束，歡迎回家";
+}
+
+/* ---------- speech ---------- */
+let voice = null;
+function pickVoice(){
+  try{
+    const vs = speechSynthesis.getVoices();
+    voice = vs.find(v => v.lang === "en-CA") || vs.find(v => v.lang === "en-US") || vs.find(v => /^en/.test(v.lang)) || null;
+  }catch(e){}
+}
+if ("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text){
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/\s*\/\s*/g, ", "));
+  u.lang = "en-CA"; u.rate = 0.9; if (voice) u.voice = voice;
+  speechSynthesis.speak(u);
+}
+const sayBtn = t => `<button class="say" type="button" data-say="${esc(t)}" aria-label="唸出 ${esc(t)}">▶</button>`;
+
+/* ---------- renderers ---------- */
+function checklist(key, items){
+  const done = items.filter((_,i) => checks[key+i]).length;
+  return `<p class="progress">${done}／${items.length} 已完成</p><ul class="checks">` + items.map((t,i) => {
+    const id = key + i;
+    return `<li><label><input type="checkbox" data-check="${id}" ${checks[id]?"checked":""}><span>${esc(t)}</span></label></li>`;
+  }).join("") + `</ul>`;
+}
+function placeList(list){
+  return `<div class="places">` + list.map(([n,d,q]) =>
+    `<div class="place"><header><span class="n">${esc(n)}</span><a class="map" href="${gm(q)}" target="_blank" rel="noopener">地圖</a></header>${d?`<div class="d">${esc(d)}</div>`:""}</div>`
+  ).join("") + `</div>`;
+}
+function noteList(list){
+  return `<ul class="notes">` + list.map(([t,k]) => `<li class="${k==="info"?"info":""}">${esc(t)}</li>`).join("") + `</ul>`;
+}
+function vocabTable(words){
+  return `<table class="vocab"><tbody>` + words.map(([en,zh,use]) =>
+    `<tr><td class="en"><span style="display:flex;gap:8px;align-items:flex-start">${sayBtn(en)}<span>${esc(en)}</span></span></td><td>${esc(zh)}<div class="use">${esc(use||"")}</div></td></tr>`
+  ).join("") + `</tbody></table>`;
+}
+function phraseList(ph){
+  return `<div class="phr">` + ph.map(([ctx,s]) => `<div>${sayBtn(s)}<span><span class="ctx">${esc(ctx)}</span><br><span class="s">${esc(s)}</span></span></div>`).join("") + `</div>`;
+}
+function linkRow(list){
+  return `<div class="links">` + list.map(([n,u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(n)}</a>`).join("") + `</div>`;
+}
+const AIRPORT = VOCAB.find(s => s.title === "機場用語");
+const RENTAL = VOCAB.find(s => s.title.startsWith("租車"));
+
+function renderDay(d){
+  const c = CITY[d.wx];
+  const route = d.route.map(esc).join('<span class="arrow">→</span>');
+  let h = `<div class="sign"><div class="sign-in">
+    <div class="when">Day ${d.n}｜${d.date.slice(5).replace("-","/")}（${d.dow}）</div>
+    <h2>${esc(d.title)}</h2>
+    <div class="route">${route}</div>
+    <div class="stay">住宿：${d.stay.a ? `<a href="${gm(d.stay.a)}" target="_blank" rel="noopener">${esc(d.stay.n)}</a>` : esc(d.stay.n)}${d.stay.note?`｜${esc(d.stay.note)}`:""}</div>
+  </div></div>`;
+  h += `<div class="glance ${d.aurora?"two":""}">
+    <div class="panel" id="wx"><h3>${esc(c.name)}天氣</h3><p class="hint">載入預報中…</p></div>
+    ${d.aurora ? `<div class="panel" id="aur"><h3>今晚極光</h3><p class="hint">載入 Kp 與雲量…</p></div>` : ""}
+  </div>`;
+  h += `<section class="block"><h3>時間表</h3><ol class="timeline">` + d.timeline.map(([t,x,b]) =>
+      `<li><span class="t">${esc(t)}</span><span>${esc(x)}${b==="book"?'<span class="badge book">已預約</span>':b==="fly"?'<span class="badge fly">航班</span>':""}</span></li>`).join("") + `</ol></section>`;
+  h += `<section class="block"><h3>今天要帶</h3>${checklist(d.id+"-b", d.bring)}</section>`;
+  if (d.spots.length) h += `<section class="block"><h3>景點</h3>${placeList(d.spots)}</section>`;
+  if (d.food.length) h += `<section class="block"><h3>餐飲</h3>${placeList(d.food)}</section>`;
+  if (d.shops) h += `<section class="block"><h3>超市採買</h3>${placeList(d.shops)}</section>`;
+  if (d.parking) h += `<section class="block"><h3>停車</h3>${placeList(d.parking)}</section>`;
+  if (d.notes.length) h += `<section class="block"><h3>注意事項</h3>${noteList(d.notes)}</section>`;
+  const secs = d.vocab.map(i => VOCAB[i]);
+  h += `<section class="block"><h3>今天的英文</h3><p class="hint" style="margin:-4px 0 10px">點 ▶ 可以聽發音。</p>`;
+  secs.forEach(s => {
+    if (secs.length > 1) h += `<p class="wordhead">${esc(s.title.replace(/^10\/30（五）/,""))}</p>`;
+    h += phraseList(s.phrases) + `<div style="height:12px"></div>` + vocabTable(s.words);
+  });
+  (d.extra||[]).forEach(x => {
+    const s = x === "airport" ? AIRPORT : RENTAL;
+    h += `<details class="more"><summary>${esc(s.title)}</summary>${phraseList(s.phrases)}<div style="height:12px"></div>${vocabTable(s.words)}</details>`;
+  });
+  h += `</section>`;
+  h += `<section class="block"><h3>今天用得到的網站</h3>${linkRow(d.links)}</section>`;
+  return h;
+}
+function renderPre(){
+  let h = `<div class="sign"><div class="sign-in"><div class="when">2026/10/20 – 11/1</div><h2>出發前準備</h2>
+    <div class="route">黃刀鎮<span class="arrow">→</span>班夫<span class="arrow">→</span>溫哥華</div>
+    <div class="stay">6 人，12 天；回程 CI031 10/31 01:35 起飛</div></div></div>`;
+  h += `<section class="block"><h3>待辦</h3>${checklist("pre-t", PRE.todos)}</section>`;
+  PRE.packing.forEach(([g, items], i) => { h += `<section class="block"><h3>行李：${esc(g)}</h3>${checklist("pre-p"+i, items)}</section>`; });
+  h += `<section class="block"><h3>注意事項</h3>${noteList(PRE.notes.map(([t,k])=>[t,k==="info"?"info":""]))}</section>`;
+  return h;
+}
+function renderLinks(){
+  let h = `<div class="sign"><div class="sign-in"><div class="when">隨時查</div><h2>實用連結</h2><div class="route">天氣<span class="arrow">・</span>極光<span class="arrow">・</span>路況<span class="arrow">・</span>航班</div></div></div>`;
+  LINKS.groups.forEach(([g, list]) => { h += `<div class="linkgroup"><h4>${esc(g)}</h4>${linkRow(list)}</div>`; });
+  h += `<section class="block"><h3>全部英文</h3><input class="search" id="q" type="search" placeholder="搜尋英文或中文，例如 parking、退房" aria-label="搜尋單字與句子"><div id="qres"></div></section>`;
+  return h;
+}
+function searchVocab(q){
+  q = q.trim().toLowerCase();
+  const out = $("#qres"); if (!out) return;
+  if (!q){ out.innerHTML = `<p class="hint">輸入關鍵字，會從每天的單字和句子裡找。</p>`; return; }
+  let words = [], phr = [];
+  VOCAB.forEach(s => {
+    s.words.forEach(w => { if (w.join(" ").toLowerCase().includes(q)) words.push(w); });
+    s.phrases.forEach(p => { if (p.join(" ").toLowerCase().includes(q)) phr.push(p); });
+  });
+  out.innerHTML = (!words.length && !phr.length) ? `<p class="hint">找不到「${esc(q)}」，換個字試試。</p>`
+    : (phr.length ? phraseList(phr.slice(0,30)) + `<div style="height:12px"></div>` : "") + (words.length ? vocabTable(words.slice(0,60)) : "");
+}
+
+/* ---------- live data ---------- */
+const WMO = {0:"晴",1:"大致晴",2:"局部多雲",3:"陰",45:"霧",48:"霧凇",51:"毛毛雨",53:"毛毛雨",55:"毛毛雨",56:"凍毛雨",57:"凍毛雨",61:"小雨",63:"雨",65:"大雨",66:"凍雨",67:"凍雨",71:"小雪",73:"雪",75:"大雪",77:"米雪",80:"陣雨",81:"陣雨",82:"強陣雨",85:"陣雪",86:"強陣雪",95:"雷雨",96:"雷雨冰雹",99:"雷雨冰雹"};
+const wxCache = {};
+async function getWx(key){
+  if (wxCache[key]) return wxCache[key];
+  const c = CITY[key];
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset&hourly=cloud_cover,temperature_2m&timezone=${encodeURIComponent(c.tz)}&forecast_days=16`;
+  wxCache[key] = fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  return wxCache[key];
+}
+async function fillWx(d){
+  const box = $("#wx"); if (!box) return;
+  const c = CITY[d.wx];
+  const ecLink = d.wx==="yk"?L.ecyk:(["banff","canmore","louise"].includes(d.wx)?L.ecbanff:L.ecvan);
+  try{
+    const j = await getWx(d.wx);
+    const i = j.daily.time.indexOf(d.date);
+    if (i < 0){
+      const past = d.date < j.daily.time[0];
+      box.innerHTML = `<h3>${esc(c.name)}天氣</h3><p class="hint">${past?"這一天已經過了。":"預報只到 16 天後，這天還沒開放。"}到時再打開這頁就會自動顯示。</p><p class="hint"><a href="${ecLink[1]}" target="_blank" rel="noopener">${ecLink[0]}</a></p>`;
+      return;
+    }
+    const D = j.daily, t = s => s.slice(11,16);
+    box.innerHTML = `<h3>${esc(c.name)}天氣</h3>
+      <div class="wx-main"><span class="wx-temp">${Math.round(D.temperature_2m_min[i])}° / ${Math.round(D.temperature_2m_max[i])}°C</span><span>${WMO[D.weather_code[i]]||""}</span></div>
+      <div class="wx-meta">降雨機率 ${D.precipitation_probability_max[i] ?? "–"}%｜最大風速 ${Math.round(D.wind_speed_10m_max[i])} km/h｜日出 ${t(D.sunrise[i])}｜日落 ${t(D.sunset[i])}</div>
+      <p class="hint"><a href="${ecLink[1]}" target="_blank" rel="noopener">看加拿大氣象局完整預報</a></p>`;
+  }catch(e){
+    box.innerHTML = `<h3>${esc(c.name)}天氣</h3><p class="hint">目前抓不到預報，可能沒有網路。可以改看 <a href="${ecLink[1]}" target="_blank" rel="noopener">${ecLink[0]}</a>。</p>`;
+  }
+}
+let kpCache = null;
+async function getKp(){
+  if (!kpCache) kpCache = fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  return kpCache;
+}
+function kpRows(j){
+  if (!Array.isArray(j)) return [];
+  if (Array.isArray(j[0])) return j.slice(1).map(r => ({t:r[0], kp:parseFloat(r[1])}));
+  return j.map(r => ({t:r.time_tag, kp:parseFloat(r.kp ?? r.Kp)}));
+}
+async function fillAurora(d){
+  const box = $("#aur"); if (!box) return;
+  const isYK = d.aurora === "yk";
+  let html = `<h3>今晚極光</h3>`;
+  try{
+    const rows = kpRows(await getKp()).filter(r => !isNaN(r.kp));
+    // night window local 20:00–03:00 MDT = 02:00–09:00 UTC next day
+    const next = new Date(d.date + "T00:00:00Z"); next.setUTCDate(next.getUTCDate()+1);
+    const nd = next.toISOString().slice(0,10);
+    const night = rows.filter(r => { const s = r.t.replace(" ","T"); return s.startsWith(nd) && +s.slice(11,13) <= 9; });
+    if (night.length){
+      const max = Math.max(...night.map(r => r.kp));
+      const need = isYK ? 2 : 5;
+      html += `<div class="kp-row">` + night.map(r => {
+        const h = +r.t.replace(" ","T").slice(11,13), local = ((h - 6) + 24) % 24;
+        return `<div class="kp ${r.kp>=need?"hi":""}">${String(local).padStart(2,"0")}:00<b>${r.kp.toFixed(1)}</b></div>`;
+      }).join("") + `</div><p class="hint">當地時間的 Kp 預報，最高 ${max.toFixed(1)}。${isYK ? "黃刀鎮在極光帶正下方，Kp 1–2 就看得到，晴不晴比 Kp 重要。" : "班夫緯度較低，大約要 Kp 5 才有機會，綠色格子是有希望的時段。"}</p>`;
+    } else {
+      html += `<p class="hint">NOAA 只預報 3 天內的 Kp，這晚還沒開放。</p>`;
+    }
+  }catch(e){
+    html += `<p class="hint">抓不到 Kp 預報，請改看下方連結。</p>`;
+  }
+  try{
+    const j = await getWx(d.wx === "banff" ? "banff" : "yk");
+    const H = j.hourly; const out = [];
+    for (let k = 0; k < H.time.length; k++){
+      const t = H.time[k], day = t.slice(0,10), hr = +t.slice(11,13);
+      const nextDay = new Date(d.date+"T00:00:00Z"); nextDay.setUTCDate(nextDay.getUTCDate()+1);
+      if ((day === d.date && hr >= 20) || (day === nextDay.toISOString().slice(0,10) && hr <= 2)) out.push([hr, H.cloud_cover[k], H.temperature_2m[k]]);
+    }
+    if (out.length){
+      const minT = Math.min(...out.map(o => o[2]));
+      html += `<p class="hint" style="margin-top:10px">雲量 20:00–02:00（綠色＝雲量 30% 以下）。最低約 ${Math.round(minT)}°C。</p>
+        <div class="clouds" aria-hidden="true">${out.map(o => `<div class="${o[1]<=30?"clear":""}" style="height:${Math.max(4,o[1])}%" title="${o[1]}%"></div>`).join("")}</div>
+        <div class="cloud-axis">${out.map(o => `<span>${o[0]}</span>`).join("")}</div>
+        <p class="hint">${out.map(o=>`${o[0]}點 ${o[1]}%`).join("、")}</p>`;
+    }
+  }catch(e){}
+  html += `<p class="hint"><a href="${L.astro[1]}" target="_blank" rel="noopener">夜間雲量</a>｜<a href="${L.swpc[1]}" target="_blank" rel="noopener">NOAA 極光</a>｜<a href="${L.swl[1]}" target="_blank" rel="noopener">SpaceWeatherLive</a></p>`;
+  box.innerHTML = html;
+}
+
+/* ---------- tabs ---------- */
+const PAGES = [PRE, ...DAYS, LINKS];
+function buildTabs(){
+  const today = dateIn("America/Vancouver");
+  $("#tabs").innerHTML = PAGES.map(p => {
+    const isDay = !!p.date;
+    const label = isDay ? p.date.slice(5).replace("-","/") : p.tab;
+    const sub = isDay ? `Day ${p.n}` : p.sub;
+    return `<button class="tab ${isDay && p.date===today ? "today":""}" role="tab" id="tab-${p.id}" aria-controls="main" aria-selected="false" data-id="${p.id}">${label}<small>${sub}</small></button>`;
+  }).join("");
+}
+function show(id, focus){
+  const p = PAGES.find(x => x.id === id) || PRE;
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.id === p.id ? "true" : "false"));
+  const btn = $("#tab-"+p.id); if (btn) btn.scrollIntoView({inline:"center", block:"nearest"});
+  const main = $("#main");
+  main.innerHTML = p === PRE ? renderPre() : p === LINKS ? renderLinks() : renderDay(p);
+  if (p.date){ fillWx(p); fillAurora(p); }
+  if (p === LINKS){ searchVocab(""); $("#q").addEventListener("input", e => searchVocab(e.target.value)); }
+  store.set("ca26-tab", p.id);
+  if (location.hash !== "#"+p.id) history.replaceState(null, "", "#"+p.id);
+  if (focus) main.focus({preventScroll:true});
+  window.scrollTo({top:0});
+}
+
+document.addEventListener("click", e => {
+  const t = e.target.closest(".tab"); if (t){ show(t.dataset.id, true); return; }
+  const s = e.target.closest("[data-say]"); if (s){ say(s.dataset.say); }
+});
+document.addEventListener("change", e => {
+  const c = e.target.closest("[data-check]"); if (!c) return;
+  checks[c.dataset.check] = c.checked; store.set("ca26-checks", checks);
+  const ul = c.closest("ul.checks"), p = ul && ul.previousElementSibling;
+  if (p && p.classList.contains("progress")){
+    const all = ul.querySelectorAll("input"), done = [...all].filter(i => i.checked).length;
+    p.textContent = `${done}／${all.length} 已完成`;
+  }
+});
+$("#tabs").addEventListener("keydown", e => {
+  if (!["ArrowRight","ArrowLeft"].includes(e.key)) return;
+  const tabs = [...document.querySelectorAll(".tab")], i = tabs.indexOf(document.activeElement);
+  if (i < 0) return;
+  const n = tabs[(i + (e.key==="ArrowRight"?1:-1) + tabs.length) % tabs.length];
+  n.focus(); show(n.dataset.id, false);
+});
+$("#themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const nx = cur === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = nx; store.set("ca26-theme", nx);
+});
+window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
+
+(function init(){
+  const th = store.get("ca26-theme", null); if (th) document.documentElement.dataset.theme = th;
+  buildTabs(); tick(); setInterval(tick, 30000);
+  $("#status").textContent = statusLine();
+  const today = DAYS.find(d => d.date === dateIn("America/Vancouver"));
+  const start = location.hash.slice(1) || (today && today.id) || store.get("ca26-tab", "pre");
+  show(start, false);
+})();
+</script>
+</body>
+</html>
