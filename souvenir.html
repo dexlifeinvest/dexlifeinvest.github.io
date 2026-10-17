@@ -73,6 +73,8 @@ tbody tr.sel{background:#f1f7ff}
 .selbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13.5px}
 .selbar label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-weight:600}
 .selbar .cnt{color:#1f6fe0;font-weight:700}
+.selbar .only{border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 9px;font-weight:600}
+.selbar .only:has(input:checked){border-color:#1f6fe0;background:#eaf2ff;color:#1f6fe0}
 .selbar button{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:13px;padding:0}
 .empty{text-align:center;color:var(--muted);padding:40px 10px}
 mark{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
@@ -189,6 +191,7 @@ footer h4{margin:12px 0 4px;color:var(--ink);font-size:13px}
     <div class="selbar">
       <label><input type="checkbox" class="ck" id="ckAll2"><span id="ckAllLbl">全部勾選</span></label>
       <span>已勾選 <span class="cnt" id="selCnt">0</span> 家</span>
+      <label class="only"><input type="checkbox" class="ck" id="onlyPicked">只顯示勾選的清單</label>
       <button id="btnUncheck" hidden>取消全部勾選</button>
     </div>
     <table>
@@ -254,6 +257,7 @@ function savePicked() { try { localStorage.setItem(LS_SEL, JSON.stringify([...pi
 function loadState() {
   try { Object.assign(state, JSON.parse(localStorage.getItem(LS_KEY) || '{}')); } catch (e) {}
   if (!['code', 'pAsc', 'pDesc'].includes(state.sort)) state.sort = 'code';
+  $('onlyPicked').checked = !!state.onlyPicked;
   $('q').value = state.q; $('maxP').value = state.maxP; $('shares').value = state.shares; $('sort').value = state.sort;
   syncChips();
 }
@@ -267,6 +271,7 @@ function applyFilter() {
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   const maxP = parseFloat(state.maxP);
   view = stocks.filter(s => {
+    if (state.onlyPicked && !picked.has(s.code)) return false;
     if (words.some(w => !s.hay.includes(w))) return false;
     if (state.years.some(y => !has(s, y))) return false;
     if (state.type !== 'all') {
@@ -462,6 +467,7 @@ let timer;
 $('q').addEventListener('input', e => { state.q = e.target.value; clearTimeout(timer); timer = setTimeout(onChange, 120); });
 $('maxP').addEventListener('input', e => { state.maxP = e.target.value; onChange(); });
 $('shares').addEventListener('input', e => { state.shares = Math.max(1, Math.round(+e.target.value) || 1); onChange(); });
+$('onlyPicked').addEventListener('change', e => { state.onlyPicked = e.target.checked; onChange(); });
 $('sort').addEventListener('change', e => { state.sort = e.target.value; onChange(); });
 $('yearChips').addEventListener('click', e => {
   const y = +(e.target.dataset.y || 0); if (!y) return;
