@@ -308,7 +308,7 @@ input[type=checkbox].pick{width:20px;height:20px;accent-color:var(--accent);curs
 
 <script>
 const KEY='dex_etf_dividend_calendar_v2';
-const SEED='2026-09-28';   /* 預設標的清單的版本；改清單就更新這個日期，舊存檔會自動補上新標的 */
+const SEED='2026-11-14b';   /* 預設標的清單的版本；改清單就更新這個日期，舊存檔會自動補上新標的 */
 const MONTHS=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
 /* 預設標的（假設估算，price 為近期收盤概值，按「自動更新股價」可抓最新）
@@ -322,9 +322,14 @@ const DEFAULTS=[
  {tk:'00713', nm:'元大台灣高息低波',  pick:false, price:63.85,  ex:'3,6,9,12',                div:1.00,  lots:0},
  {tk:'00918', nm:'大華優利高填息30',  pick:false, price:35.34,  ex:'3,6,9,12',                div:1.26,  lots:0},
  {tk:'00929', nm:'復華台灣科技優息',  pick:false, price:28.62,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.38, lots:0},
+ /* 00406A 主動式 ETF＋掩護性買權，月配；近兩期配息 0.138 元（2026/10、11 除息） */
+ {tk:'00406A',nm:'主動中信台灣收益',  pick:false, price:7.75,   ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.138, lots:0, cat:'income'},
+ /* 009816 不配息（股利留在基金內再投入），列進來對照用，月曆上不會有入帳 */
+ {tk:'009816',nm:'凱基台灣TOP50',     pick:false, price:15.22,  ex:'',                        div:0,     lots:0, cat:'market'},
+ /* 00923 半年配（2、8 月除息），近四次 0.77／0.923／1.71／3.05 落差很大，比照 00927 填近四次平均 1.61 */
+ {tk:'00923', nm:'群益台ESG低碳50',   pick:false, price:36.82,  ex:'2,8',                     div:1.61,  lots:0, cat:'market'},
  /* 00927 每次配息落差很大（近四次 0.22／0／0.94／1.88），用「上次 1.88」推估殖利率會膨脹到近 19%，這裡改填近四次平均 */
  {tk:'00927', nm:'群益半導體收益',    pick:false, price:39.77,  ex:'1,4,7,10',                div:0.76,  lots:0, cat:'industry'},
- {tk:'00712', nm:'復華富時不動產',    pick:false, price:8.38,   ex:'3,6,9,12',                div:0.235, lots:0},
  {tk:'00714', nm:'群益道瓊美國地產',  pick:false, price:21.15,  ex:'1,4,7,10',                div:0.123, lots:0},
  {tk:'00679B',nm:'元大美債20年',      pick:false, price:25.26,  ex:'2,5,8,11',                div:0.28,  lots:0},
  {tk:'00772B',nm:'中信高評級公司債',  pick:false, price:31.85,  ex:'1,2,3,4,5,6,7,8,9,10,11,12', div:0.14, lots:0},
@@ -332,7 +337,7 @@ const DEFAULTS=[
 ];
 
 /* 從預設清單拿掉的標的：舊存檔裡若沒持有（張數 0）就一併移除，有持有的保留 */
-const REMOVED=['00751B'];
+const REMOVED=['00751B','00712'];
 
 let rows=[], lastFetch='';
 
